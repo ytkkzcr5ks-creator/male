@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ГОТИЧЕСКИЙ СКАНЕР МУЖИКОВ v6.66</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--green:#39ff88;--red:#ff3b5c;--purple:#b388ff;--bg:#050607}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#d8ffe9;font-family:'Share Tech Mono',monospace;min-height:100vh;overflow-x:hidden}
+#matrix{position:fixed;inset:0;z-index:0;opacity:.22}
+.arch{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 0%,rgba(57,255,136,.08),transparent 60%)}
+.wrap{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:34px 18px 70px}
+h1{font-family:'Cinzel',serif;font-weight:800;text-align:center;color:var(--green);text-shadow:0 0 18px rgba(57,255,136,.55);letter-spacing:.06em;font-size:clamp(24px,5vw,42px)}
+.sub{text-align:center;color:#8fd9b2;margin:10px 0 26px;font-size:13px;letter-spacing:.12em}
+.card{border:1px solid rgba(57,255,136,.35);background:rgba(3,10,6,.85);padding:26px;position:relative}
+.card:before,.card:after{content:"";position:absolute;width:26px;height:26px;border:2px solid var(--green);opacity:.7}
+.card:before{top:-2px;left:-2px;border-right:0;border-bottom:0}
+.card:after{bottom:-2px;right:-2px;border-left:0;border-top:0}
+.scan{color:var(--green);font-size:12px;letter-spacing:.18em;margin-bottom:14px;text-transform:uppercase}
+.q{font-family:'Cinzel',serif;font-size:clamp(18px,3.4vw,25px);color:#eafff3;margin-bottom:20px;line-height:1.35}
+button{display:block;width:100%;text-align:left;background:rgba(57,255,136,.05);border:1px solid rgba(57,255,136,.28);color:#d8ffe9;font-family:'Share Tech Mono',monospace;font-size:15px;padding:14px 16px;margin:10px 0;cursor:pointer;transition:.18s}
+button:hover{background:rgba(57,255,136,.14);border-color:var(--green);transform:translateX(4px)}
+.bar{height:7px;background:#08150e;border:1px solid rgba(57,255,136,.3);margin:16px 0 20px}
+.fill{height:100%;background:linear-gradient(90deg,#0f8a4d,var(--green));transition:.4s}
+.result-class{font-family:'Cinzel',serif;font-size:clamp(26px,6vw,40px);color:var(--green);margin:8px 0}
+.danger{display:inline-block;padding:6px 12px;border:1px solid currentColor;margin:10px 0;font-size:12px;letter-spacing:.2em}
+.red{color:var(--red)}.yellow{color:#ffd166}.safe{color:var(--green)}.purple{color:var(--purple)}
+.quote{border-left:3px solid var(--green);padding:10px 14px;margin:16px 0;color:#bdf5d4;font-style:italic}
+.stats div{display:flex;justify-content:space-between;border-bottom:1px dashed rgba(57,255,136,.2);padding:7px 0;font-size:13px}
+.restart{margin-top:22px;text-align:center;background:transparent;border:1px solid var(--red);color:var(--red)}
+.hidden{display:none}
+.disclaimer{margin-top:22px;font-size:11px;color:#5d8f75;text-align:center;line-height:1.6}
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas><div class="arch"></div>
+<div class="wrap">
+<h1>ГОТИЧЕСКИЙ СКАНЕР<br>МУЖИКОВ v6.66</h1>
+<div class="sub">ОПЕРАЦИЯ «КРАСНЫЙ ФЛАГ» • САТИРА, НЕ ДИАГНОЗ</div>
+
+<div id="quiz" class="card">
+<div class="scan" id="scan">ИНИЦИАЛИЗАЦИЯ СКАНЕРА…</div>
+<div class="bar"><div class="fill" id="fill" style="width:0%"></div></div>
+<div class="q" id="question"></div>
+<div id="answers"></div>
+</div>
+
+<div id="result" class="card hidden">
+<div class="scan">АНАЛИЗ ЗАВЕРШЁН. СУЩНОСТЬ ИДЕНТИФИЦИРОВАНА.</div>
+<div class="result-class" id="rClass"></div>
+<div id="rDanger"></div>
+<div class="quote" id="rQuote"></div>
+<div class="stats" id="rStats"></div>
+<div class="quote" id="rAdvice"></div>
+<button class="restart" onclick="restart()">ПРОВЕСТИ НОВЫЙ ЭКЗОРЦИЗМ</button>
+</div>
+
+<div class="disclaimer">Сатирический развлекательный тест. Не ставит диагнозы и не заменяет консультацию специалиста.</div>
+</div>
+
+<script>
+const S={narc:0,covert:0,gas:0,manip:0,pickme:0,chaos:0,norm:0,green:0,ctrl:0};
+
+const Q={
+start:{scan:"СКАНИРОВАНИЕ МУЖСКОЙ СУЩНОСТИ…",q:"Как он обычно начинает общение?",a:[
+["«Привет, красотка. Ты мне сразу понравилась»","pickme","q2_pickme"],
+["«Привет. Что делаешь?»","norm","q2_norm"],
+["Мем, голосовое на 4 минуты или «глянь, что нашёл»","chaos","q2_chaos"],
+["«Я редко такое говорю, но ты не такая, как все»","narc","q2_narc"]]},
+q2_pickme:{scan:"ОБНАРУЖЕНА ПИКМИ-ЭНЕРГИЯ.",q:"Через два дня он говорит, что влюбился. Ты просишь не торопиться. Его реакция?",a:[
+["«Понял, не тороплю»","green","q4"],
+["«Ты боишься своих чувств»","manip","q3_manip"],
+["«Наверное, я снова всё испортил»","covert","q3_covert"],
+["«Тогда найду ту, которая оценит»","narc","q3_narc"]]},
+q2_norm:{scan:"СТАНДАРТНЫЙ БИОЛОГИЧЕСКИЙ ОБЪЕКТ.",q:"Ты говоришь: «Мне было неприятно, когда ты так пошутил».",a:[
+["Извиняется и уточняет","green","q4"],
+["«Ты преувеличиваешь»","gas","q3_gas"],
+["«А ты вот тоже…»","manip","q3_manip"],
+["Пропадает, потом пишет «забудь»","covert","q3_covert"]]},
+q2_chaos:{scan:"ОБНАРУЖЕН ХАОС-АГЕНТ.",q:"Он обещает встретиться в субботу. В субботу он:",a:[
+["Пишет заранее, если планы меняются","green","q4"],
+["Появляется в 23:40: «Ты ещё не спишь?»","chaos","q5_chaos"],
+["«У меня был важный разговор с самим собой»","narc","q3_narc"],
+["«Я думал, ты сама поймёшь»","manip","q3_manip"]]},
+q2_narc:{scan:"ПОВЫШЕННЫЙ УРОВЕНЬ ГРАНДИОЗНОСТИ.",q:"Как он говорит о бывших?",a:[
+["Нейтрально","norm","q4"],
+["«Все были психованки»","gas","q3_gas"],
+["«Я слишком много отдавал»","covert","q3_covert"],
+["«Они меня не заслуживали»","narc","q4"]]},
+q3_narc:{scan:"ГРАНДИОЗНОСТЬ: КРИТИЧЕСКАЯ.",q:"Ты рассказываешь о своём успехе.",a:[
+["Искренне радуется","green","q5"],
+["«Молодец. А я вот…»","narc","q6"],
+["«Тебе просто повезло»","gas","q6"],
+["«Это потому что я тебя поддерживал»","pickme","q6"]]},
+q3_gas:{scan:"ОБНАРУЖЕН ГАЗЛАЙТ-ПРОТОКОЛ.",q:"После ссоры он говорит: «Я этого не говорил».",a:[
+["«Возможно, я выразился неудачно»","norm","q5"],
+["«У тебя проблемы с памятью»","gas","q6"],
+["«Ты сама всё придумала»","gas","q6"],
+["«Не начинай, у меня тяжёлый день»","manip","q6"]]},
+q3_manip:{scan:"МАНИПУЛЯТИВНАЯ СИГНАТУРА.",q:"Он узнаёт, что ты общаешься с другим парнем.",a:[
+["Спрашивает спокойно","green","q5"],
+["«Зачем он тебе, если есть я?»","ctrl","q6"],
+["Флиртует с другими назло","manip","q6"],
+["«Мне всё равно»","chaos","q5_chaos"]]},
+q3_covert:{scan:"СКРЫТЫЙ НАРЦИСС. РЕЖИМ ЖЕРТВЫ.",q:"Когда у него проблемы, он:",a:[
+["Просит поддержки и благодарит","norm","q5"],
+["«Все меня предали, ты тоже уйдёшь»","covert","q6"],
+["Молчит, потом обвиняет тебя","manip","q6"],
+["«Справлюсь сам» — и страдает в сторис","chaos","q5_chaos"]]},
+q4:{scan:"СТАБИЛЬНОСТЬ: ЧАСТИЧНАЯ.",q:"Вы не согласны друг с другом.",a:[
+["«Давай спокойно разберёмся»","green","q5"],
+["Повышает голос или уходит","ctrl","q6"],
+["Вспоминает твои старые ошибки","manip","q6"],
+["«Ты права» — и делает по-своему","manip","q6"]]},
+q5:{scan:"ЭМПАТИЯ: ВЕРИФИКАЦИЯ.",q:"У тебя плохой день. Он:",a:[
+["Слушает, не «чинит» сразу","green","q6"],
+["«Не думай, займись спортом»","norm","q7"],
+["Через пять минут говорит о себе","pickme","q7"],
+["«Ты опять драматизируешь»","gas","q7"]]},
+q5_chaos:{scan:"ХАОС-МАТРИЦА НЕСТАБИЛЬНА.",q:"Он исчез на три дня и вернулся с мемом.",a:[
+["Честно объясняет и извиняется","green","q6"],
+["«А ты что, считала дни?»","manip","q7"],
+["«У меня сложный период»","covert","q7"],
+["«Я просто вырубился, брат»","chaos","q7"]]},
+q6:{scan:"КРАСНЫЙ ФЛАГ ПОДТВЕРЖДЁН.",q:"Вы расстаётесь или сильно ссоритесь. Потом он:",a:[
+["Уважает дистанцию","green","final"],
+["«Я без тебя не могу», а завтра — «ты ничтожество»","manip","final"],
+["Рассказывает всем, какая ты плохая","narc","final"],
+["Возвращается через месяц: «я изменился»","manip","final"]]},
+q7:{scan:"ФИНАЛЬНАЯ КАЛИБРОВКА.",q:"Ты говоришь: «Мне нужно время подумать».",a:[
+["«Я рядом, когда будешь готова»","green","final"],
+["«Значит, ты нашла кого-то»","ctrl","final"],
+["«После всего, что я сделал?»","manip","final"],
+["«Ок» — и исчезает","chaos","final"]}
+};
+
+const R={
+narc:{name:"НАРЦИСС-АРХОНТ",danger:["red","RED FLAG / FINAL BOSS"],quote:"Он не разговаривает — он проводит пресс-конференцию о собственной величии.",advice:"Не спорь с легендой. Смотри на действия и держи границы."},
+covert:{name:"СКРЫТЫЙ НАРЦИСС",danger:["red","RED FLAG / ВЕЧНАЯ ЖЕРТВА"],quote:"Виноваты все, кроме него.",advice:"Сочувствие — не обязанность спасать."},
+gas:{name:"ГАЗЛАЙТ-ГОБЛИН",danger:["red","RED FLAG / РЕАЛЬНОСТЬ ПОВРЕЖДЕНА"],quote:"Ты не помнишь разговор? Значит, его не было.",advice:"Не выясняй правоту в бесконечном споре. Фиксируй факты."},
+manip:{name:"МАНИПУЛЯТОР-ЗЕРКАЛЬЩИК",danger:["red","RED FLAG / ИГРА НАЧАЛАСЬ"],quote:"Он спорит так, что ты извиняешься за то, что он тебе сделал.",advice:"Смотри на поступки, а не на монологи."},
+pickme:{name:"ПИКМИ-ВАМПИР",danger:["purple","HIGH DRAMA"],quote:"Влюбляется быстро, исчезает красиво, возвращается с цитатой.",advice:"Не спасай. Взрослый человек переживёт паузу в ответах."},
+chaos:{name:"ХАОС-АГЕНТ",danger:["yellow","MID CRINGE"],quote:"План на завтра отсутствует. План на жизнь — тоже.",advice:"Если нужна стабильность — это не твой рейдовый босс."},
+norm:{name:"НОРМИС",danger:["safe","SAFE MODE"],quote:"Ничего экстраординарного. Это теперь редкость.",advice:"Проверяй не вайб, а последовательность поступков."},
+green:{name:"ЗЕЛЁНЫЙ ФЛАГ",danger:["safe","SAFE MODE"],quote:"Уважает границы и умеет извиняться. Подозрительно стабилен.",advice:"Береги, но не превращай в спасителя."},
+ctrl:{name:"КОНТРОЛЁР-ИНКВИЗИТОР",danger:["red","RED FLAG"],quote:"Ревность он называет заботой, запреты — защитой.",advice:"Контроль не усиливается от любви. Не отдавай границы во имя спокойствия."}};
+
+let current="start",step=0,total=7;
+const el=id=>document.getElementById(id);
+
+function render(id){
+current=id;step++;
+el("scan").textContent=Q[id].scan;
+el("question").textContent=Q[id].q;
+el("fill").style.width=Math.min(100,Math.round(step/total*100))+"%";
+const box=el("answers");box.innerHTML="";
+Q[id].a.forEach(function(item){
+const b=document.createElement("button");
+b.textContent="▸ "+item[0];
+b.onclick=function(){S[item[1]]++;if(item[2]==="final"){finish();}else{render(item[2]);}};
+box.appendChild(b);
+});
+}
+
+function finish(){
+const winner=Object.keys(S).reduce(function(a,b){return S[b]>S[a]?b:a;});
+const r=R[winner]||R.norm;
+el("quiz").classList.add("hidden");
+el("result").classList.remove("hidden");
+el("rClass").textContent=r.name;
+el("rDanger").innerHTML='<span class="danger '+r.danger[0]+'">'+r.danger[1]+'</span>';
+el("rQuote").textContent="«"+r.quote+"»";
+const max=Math.max(1,...Object.values(S));
+const names={narc:"Грандиозность",covert:"Жертвенный лор",gas:"Газлайт",manip:"Манипуляции",pickme:"Пикми-энергия",chaos:"Хаос",norm:"Нормис-стабильность",green:"Зелёные флаги",ctrl:"Контроль"};
+el("rStats").innerHTML=Object.keys(S).map(function(k){return '<div><span>'+names[k]+'</span><span>'+Math.round(S[k]/max*100)+'%</span></div>';}).join("");
+el("rAdvice").textContent="ПРОТОКОЛ ВЫЖИВАНИЯ: "+r.advice;
+}
+
+function restart(){
+Object.keys(S).forEach(function(k){S[k]=0;});
+step=0;el("result").classList.add("hidden");el("quiz").classList.remove("hidden");render("start");
+}
+
+const c=el("matrix"),x=c.getContext("2d");let cols,drops;
+function resize(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/16);drops=[];for(let i=0;i<cols;i++)drops.push(1);}
+resize();addEventListener("resize",resize);
+const chars="01АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ☠✝⚔";
+setInterval(function(){
+x.fillStyle="rgba(5,6,7,.08)";x.fillRect(0,0,c.width,c.height);
+x.fillStyle="#39ff88";x.font="15px monospace";
+for(let i=0;i<cols;i++){
+x.fillText(chars[Math.floor(Math.random()*chars.length)],i*16,drops[i]*16);
+if(drops[i]*16>c.height&&Math.random()>.975)drops[i]=0;drops[i]++;
+}
+},45);
+
+render("start");
+</script>
+</body>
+</html>
