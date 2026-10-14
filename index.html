@@ -1,114 +1,63 @@
 <!DOCTYPE html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Сканер мужиков v6.66</title>
+<title>Готический сканер отношений v6.66</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-body{margin:0;background:#040506;color:#d8ffe9;font-family:'Share Tech Mono',monospace;padding:18px}
-#m{position:fixed;inset:0;z-index:0;opacity:.25}
+body{margin:0;background:#040506;color:#d8ffe9;font-family:'Share Tech Mono',monospace;padding:18px;overflow-x:hidden}
+#m{position:fixed;inset:0;z-index:0;opacity:.22}
 #p{position:fixed;inset:0;z-index:9;background:radial-gradient(circle,#39ff88aa,#000 70%);opacity:0;pointer-events:none;transition:.5s}
-.w{position:relative;z-index:2;max-width:660px;margin:auto}
-h1{font-family:Cinzel,serif;color:#39ff88;text-align:center;font-size:clamp(20px,5vw,34px);text-shadow:0 0 15px #39ff88}
+.em{position:fixed;top:50%;transform:translateY(-50%);z-index:3;font-size:clamp(34px,8vw,64px);opacity:.75;filter:drop-shadow(0 0 14px currentColor);transition:.4s}
+#el{left:8px;color:#39ff88}#er{right:8px;color:#39ff88}
+@media(max-width:760px){.em{font-size:30px;opacity:.5}#el{left:4px}#er{right:4px}}
+.w{position:relative;z-index:2;max-width:640px;margin:auto}
+h1{font-family:Cinzel,serif;color:#39ff88;text-align:center;font-size:clamp(20px,5vw,32px);text-shadow:0 0 15px #39ff88}
 .s{text-align:center;color:#8fd9b2;font-size:11px;letter-spacing:2px;margin:8px 0 18px}
 .c{border:1px solid #39ff88;background:#020805ee;padding:20px;position:relative;overflow:hidden}
 .t{color:#39ff88;font-size:11px;letter-spacing:2px;margin-bottom:10px}
 .b{height:7px;background:#07130c;border:1px solid #39ff88;margin:10px 0 16px}
 .f{height:100%;background:#39ff88;transition:.4s}
 .sl{position:absolute;top:0;height:3px;width:70px;background:linear-gradient(90deg,transparent,#39ff88,transparent);box-shadow:0 0 12px #39ff88;transition:left .5s}
-.qq{font-family:Cinzel,serif;color:#eafff3;font-size:clamp(16px,4vw,22px);margin-bottom:14px;line-height:1.35}
-button{display:block;width:100%;margin:8px 0;padding:12px;background:#06170ecc;border:1px solid #39ff88;color:#d8ffe9;font-family:inherit;font-size:13px;text-align:left;cursor:pointer}
+.qq{font-family:Cinzel,serif;color:#eafff3;font-size:clamp(16px,4vw,21px);margin-bottom:14px;line-height:1.4}
+button{display:block;width:100%;margin:8px 0;padding:12px 14px;background:#06170ecc;border:1px solid #39ff88;color:#d8ffe9;font-family:inherit;font-size:13px;text-align:left;cursor:pointer;transition:.18s}
 button:hover{background:#0d2b1a}
-.bk{background:transparent;border:1px dashed #39ff88;color:#8fd9b2;text-align:center}
+.rp{background:transparent;border:1px dashed #ffd166;color:#ffd166;text-align:center}
 .sh{border-color:#b388ff;color:#b388ff;text-align:center;background:#b388ff14}
 .cp{border-color:#ffd166;color:#ffd166;text-align:center;background:#ffd16614}
 .ag{border:2px solid #ff3b5c;color:#ff3b5c;text-align:center;font-weight:bold;background:#ff3b5c14}
-.k{font-family:Cinzel,serif;color:#39ff88;font-size:clamp(22px,6vw,32px);margin:6px 0}
+.k{font-family:Cinzel,serif;color:#39ff88;font-size:clamp(22px,6vw,30px);margin:6px 0}
 .d{display:inline-block;border:1px solid currentColor;padding:5px 10px;font-size:11px;letter-spacing:2px;margin:6px 0}
 .red{color:#ff3b5c}.yel{color:#ffd166}.grn{color:#39ff88}.pur{color:#b388ff}
 .qt{border-left:3px solid #ff3b5c;padding:8px 12px;margin:12px 0;color:#ffd7de;font-style:italic}
-.bl{border:1px dashed #39ff8866;padding:11px;margin:11px 0;font-size:13px;line-height:1.55;background:#00000055}
-.bl b{color:#39ff88}
-.bl.red{border-color:#ff3b5c88}.bl.red b{color:#ff3b5c}
-.bl.yel{border-color:#ffd16688}.bl.yel b{color:#ffd166}
+.bl{border:1px dashed #39ff8866;padding:11px;margin:11px 0;font-size:13px;line-height:1.6;background:#00000055}
+.bl b{color:#39ff88}.bl.red{border-color:#ff3b5c88}.bl.red b{color:#ff3b5c}.bl.yel{border-color:#ffd16688}.bl.yel b{color:#ffd166}.bl.grn{border-color:#39ff88}
 .st{margin:5px 0}.st .n{display:flex;justify-content:space-between;font-size:12px}.st .tr{height:6px;background:#07130c;border:1px solid #39ff8844}.st .v{height:100%;background:#39ff88}
 .st.red .v{background:#ff3b5c}.st.pur .v{background:#b388ff}.st.yel .v{background:#ffd166}
-ul{margin:6px 0 0 18px}li{margin:4px 0;line-height:1.45}
+ul{margin:6px 0 0 18px}li{margin:4px 0;line-height:1.5}
 .rf li::before{content:"🔴 "}.gf li::before{content:"🟢 "}
 .sm{font-size:10px;color:#5d8f75;text-align:center;margin-top:16px;line-height:1.5}
 .bt{min-height:220px}.ln{color:#39ff88;font-size:13px;margin:4px 0;opacity:0;animation:a .3s forwards}.ln.red{color:#ff3b5c}
 @keyframes a{to{opacity:1}}
-.bq{font-family:Cinzel,serif;color:#eafff3;text-align:center;font-size:clamp(18px,5vw,28px);margin:18px 0}
+.bq{font-family:Cinzel,serif;color:#eafff3;text-align:center;font-size:clamp(18px,5vw,27px);margin:18px 0}
 .y{border-color:#39ff88;color:#39ff88;text-align:center;background:#39ff881a}
 .n{border-color:#ff3b5c;color:#ff3b5c;text-align:center;background:#ff3b5c14}
 </style></head><body>
-<canvas id="m"></canvas><div id="p"></div><div class="w">
-<h1>ГОТИЧЕСКИЙ СКАНЕР МУЖИКОВ v6.66</h1>
-<div class="s">ОПЕРАЦИЯ «КРАСНЫЙ ФЛАГ» • САТИРА, НЕ ДИАГНОЗ</div>
+<canvas id="m"></canvas><div id="p"></div><div class="em" id="el">🌿</div><div class="em" id="er">🌿</div><div class="w">
+<h1>ГОТИЧЕСКИЙ СКАНЕР ОТНОШЕНИЙ v6.66</h1>
+<div class="s">АНАЛИЗ ПАТТЕРНОВ • КРАСНЫЕ ФЛАГИ • САТИРА, НЕ ДИАГНОЗ</div>
 <div class="c" id="app"></div>
-<div class="sm">Сатирический развлекательный тест. Не ставит диагнозы.</div></div>
+<div class="sm">Сатирический развлекательный тест. Он не ставит психиатрические диагнозы и не заменяет консультацию специалиста.</div></div>
 <script>
 var S={narc:0,covert:0,gas:0,manip:0,pickme:0,chaos:0,norm:0,green:0,ctrl:0};
-var hist=[],step=0,total=12;
+var replaces=2,step=0,total=12,cur="start";
 var Q={
-start:{t:"Как он обычно начинает общение?",a:[["«Ты не такая, как все»","pickme"],["«Привет. Что делаешь?»","norm"],["Мем или голосовое ночью","chaos"],["«Ты особенная, я редко такое говорю»","narc"],["Спокойно спрашивает, как день","green"]]},
-q2:{t:"Ты заболела и говоришь, что тебе плохо.",a:[["«Отдыхай, могу помочь?»","green"],["«Пей воду»","norm"],["«А я вчера тоже болел»","pickme"],["«Ты драматизируешь»","gas"],["Пропадает, потом мем","chaos"]]},
-q3:{t:"Тебя кто-то обидел. Он:",a:[["Слушает и поддерживает","green"],["«Забудь»","norm"],["Сразу говорит о себе","pickme"],["«Ты сама спровоцировала?»","gas"],["«Все токсичные, я говорил»","covert"]]},
-q4:{t:"У тебя сложная работа и ты устала.",a:[["Спрашивает, как помочь","green"],["«Все устают»","norm"],["«Моя работа сложнее»","narc"],["«Забей, поехали гулять»","chaos"],["Обижается, что мало внимания","manip"]]},
-q5:{t:"В начале он постоянно дарит подарки, пишет 24/7 и называет тебя идеалом.",a:[["Тепло, но без давления","green"],["Приятно, но слишком навязчиво","pickme"],["Потом упрекал: «Я столько сделал»","manip"],["Требовал любви и ревновал","ctrl"],["Исчез так же внезапно","chaos"]]},
-q6:{t:"Ты говоришь, чего хочешь.",a:[["Слышит и учитывает","green"],["Слышит, но забывает","norm"],["«Ты слишком многого хочешь»","gas"],["Согласен, потом делает по-своему","manip"],["«Я такой, меня не изменить»","chaos"]]},
-q7:{t:"Как он говорит о тебе?",a:[["Замечает конкретное и поддерживает","green"],["Почти не говорит комплиментов","norm"],["Комплименты ради выгоды","manip"],["«Красивая, но характер поменяй»","gas"],["«Ты идеал, я не могу без тебя» в первый день","pickme"]]},
-q8:{t:"Вы поссорились. Он:",a:[["Хочет спокойно поговорить","green"],["Повышает голос или уходит","ctrl"],["Вспоминает твои ошибки","manip"],["«Ты права» — и делает по-своему","manip"],["«Все так на тебя реагируют»","covert"]]},
-q9:{t:"Он узнаёт о другом парне.",a:[["Спрашивает спокойно","green"],["«Зачем он тебе?»","ctrl"],["Флиртует назло","manip"],["Проверяет телефон","ctrl"],["«Мне всё равно»","chaos"]]},
-q10:{t:"Он обещает помочь или встретиться.",a:[["Делает, как сказал","green"],["Иногда забывает, но предупреждает","norm"],["Обещает и исчезает","pickme"],["«Моя жизнь сложнее»","narc"],["Возвращается через неделю","chaos"]]},
-q11:{t:"Ты говоришь «нет».",a:[["Принимает","green"],["Давит и уговаривает","ctrl"],["Обижается: «Я не нужен?»","manip"],["«Ладно» — делает по-своему","manip"],["«Ты меня не любишь»","gas"]]},
-q12:{t:"Ты просишь время подумать.",a:[["«Хорошо, я рядом»","green"],["«Ты нашла другого?»","ctrl"],["«После всего, что я сделал?»","manip"],["«Ок» — исчезает","chaos"],["«Не могу без тебя», а завтра — «ты ничтожество»","manip"]]}};
-var R={
-narc:{n:"НАРЦИСС-АРХОНТ",d:["red","RED FLAG / FINAL BOSS"],q:"Он проводит пресс-конференцию о своей величии.",desc:"Он считает себя главным сюжетом. Твои чувства — «слишком сложные», его ошибки — «непонятые».",rec:"Разговоры всегда сворачивают на него. Критику воспринимает как нападение.",ph:["«Меня не ценят»","«Я слишком умный»","«Она не понимала, кого потеряла»"],exp:"Сначала королевский приём, потом холод и наказание дистанцией.",co:"Не заслуживай уважение идеальным поведением. Веди факты: обещал — сделал. Не спорь о его величии. Если после общения ты всё время виновата, поговори с близкой подругой или психологом.",fl:["Обесценивает чувства","Не извиняется по-настоящему","Переводит разговор на себя","Считает критику нападением"]},
-covert:{n:"СКРЫТЫЙ НАРЦИСС",d:["red","RED FLAG / ВЕЧНАЯ ЖЕРТВА"],q:"Виноваты все: бывшие, начальник, карма и ты.",desc:"Вечная жертва с короной. Его боль реальна, но используется как разрешение на обиды и молчание.",rec:"Все его предали, но его роль в конфликтах — загадка.",ph:["«Все меня предавали»","«Я слишком много отдавал»","«Ты тоже уйдёшь»"],exp:"Обиды, намёки, молчание и чувство вины у тебя.",co:"Сочувствие — не обязанность спасать. Ты не его терапевт. Отделяй его чувства от своей ответственности и не решай ничего в момент вины.",fl:["Вечная жертва","Пассивная агрессия","Границы = предательство","Наказывает молчанием"]},
-gas:{n:"ГАЗЛАЙТ-ГОБЛИН",d:["red","RED FLAG / РЕАЛЬНОСТЬ ПОВРЕЖДЕНА"],q:"Ты не помнишь разговор? Значит, его не было.",desc:"Он переписывает реальность, пока ты не начнёшь сомневаться в себе.",rec:"После общения ты думаешь: «Может, я преувеличиваю?»",ph:["«Я этого не говорил»","«Ты всё придумала»","«Ты слишком чувствительная»"],exp:"Путаница, двойные стандарты, ощущение минного поля.",co:"Не спорь «было или не было». Фиксируй факты и возвращай разговор к конкретному поступку. Расскажи о ситуации человеку вне этой истории.",fl:["Отрицает очевидное","Обесценивает чувства","Перекладывает вину","Заставляет сомневаться в себе"]},
-manip:{n:"МАНИПУЛЯТОР-ЗЕРКАЛЬЩИК",d:["red","RED FLAG / ИГРА НАЧАЛАСЬ"],q:"Он спорит так, что ты извиняешься за то, что он сделал.",desc:"Любой конфликт превращается в разговор о твоих недостатках.",rec:"Если он сделал больно — ты спровоцировала. Если ты злишься — ты «слишком эмоциональная».",ph:["«Я пошутил»","«Ты сама спровоцировала»","«После всего, что я сделал»"],exp:"Двойные стандарты: ему можно, тебе нельзя.",co:"Смотри на действия, а не объяснения. Здоровый человек меняет поведение, манипулятор — формулировки. Не оправдывайся за свои чувства.",fl:["Двойные стандарты","Игра на вине","Наказывает молчанием","Ты всегда виновата"]},
-pickme:{n:"ПИКМИ-ВАМПИР",d:["pur","HIGH DRAMA"],q:"Влюбляется быстро, исчезает красиво, возвращается с цитатой.",desc:"Он влюбляется в внимание и драму, а не в реального человека.",rec:"Быстрая идеализация, огромные обещания, потом исчезновение.",ph:["«Ты не такая, как все»","«Я никогда так не привязывался»","«Я изменился, дай шанс»"],exp:"Горячо-холодные качели.",co:"Не спасай и не доказывай, что ты особенная. Проверяй не слова, а простые договорённости. Если после возвращения легко, а потом тревожно — это паттерн.",fl:["Быстрая идеализация","Горячо-холодные качели","Драматичные исчезновения","Обещания без действий"]},
-chaos:{n:"ХАОС-АГЕНТ",d:["yel","MID CRINGE"],q:"Плана нет. Вайб есть.",desc:"Живёт в режиме «разберёмся на месте».",rec:"Появляется, когда удобно, исчезает без объяснений.",ph:["«Давай посмотрим, как пойдёт»","«Само наладится»","«Ты считала дни?»"],exp:"Сорванные планы и непредсказуемость.",co:"Не переделывай хаос в надёжность. Если тебе важны стабильность и ясность — это критерий совместимости, а не «слишком много требований».",fl:["Срывает договорённости","Нет планов","«Само наладится»","Эмоциональные качели"]},
-norm:{n:"НОРМИС",d:["grn","SAFE MODE"],q:"Ничего экстраординарного. Это теперь редкость.",desc:"Не идеален, но способен на диалог, извинения и договорённости.",rec:"Отвечает, не исчезает, не превращает спор в войну.",ph:["«Давай обсудим»","«Я понял, что тебя задело»","«В следующий раз иначе»"],exp:"Стабильность без фейерверков.",co:"Не проверяй на «настоящую любовь» и не создавай драму. Прямо говори о потребностях и смотри на повторяющиеся действия.",fl:["Эмоционально простой","Не понимает намёки","Иногда скучноват","Но не устраивает квест"]},
-green:{n:"ЗЕЛЁНЫЙ ФЛАГ",d:["grn","SAFE MODE"],q:"Уважает границы, слышит и умеет извиняться.",desc:"Он не превращает близость в войну за власть.",rec:"Спрашивает, как ты, не наказывает молчанием, уважает «нет».",ph:["«Что тебя задело?»","«Я был неправ, извини»","«Что тебе комфортнее?»"],exp:"Спокойствие, последовательность, уважение.",co:"Береги, но не превращай в спасителя. Продолжай говорить о потребностях и границах.",fl:["Признаёт ошибки","Уважает «нет»","Не давит","Не исчезает"]},
-ctrl:{n:"КОНТРОЛЁР-ИНКВИЗИТОР",d:["red","RED FLAG"],q:"Ревность он называет заботой, запреты — защитой.",desc:"Сначала «я волнуюсь», потом твоя свобода становится угрозой.",rec:"Хочет знать, где ты, с кем ты, требует пароли и отчёты.",ph:["«Удали его из друзей»","«Почему не ответила?»","«Я просто забочусь»"],exp:"Постепенное сужение жизни и изоляция.",co:"Контроль не усиливается от любви. Не отдавай пароли и не сокращай жизнь ради его спокойствия. Если есть страх или угроза — обратись за поддержкой к близким или специалисту.",fl:["Проверяет телефон","Запрещает друзей","Наказывает молчанием","Ревность = забота"]}};
-function beep(f,d,t){try{var c=new(window.AudioContext||window.webkitAudioContext)();var o=c.createOscillator(),g=c.createGain();o.type=t||"square";o.frequency.value=f;g.gain.value=.03;o.connect(g);g.connect(c.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);o.stop(c.currentTime+d);}catch(e){}}
-function render(id){step++;beep(620,.05);var q=Q[id],a=document.getElementById("app");
-var h='<div class="sl" style="left:'+Math.min(90,step/total*100)+'%"></div><div class="t">'+step+"/"+total+'</div><div class="b"><div class="f" style="width:'+(step/total*100)+'%"></div></div><div class="qq">'+q.t+'</div>';
-a.innerHTML=h;
-for(var i=0;i<q.a.length;i++){(function(it){var b=document.createElement("button");b.textContent="▸ "+it[0];b.onclick=function(){beep(820,.06);S[it[1]]++;hist.push(id);if(id==="q12"){finish();}else{render("q"+(order.indexOf(id)+2));}};a.appendChild(b);})(q.a[i]);}
-if(hist.length){var bk=document.createElement("button");bk.className="bk";bk.textContent="◂ НАЗАД";bk.onclick=function(){beep(300,.08);hist.pop();step--;render(order[order.indexOf(id)-1]);};a.appendChild(bk);}}
-function finish(){beep(220,.25,"sawtooth");var red=S.narc+S.covert+S.gas+S.manip+S.ctrl,best="norm",mx=-1,ks=["narc","covert","gas","manip","pickme","chaos","norm","ctrl"];
-for(var i=0;i<ks.length;i++){if(S[ks[i]]>mx){mx=S[ks[i]];best=ks[i];}}
-if(S.green>=6&&red<=3)best="green";
-var r=R[best],isG=best==="green",ti=isG?"🟢 ЗЕЛЁНЫЕ ФЛАГИ":"🔴 КРАСНЫЕ ФЛАГИ";
-var nm={narc:"Нарцисс-Архонт",covert:"Скрытый нарцисс",gas:"Газлайт-Гоблин",manip:"Манипулятор",pickme:"Пикми-Вампир",chaos:"Хаос-Агент",norm:"Нормис",green:"Зелёный флаг",ctrl:"Контролёр"};
-var cl={narc:"red",covert:"red",gas:"red",manip:"red",pickme:"pur",chaos:"yel",norm:"grn",green:"grn",ctrl:"red"};
-var mx2=Math.max(1,S.narc,S.covert,S.gas,S.manip,S.pickme,S.chaos,S.norm,S.green,S.ctrl);
-var h='<div class="k">'+r.n+'</div><div class="d '+r.d[0]+'">'+r.d[1]+'</div><div class="qt">«'+r.q+'»</div>';
-h+='<div class="bl"><b>КТО ОН:</b><br>'+r.desc+'</div><div class="bl"><b>КАК РАСПОЗНАТЬ:</b><br>'+r.rec+'</div><div class="bl red"><b>ФРАЗЫ-МАРКЕРЫ:</b><ul class="rf">';
-for(var i=0;i<r.ph.length;i++)h+='<li>'+r.ph[i]+'</li>';
-h+='</ul></div><div class="bl"><b>ЧЕГО ЖДАТЬ:</b><br>'+r.exp+'</div><div class="bl"><b>КАСТЫ:</b>';
-for(var j=0;j<ks.length;j++){var k=ks[j],pc=Math.round(S[k]/mx2*100);h+='<div class="st '+cl[k]+'"><div class="n"><span>'+nm[k]+'</span><span>'+pc+'%</span></div><div class="tr"><div class="v" style="width:'+pc+'%"></div></div></div>';}
-h+='</div><div class="bl '+(isG?"grn":"red")+'"><b>'+ti+':</b><ul class="'+(isG?"gf":"rf")+'">';
-for(var m=0;m<r.fl.length;m++)h+='<li>'+r.fl[m]+'</li>';
-h+='</ul></div><button class="cp" onclick="cope()">🧭 ЧТО ДЕЛАТЬ ДАЛЬШЕ</button><button class="sh" onclick="share()">☾ ПОДЕЛИТЬСЯ ☾</button><button class="ag" onclick="restart()">☠ НОВЫЙ ЭКЗОРЦИЗМ ☠</button>';
-document.getElementById("app").innerHTML=h;
-window.res="Мой результат: "+r.n+" — "+r.d[1]+". "+r.q;window.ty=best;}
-function cope(){beep(700,.1);var r=R[window.ty||"norm"],h='<div class="k">'+r.n+'</div><div class="bl yel"><b>ГЛАВНОЕ:</b><br>Ты не обязана сразу всё оборвать, чтобы начать заботиться о себе. Но ты имеешь право замечать, как тебе после общения, и менять дистанцию.</div><div class="bl"><b>ЧТО ДЕЛАТЬ:</b><ul><li>Записывай: обещал — сделал, как ты себя чувствовала.</li><li>Смотри на повторяющиеся действия, а не на лучшие моменты.</li><li>Говори о границах коротко: «Мне не подходит такое».</li><li>Не решай ничего в момент вины, страха или надежды.</li><li>Обсуди с подругой, близким или психологом.</li><li>Если есть страх, угрозы, контроль или насилие — безопасность важнее объяснений.</li></ul></div><div class="bl"><b>ДЛЯ «'+r.n+'»:</b><br>'+r.co+'</div><div class="bl yel"><b>НАПОМИНАНИЕ:</b><br>Ты не обязана спасать взрослого человека или терпеть боль ради потенциала.</div><button class="sh" onclick="share()">☾ ПОДЕЛИТЬСЯ ☾</button><button class="ag" onclick="restart()">☠ НОВЫЙ ЭКЗОРЦИЗМ ☠</button>';document.getElementById("app").innerHTML=h;}
-function restart(){beep(180,.2,"sawtooth");step=0;hist=[];for(var k in S)S[k]=0;render("start");}
-function share(){beep(900,.08);var t=window.res||"Готический сканер мужиков",u="https://ytkkzcr5ks-creator.github.io/male/";if(navigator.share)navigator.share({title:"Сканер мужиков",text:t,url:u});else if(navigator.clipboard){navigator.clipboard.writeText(t+" "+u);alert("Скопировано!");}else prompt("Скопируй:",t+" "+u);}
-function portal(){var p=document.getElementById("p");p.style.opacity=1;beep(140,.5,"sawtooth");setTimeout(function(){p.style.opacity=0;},600);}
-function start(){portal();setTimeout(function(){step=0;hist=[];for(var k in S)S[k]=0;render("start");},500);}
-function no(){beep(180,.18,"sawtooth");document.getElementById("iq").innerHTML='<div class="bq">СКАНЕР УВАЖАЕТ РЕШЕНИЕ.<br>НО МУЖИКИ ВСЁ РАВНО ЕСТЬ.</div><button class="y" onclick="start()">ЛАДНО, ДА</button><button class="n" onclick="location.reload()">ЗАКРЫТЬ</button>';}
-function intro(){var L=["> ИНИЦИАЛИЗАЦИЯ СКАНЕРА…","> ПОДКЛЮЧЕНИЕ К МАТРИЦЕ…","> ЗАГРУЗКА «КРАСНОГО ФЛАГА»…","> КАЛИБРОВКА ЧЕРЕПОВ…","> ОБНАРУЖЕНЫ ПИКМИ-ВАМПИРЫ И ГАЗЛАЙТ-ГОБЛИНЫ…","> СКАНЕР ГОТОВ."],h='<div class="bt">';
-for(var i=0;i<L.length;i++)h+='<div class="ln'+(i===4?" red":"")+'" style="animation-delay:'+(i*.5)+'s">'+L[i]+'</div>';
-h+='<div class="b"><div class="f" id="bf" style="width:0"></div></div><div id="iq"></div></div>';
-document.getElementById("app").innerHTML=h;var w=0,t=setInterval(function(){w+=4;beep(500+w*3,.03);document.getElementById("bf").style.width=w+"%";if(w>=100){clearInterval(t);beep(980,.15);document.getElementById("iq").innerHTML='<div class="bq">ВЫ ГОТОВЫ ПРОВЕСТИ ЭКЗОРЦИЗМ?</div><button class="y" onclick="start()">ДА, НАЧНЁМ</button><button class="n" onclick="no()">НЕТ</button>';}},110);}
-var order=["start","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12"];
-intro();
-var c=document.getElementById("m"),x=c.getContext("2d"),cols,dr;
-function rs(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/16);dr=[];for(var i=0;i<cols;i++)dr.push(Math.random()*50);}
-rs();addEventListener("resize",rs);
-var ch="01АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ☠✝⚔";
-setInterval(function(){x.fillStyle="rgba(4,5,6,.09)";x.fillRect(0,0,c.width,c.height);x.font="15px monospace";for(var i=0;i<cols;i++){var y=dr[i]*16;x.fillStyle=Math.random()>.97?"#ff3b5c":"#39ff88";x.fillText(ch[Math.floor(Math.random()*ch.length)],i*16,y);if(y>c.height&&Math.random()>.975)dr[i]=0;dr[i]++;}},45);
-</script></body></html>
+start:{t:"Как обычно выглядит начало вашего общения?",a:[["Он быстро называет меня особенной и рисует общее будущее","pickme"],["Общение спокойное, без громких обещаний","norm"],["Всё спонтанно: мемы, ночные сообщения, внезапные планы","chaos"],["Он много говорит о себе, достижениях и непонятых талантах","narc"],["Он интересуется мной без давления и навязчивости","green"]]},
+q2:{t:"Вы договорились встретиться, но у него меняются планы.",a:[["Он предупреждает заранее и предлагает другое время","green"],["Переносит без объяснений","chaos"],["Говорит, что его обстоятельства важнее","narc"],["Обижается, будто я его в чём-то обвиняю","covert"],["Начинает давить: «Ты не понимаешь, как мне тяжело»","manip"]]},
+q3:{t:"Вы не согласны друг с другом.",a:[["Он предлагает спокойно обсудить","green"],["Он слушает, но потом всё равно поступает по-своему","norm"],["Он вспоминает мои прошлые ошибки","manip"],["Он повышает голос или уходит","ctrl"],["Он говорит, что все предыдущие партнёры его не понимали","covert"]]},
+q4:{t:"Я говорю, что мне было неприятно из-за его слов или поступка.",a:[["Он уточняет, что именно задело, и учитывает это","green"],["Он говорит, что не хотел задеть, и обсуждает ситуацию","norm"],["Он отвечает, что я слишком остро реагирую","gas"],["Он переводит разговор на мои недостатки","manip"],["Он исчезает, а потом возвращается без объяснений","chaos"]]},
+q5:{t:"Я заболела или плохо себя чувствую.",a:[["Он спрашивает, чем помочь, и учитывает моё состояние","green"],["Он желает выздороветь, но особо не включается","norm"],["Он рассказывает, как ему самому было плохо","pickme"],["Он говорит, что я драматизирую","gas"],["Он исчезает, а потом пишет мем","chaos"]]},
+q6:{t:"Я рассказываю, что меня кто-то обидел или расстроил.",a:[["Он слушает и спрашивает, чем поддержать","green"],["Он советует не переживать и переключиться","norm"],["Он сразу начинает рассказывать о своей проблеме","pickme"],["Он спрашивает, точно ли я не спровоцировала","gas"],["Он говорит, что все люди токсичны, кроме него","covert"]]},
+q7:{t:"У меня сложный период на работе или учёбе.",a:[["Он интересуется, как мне помочь или снизить нагрузку","green"],["Он поддерживает словами, но без конкретных действий","norm"],["Он сравнивает с своими трудностями","narc"],["Он обижается, что я уделяю ему меньше внимания","manip"],["Он предлагает бросить всё и уехать","chaos"]]},
+q8:{t:"В начале он очень активно дарит подарки, пишет круглосуточно и называет меня идеальной.",a:[["Это было тепло и не сопровождалось давлением","green"],["Это было приятно, но слишком быстро и интенсивно","pickme"],["Позже он упрекал меня: «Я столько для тебя сделал»","manip"],["Он требовал ответной любви и ревновал","ctrl"],["Он исчез так же внезапно, как появился","chaos"]]},
+q9:{t:"Я говорю, чего хочу от общения: времени, спокойствия или конкретной помощи.",a:[["Он слышит и старается учитывать","green"],["Он слышит, но быстро забывает","norm"],["Он говорит, что я слишком многого хочу","gas"],["Он соглашается, а потом делает по-своему","manip"],["Он говорит, что таким его не изменить","chaos"]]},
+q10:{t:"Он узнаёт, что я общаюсь с другим человеком.",a:[["Он спокойно уточняет контекст","green"],["Он требует прекратить общение","ctrl"],["Он начинает флиртовать с другими назло","manip"],["Он проверяет мой телефон или требует отчёты","ctrl"],["Он говорит, что ему всё равно","chaos"]]},
+q11:{t:"Я говорю «нет»
