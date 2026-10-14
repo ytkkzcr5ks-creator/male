@@ -4,34 +4,58 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ГОТИЧЕСКИЙ СКАНЕР МУЖИКОВ v6.66</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-body{margin:0;background:#050607;color:#d8ffe9;font-family:monospace;padding:20px}
-h1{color:#39ff88;text-align:center;font-size:24px;text-shadow:0 0 12px #39ff88}
-h2{color:#eafff3;font-size:19px;line-height:1.4}
-.sub{text-align:center;color:#8fd9b2;font-size:12px;letter-spacing:2px}
-.card{max-width:640px;margin:18px auto;border:1px solid #39ff88;padding:22px;background:#030a06;box-shadow:0 0 25px rgba(57,255,136,.15)}
-.scan{color:#39ff88;font-size:11px;letter-spacing:2px;margin-bottom:12px}
-button{display:block;width:100%;margin:9px 0;padding:13px;background:#06170e;color:#d8ffe9;border:1px solid #39ff88;font-family:monospace;font-size:14px;text-align:left;cursor:pointer}
-button:hover{background:#0d2b1a}
-.share{background:#031108;border-color:#39ff88;text-align:center;color:#39ff88}
-.bar{height:6px;background:#08150e;border:1px solid #39ff88;margin:12px 0 18px}
-.fill{height:100%;background:#39ff88}
-.klass{color:#39ff88;font-size:26px;font-weight:bold;margin:6px 0}
-.danger{display:inline-block;border:1px solid currentColor;padding:5px 10px;font-size:11px;letter-spacing:2px;margin:8px 0}
-.red{color:#ff3b5c}.yellow{color:#ffd166}.safe{color:#39ff88}.purple{color:#b388ff}
-.quote{border-left:3px solid #39ff88;padding:8px 12px;margin:14px 0;color:#bdf5d4;font-style:italic}
-.block{border:1px dashed rgba(57,255,136,.4);padding:12px;margin:12px 0;font-size:13px;line-height:1.5}
-.block b{color:#39ff88}
-ul{margin:8px 0 0 18px;padding:0}
+:root{--g:#39ff88;--r:#ff3b5c;--p:#b388ff;--y:#ffd166}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#040506;color:#d8ffe9;font-family:'Share Tech Mono',monospace;min-height:100vh;overflow-x:hidden}
+#matrix{position:fixed;inset:0;z-index:0;opacity:.25}
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 40%,transparent 40%,rgba(0,0,0,.85) 100%)}
+#portal{position:fixed;inset:0;z-index:50;background:radial-gradient(circle,rgba(57,255,136,.55),rgba(0,0,0,.95) 70%);opacity:0;pointer-events:none;transition:opacity .5s}
+.wrap{position:relative;z-index:2;max-width:680px;margin:0 auto;padding:30px 16px 60px}
+h1{font-family:'Cinzel',serif;font-weight:800;text-align:center;color:var(--g);text-shadow:0 0 18px rgba(57,255,136,.6);font-size:clamp(22px,5.5vw,38px)}
+h1 .skull{color:var(--r);text-shadow:0 0 14px rgba(255,59,92,.7)}
+.sub{text-align:center;color:#8fd9b2;font-size:11px;letter-spacing:.22em;margin:10px 0 22px}
+.card{border:1px solid rgba(57,255,136,.4);background:rgba(2,8,5,.9);padding:24px;position:relative;box-shadow:0 0 35px rgba(57,255,136,.12),inset 0 0 45px rgba(0,0,0,.75)}
+.card:before,.card:after{content:"☠";position:absolute;font-size:18px;color:var(--r);text-shadow:0 0 10px rgba(255,59,92,.8)}
+.card:before{top:-12px;left:12px}
+.card:after{top:-12px;right:12px}
+.scan{color:var(--g);font-size:11px;letter-spacing:.2em;margin-bottom:12px;text-transform:uppercase}
+.bar{height:7px;background:#07130c;border:1px solid rgba(57,255,136,.35);margin:12px 0 20px}
+.fill{height:100%;background:linear-gradient(90deg,#0f8a4d,var(--g));box-shadow:0 0 12px var(--g);transition:.4s}
+.q{font-family:'Cinzel',serif;font-size:clamp(17px,4vw,24px);color:#eafff3;margin-bottom:18px;line-height:1.4}
+button{display:block;width:100%;margin:10px 0;padding:13px 15px;background:rgba(57,255,136,.05);border:1px solid rgba(57,255,136,.3);color:#d8ffe9;font-family:'Share Tech Mono',monospace;font-size:14px;text-align:left;cursor:pointer;transition:.18s}
+button:hover{background:rgba(57,255,136,.15);border-color:var(--g);transform:translateX(4px)}
+.share{background:rgba(179,136,255,.08);border-color:var(--p);color:var(--p);text-align:center}
+.again{background:rgba(255,59,92,.08);border:1px solid var(--r);color:var(--r);text-align:center}
+.again:hover{background:rgba(255,59,92,.18);box-shadow:0 0 18px rgba(255,59,92,.35)}
+.klass{font-family:'Cinzel',serif;font-size:clamp(24px,6vw,36px);color:var(--g);text-shadow:0 0 20px rgba(57,255,136,.55);margin:8px 0}
+.danger{display:inline-block;border:1px solid currentColor;padding:5px 11px;font-size:11px;letter-spacing:.2em;margin:8px 0}
+.red{color:var(--r)}.yellow{color:var(--y)}.safe{color:var(--g)}.purple{color:var(--p)}
+.quote{border-left:3px solid var(--r);padding:9px 13px;margin:15px 0;color:#ffd7de;font-style:italic}
+.block{border:1px dashed rgba(57,255,136,.35);padding:12px;margin:12px 0;font-size:13px;line-height:1.55;background:rgba(0,0,0,.35)}
+.block b{color:var(--g)}
+ul{margin:8px 0 0 18px}
 li{margin:4px 0}
-.small{font-size:11px;color:#5d8f75;text-align:center;margin-top:18px;line-height:1.5}
+li:before{content:"☠ ";color:var(--r)}
+.small{font-size:10px;color:#5d8f75;text-align:center;margin-top:18px;line-height:1.6}
+.boot{min-height:240px;display:flex;flex-direction:column;justify-content:center}
+.bootline{color:var(--g);font-size:13px;margin:5px 0;opacity:0;animation:appear .35s forwards}
+.bootline.red{color:var(--r)}
+@keyframes appear{to{opacity:1}}
+.bigq{font-family:'Cinzel',serif;font-size:clamp(20px,5vw,30px);color:#eafff3;text-align:center;margin:22px 0 18px;text-shadow:0 0 16px rgba(57,255,136,.4)}
+.yes{background:rgba(57,255,136,.1);border-color:var(--g);color:var(--g);text-align:center}
+.no{background:rgba(255,59,92,.08);border-color:var(--r);color:var(--r);text-align:center}
 </style>
 </head>
 <body>
-<h1>ГОТИЧЕСКИЙ СКАНЕР МУЖИКОВ v6.66</h1>
-<div class="sub">ОПЕРАЦИЯ «КРАСНЫЙ ФЛАГ» • САТИРА, НЕ ДИАГНОЗ</div>
+<canvas id="matrix"></canvas><div class="vignette"></div><div id="portal"></div>
+<div class="wrap">
+<h1><span class="skull">☠</span> ГОТИЧЕСКИЙ СКАНЕР МУЖИКОВ v6.66 <span class="skull">☠</span></h1>
+<div class="sub">ОПЕРАЦИЯ «КРАСНЫЙ ФЛАГ» • ЦИФРОВАЯ ИНКВИЗИЦИЯ • САТИРА, НЕ ДИАГНОЗ</div>
 <div class="card" id="app"></div>
 <div class="small">Тест — сатира и развлечение. Он не ставит психиатрические диагнозы.<br>«Нарцисс», «манипулятор» и другие названия — игровые архетипы.</div>
+</div>
 <script>
 var S={narc:0,covert:0,gas:0,manip:0,pickme:0,chaos:0,norm:0,green:0,ctrl:0};
 var Q={
@@ -159,52 +183,117 @@ desc:"Сначала это выглядит как сильная любовь:
 how:"Контроль не усиливается от любви. Не оправдывай изоляцию, не отдавай пароли и не сокращай жизнь ради его спокойствия.",
 flags:["Проверяет телефон и переписки","Запрещает друзей","Наказывает молчанием","Любовь = разрешение только на него"]}};
 var step=0,total=10;
+function beep(freq,dur,type){
+try{
+var ctx=new (window.AudioContext||window.webkitAudioContext)();
+var o=ctx.createOscillator(),g=ctx.createGain();
+o.type=type||"square";o.frequency.value=freq||700;
+g.gain.value=.03;o.connect(g);g.connect(ctx.destination);
+o.start();g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+(dur||.06));
+o.stop(ctx.currentTime+(dur||.06));
+}catch(e){}
+}
 function render(id){
-step++;
+step++;beep(620,.05);
 var q=Q[id];
 var h='<div class="scan">'+q.s+'</div><div class="bar"><div class="fill" style="width:'+Math.round(step/total*100)+'%"></div></div>';
-h+='<h2>'+q.t+'</h2>';
+h+='<div class="q">'+q.t+'</div>';
 for(var i=0;i<q.a.length;i++){
 h+='<button onclick="pick(\''+q.a[i][1]+'\',\''+q.a[i][2]+'\')">▸ '+q.a[i][0]+'</button>';
 }
 document.getElementById("app").innerHTML=h;
 }
 function pick(type,next){
+beep(820,.06);
 S[type]++;
 if(next==="end"){finish();}else{render(next);}
 }
 function finish(){
+beep(220,.25,"sawtooth");
 var best="norm";
 for(var k in S){if(S[k]>S[best]){best=k;}}
 var r=R[best];
-var dangerText=r.d[1];
+var flagTitle=(best==="green")?"ЗЕЛЁНЫЕ ФЛАГИ":"КРАСНЫЕ ФЛАГИ";
 var h='<div class="scan">АНАЛИЗ ЗАВЕРШЁН. СУЩНОСТЬ ИДЕНТИФИЦИРОВАНА.</div>';
-h+='<div class="klass">'+r.n+'</div>';
-h+='<div class="danger '+r.d[0]+'">'+dangerText+'</div>';
+h+='<div class="klass">☠ '+r.n+' ☠</div>';
+h+='<div class="danger '+r.d[0]+'">'+r.d[1]+'</div>';
 h+='<div class="quote">«'+r.q+'»</div>';
 h+='<div class="block"><b>КТО ОН:</b><br>'+r.desc+'</div>';
 h+='<div class="block"><b>КАК С НИМ ВЗАИМОДЕЙСТВОВАТЬ:</b><br>'+r.how+'</div>';
-h+='<div class="block"><b>КРАСНЫЕ ФЛАГИ:</b><ul>';
+h+='<div class="block"><b>'+flagTitle+':</b><ul>';
 for(var i=0;i<r.flags.length;i++){h+='<li>'+r.flags[i]+'</li>';}
 h+='</ul></div>';
-h+='<button class="share" onclick="share()">ПОДЕЛИТЬСЯ ВЕРДИКТОМ</button>';
-h+='<button onclick="location.reload()">ПРОВЕСТИ НОВЫЙ ЭКЗОРЦИЗМ</button>';
+h+='<button class="share" onclick="share()">☾ ПОДЕЛИТЬСЯ ВЕРДИКТОМ ☾</button>';
+h+='<button class="again" onclick="location.reload()">☠ ПРОВЕСТИ НОВЫЙ ЭКЗОРЦИЗМ ☠</button>';
 document.getElementById("app").innerHTML=h;
-window.lastResult="Мой результат в «Готическом сканере мужиков»: "+r.n+" — "+dangerText+". "+r.q;
+window.lastResult="Мой результат в «Готическом сканере мужиков»: "+r.n+" — "+r.d[1]+". "+r.q;
 }
 function share(){
+beep(900,.08);
 var text=window.lastResult||"Я прошла «Готический сканер мужиков»!";
 var url="https://ytkkzcr5ks-creator.github.io/male/";
-if(navigator.share){
-navigator.share({title:"Готический сканер мужиков",text:text,url:url});
-}else if(navigator.clipboard){
-navigator.clipboard.writeText(text+" "+url);
-alert("Результат скопирован!");
-}else{
-prompt("Скопируй результат:",text+" "+url);
+if(navigator.share){navigator.share({title:"Готический сканер мужиков",text:text,url:url});}
+else if(navigator.clipboard){navigator.clipboard.writeText(text+" "+url);alert("Результат скопирован!");}
+else{prompt("Скопируй результат:",text+" "+url);}
 }
+function portal(){
+var p=document.getElementById("portal");
+p.style.opacity="1";beep(140,.5,"sawtooth");
+setTimeout(function(){p.style.opacity="0";},650);
 }
+function startQuiz(){
+portal();
+setTimeout(function(){
+step=0;
+for(var k in S){S[k]=0;}
 render("start");
+},500);
+}
+function refuse(){
+beep(180,.18,"sawtooth");
+document.getElementById("introq").innerHTML='<div class="bigq">СКАНЕР УВАЖАЕТ ТВОЁ РЕШЕНИЕ.<br>НО МУЖИКИ ВСЁ РАВНО СУЩЕСТВУЮТ.</div><button class="yes" onclick="startQuiz()">ЛАДНО, ВСЁ ТАКИ ДА</button><button class="no" onclick="location.reload()">ЗАКРЫТЬ ПОРТАЛ</button>';
+}
+function intro(){
+var lines=[
+"> ИНИЦИАЛИЗАЦИЯ СКАНЕРА МУЖИКОВ v6.66…",
+"> ПОДКЛЮЧЕНИЕ К ДЕМОНИЧЕСКОЙ МАТРИЦЕ…",
+"> ЗАГРУЗКА ПРОТОКОЛА «КРАСНЫЙ ФЛАГ»…",
+"> КАЛИБРОВКА ЧЕРЕПОВ И КРАСНЫХ ФЛАГОВ…",
+"> ОБНАРУЖЕНЫ ПИКМИ-ВАМПИРЫ, ГАЗЛАЙТ-ГОБЛИНЫ И ХАОС-АГЕНТЫ…",
+"> СКАНЕР ГОТОВ."
+];
+var h='<div class="boot">';
+for(var i=0;i<lines.length;i++){
+h+='<div class="bootline'+(i===4?' red':'')+'" style="animation-delay:'+(i*.55)+'s">'+lines[i]+'</div>';
+}
+h+='<div class="bar"><div class="fill" id="bootfill" style="width:0%"></div></div><div id="introq"></div></div>';
+document.getElementById("app").innerHTML=h;
+var w=0;
+var t=setInterval(function(){
+w+=4;beep(520+w*3,.03);
+document.getElementById("bootfill").style.width=w+"%";
+if(w>=100){
+clearInterval(t);
+beep(980,.15);
+document.getElementById("introq").innerHTML='<div class="bigq">ВЫ ГОТОВЫ ПРОВЕСТИ ЭКЗОРЦИЗМ?</div><button class="yes" onclick="startQuiz()">ДА, НАЧНЁМ РИТУАЛ</button><button class="no" onclick="refuse()">НЕТ, Я ЕЩЁ НЕ ГОТОВА</button>';
+}
+},110);
+}
+intro();
+var c=document.getElementById("matrix"),x=c.getContext("2d"),cols,drops;
+function resize(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/16);drops=[];for(var i=0;i<cols;i++)drops.push(Math.random()*50);}
+resize();addEventListener("resize",resize);
+var chars="01АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ☠✝⚔";
+setInterval(function(){
+x.fillStyle="rgba(4,5,6,.09)";x.fillRect(0,0,c.width,c.height);
+x.font="15px monospace";
+for(var i=0;i<cols;i++){
+var y=drops[i]*16;
+x.fillStyle=Math.random()>.97?"#ff3b5c":"#39ff88";
+x.fillText(chars[Math.floor(Math.random()*chars.length)],i*16,y);
+if(y>c.height&&Math.random()>.975)drops[i]=0;drops[i]++;
+}
+},45);
 </script>
 </body>
 </html>
