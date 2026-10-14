@@ -13,13 +13,9 @@ body{background:#040506;color:#d8ffe9;font-family:'Share Tech Mono',monospace;mi
 .vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 40%,transparent 40%,rgba(0,0,0,.85) 100%)}
 #portal{position:fixed;inset:0;z-index:50;background:radial-gradient(circle,rgba(57,255,136,.55),rgba(0,0,0,.95) 70%);opacity:0;pointer-events:none;transition:opacity .5s}
 .wrap{position:relative;z-index:2;max-width:680px;margin:0 auto;padding:30px 16px 60px}
-h1{font-family:'Cinzel',serif;font-weight:800;text-align:center;color:var(--g);text-shadow:0 0 18px rgba(57,255,136,.6);font-size:clamp(22px,5.5vw,38px)}
-h1 .skull{color:var(--r);text-shadow:0 0 14px rgba(255,59,92,.7)}
+h1{font-family:'Cinzel',serif;font-weight:800;text-align:center;color:var(--g);text-shadow:0 0 18px rgba(57,255,136,.6);font-size:clamp(22px,5.5vw,36px)}
 .sub{text-align:center;color:#8fd9b2;font-size:11px;letter-spacing:.22em;margin:10px 0 22px}
-.card{border:1px solid rgba(57,255,136,.4);background:rgba(2,8,5,.9);padding:24px;position:relative;box-shadow:0 0 35px rgba(57,255,136,.12),inset 0 0 45px rgba(0,0,0,.75)}
-.card:before,.card:after{content:"☠";position:absolute;font-size:18px;color:var(--r);text-shadow:0 0 10px rgba(255,59,92,.8)}
-.card:before{top:-12px;left:12px}
-.card:after{top:-12px;right:12px}
+.card{border:1px solid rgba(57,255,136,.4);background:rgba(2,8,5,.92);padding:24px;position:relative;box-shadow:0 0 35px rgba(57,255,136,.12),inset 0 0 45px rgba(0,0,0,.75)}
 .scan{color:var(--g);font-size:11px;letter-spacing:.2em;margin-bottom:12px;text-transform:uppercase}
 .bar{height:7px;background:#07130c;border:1px solid rgba(57,255,136,.35);margin:12px 0 20px}
 .fill{height:100%;background:linear-gradient(90deg,#0f8a4d,var(--g));box-shadow:0 0 12px var(--g);transition:.4s}
@@ -27,17 +23,25 @@ h1 .skull{color:var(--r);text-shadow:0 0 14px rgba(255,59,92,.7)}
 button{display:block;width:100%;margin:10px 0;padding:13px 15px;background:rgba(57,255,136,.05);border:1px solid rgba(57,255,136,.3);color:#d8ffe9;font-family:'Share Tech Mono',monospace;font-size:14px;text-align:left;cursor:pointer;transition:.18s}
 button:hover{background:rgba(57,255,136,.15);border-color:var(--g);transform:translateX(4px)}
 .share{background:rgba(179,136,255,.08);border-color:var(--p);color:var(--p);text-align:center}
-.again{background:rgba(255,59,92,.08);border:1px solid var(--r);color:var(--r);text-align:center}
-.again:hover{background:rgba(255,59,92,.18);box-shadow:0 0 18px rgba(255,59,92,.35)}
-.klass{font-family:'Cinzel',serif;font-size:clamp(24px,6vw,36px);color:var(--g);text-shadow:0 0 20px rgba(57,255,136,.55);margin:8px 0}
+.again{background:rgba(255,59,92,.1);border:2px solid var(--r);color:var(--r);text-align:center;font-weight:bold}
+.again:hover{background:rgba(255,59,92,.22);box-shadow:0 0 22px rgba(255,59,92,.45)}
+.klass{font-family:'Cinzel',serif;font-size:clamp(24px,6vw,34px);color:var(--g);text-shadow:0 0 20px rgba(57,255,136,.55);margin:8px 0}
 .danger{display:inline-block;border:1px solid currentColor;padding:5px 11px;font-size:11px;letter-spacing:.2em;margin:8px 0}
 .red{color:var(--r)}.yellow{color:var(--y)}.safe{color:var(--g)}.purple{color:var(--p)}
 .quote{border-left:3px solid var(--r);padding:9px 13px;margin:15px 0;color:#ffd7de;font-style:italic}
 .block{border:1px dashed rgba(57,255,136,.35);padding:12px;margin:12px 0;font-size:13px;line-height:1.55;background:rgba(0,0,0,.35)}
 .block b{color:var(--g)}
+.stat{margin:6px 0}
+.stat .name{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}
+.stat .track{height:6px;background:#07130c;border:1px solid rgba(57,255,136,.25)}
+.stat .val{height:100%;background:var(--g)}
+.stat.red .val{background:var(--r)}
+.stat.purple .val{background:var(--p)}
+.stat.yellow .val{background:var(--y)}
 ul{margin:8px 0 0 18px}
 li{margin:4px 0}
 li:before{content:"☠ ";color:var(--r)}
+.greenflags li:before{content:"✔ ";color:var(--g)}
 .small{font-size:10px;color:#5d8f75;text-align:center;margin-top:18px;line-height:1.6}
 .boot{min-height:240px;display:flex;flex-direction:column;justify-content:center}
 .bootline{color:var(--g);font-size:13px;margin:5px 0;opacity:0;animation:appear .35s forwards}
@@ -51,7 +55,7 @@ li:before{content:"☠ ";color:var(--r)}
 <body>
 <canvas id="matrix"></canvas><div class="vignette"></div><div id="portal"></div>
 <div class="wrap">
-<h1><span class="skull">☠</span> ГОТИЧЕСКИЙ СКАНЕР МУЖИКОВ v6.66 <span class="skull">☠</span></h1>
+<h1>ГОТИЧЕСКИЙ СКАНЕР МУЖИКОВ v6.66</h1>
 <div class="sub">ОПЕРАЦИЯ «КРАСНЫЙ ФЛАГ» • ЦИФРОВАЯ ИНКВИЗИЦИЯ • САТИРА, НЕ ДИАГНОЗ</div>
 <div class="card" id="app"></div>
 <div class="small">Тест — сатира и развлечение. Он не ставит психиатрические диагнозы.<br>«Нарцисс», «манипулятор» и другие названия — игровые архетипы.</div>
@@ -147,86 +151,100 @@ q10:{s:"ФИНАЛЬНЫЙ СКАН ЗАВЕРШЁН.",t:"Ты говоришь:
 };
 var R={
 narc:{n:"НАРЦИСС-АРХОНТ",d:["red","RED FLAG / FINAL BOSS"],q:"Он не разговаривает — он проводит пресс-конференцию о собственной величии.",
-desc:"Мир делится на него, его достижения и зрителей. Твои чувства часто становятся «слишком сложными», а его ошибки — «непонятыми». Он может быть обаятельным, но обаяние работает в одну сторону: на восхищение ему, а не на уважение к тебе.",
-how:"Не спорь с его легендой и не пытайся заслужить уважение идеальным поведением. Фиксируй факты, держи границы и смотри на поступки, а не на красивые монологи.",
-flags:["Обесценивает твои чувства","Не умеет искренне извиняться","Переводит любой разговор на себя","Считает критику нападением"]},
+desc:"Мир делится на него, его достижения и зрителей. Твои чувства часто становятся «слишком сложными», а его ошибки — «непонятыми».",
+how:"Не спорь с его легендой. Фиксируй факты, держи границы и смотри на поступки, а не на монологи.",
+flags:["Обесценивает твои чувства","Не умеет искренне извиняться","Переводит разговор на себя","Считает критику нападением"]},
 covert:{n:"СКРЫТЫЙ НАРЦИСС",d:["red","RED FLAG / ВЕЧНАЯ ЖЕРТВА"],q:"Виноваты все: бывшие, начальник, погода, карма и ты.",
-desc:"Он не хвастается прямо — он страдает так красиво, что вокруг появляется ощущение: «его надо спасать». Но после каждой его драмы виноватой почему-то остаёшься ты.",
-how:"Сочувствие — это не обязанность спасать. Не бери на себя роль терапевта, мамы и ангела-хранителя одновременно. Если после разговора ты всегда виновата — это не любовь.",
-flags:["Постоянная позиция жертвы","Пассивная агрессия и обиды","Твои границы называют предательством","Никогда не признаёт свой вклад в конфликт"]},
+desc:"Он страдает так красиво, что кажется: его надо спасать. Но после каждой драмы виноватой остаёшься ты.",
+how:"Сочувствие — не обязанность спасать. Не становись его терапевтом, мамой и ангелом-хранителем.",
+flags:["Позиция вечной жертвы","Пассивная агрессия","Границы называет предательством","Не признаёт свой вклад в конфликт"]},
 gas:{n:"ГАЗЛАЙТ-ГОБЛИН",d:["red","RED FLAG / РЕАЛЬНОСТЬ ПОВРЕЖДЕНА"],q:"Ты не помнишь разговор? Значит, его не было. Так решил он.",
-desc:"Он не просто спорит — он переписывает реальность. Сначала ты сомневаешься в его словах, потом в своей памяти, а потом уже извиняешься за то, что вообще что-то заметила.",
-how:"Не устраивай бесконечные дебаты о том, «было или не было». Записывай важное, обсуждай конкретные поступки и не оставайся одна наедине с формулой «ты всё придумала».",
+desc:"Он переписывает реальность, пока ты не начнёшь сомневаться в своей памяти.",
+how:"Не спорь о том, «было или не было». Обсуждай конкретные поступки и фиксируй важное.",
 flags:["Отрицает очевидное","Говорит «ты слишком чувствительная»","Перекладывает вину","После ссоры ты сомневаешься в себе"]},
-manip:{n:"МАНИПУЛЯТОР-ЗЕРКАЛЬЩИК",d:["red","RED FLAG / ИГРА НАЧАЛАСЬ"],q:"Он спорит так убедительно, что ты уже извиняешься за то, что он тебе сделал.",
-desc:"Он умеет превращать любой конфликт в твои недостатки. Ревность называется заботой, обесценивание — честностью, а давление — «я просто переживаю за нас».",
-how:"Смотри не на слова, а на систему действий. Здоровый человек после разговора меняет поведение; манипулятор меняет формулировки.",
-flags:["Двойные стандарты","Играет на чувстве вины","Наказывает холодом или молчанием","После ссоры ты всегда виновата"]},
-pickme:{n:"ПИКМИ-ВАМПИР",d:["purple","HIGH DRAMA / ЭМОЦИОНАЛЬНЫЙ ПАРАЗИТ"],q:"Влюбляется быстро, исчезает красиво, возвращается с цитатой.",
-desc:"Он не влюбляется в тебя — он влюбляется в внимание, в драму и в надежду, что ты станешь его личным спасателем. Сначала ты «единственная», потом «слишком сложная», потом снова «единственная».",
-how:"Не спасай и не доказывай, что ты особенная. Взрослый человек способен пережить паузу в ответах без эмоционального шантажа.",
-flags:["Слишком быстрая идеализация","Горячо-холодное поведение","Драматичные исчезновения","Любовь через давление и жалость"]},
-chaos:{n:"ХАОС-АГЕНТ",d:["yellow","MID CRINGE / ПЛАН ОТСУТСТВУЕТ"],q:"План на завтра отсутствует. План на жизнь — тоже. Зато вайб есть.",
-desc:"Он не обязательно токсичный — он просто живёт в режиме «разберёмся на месте». Это может быть весело на неделю и выматывающе на год, особенно если тебе важны договорённости.",
-how:"Если тебе нужны стабильность, ответы на сообщения и планы — не пытайся переделать хаос в надёжность. Он не рейдовый босс, который «дропнет» обязательность.",
-flags:["Срывы договорённостей","Отсутствие планов","«Как-нибудь само наладится»","Эмоциональные качели без объяснений"]},
-norm:{n:"НОРМИС",d:["safe","SAFE MODE / БЕЗ МАГИИ"],q:"Ничего экстраординарного. К сожалению, это теперь почти редкая порода.",
-desc:"Он не идеален и не главный герой сериала, но способен на нормальный диалог, извинения и выполнение базовых договорённостей. Иногда это скучно. Иногда это именно то, что нужно.",
-how:"Не ищи в нём тайный лор и не проверяй на «настоящую любовь». Смотри, повторяются ли уважение, честность и действия после слов.",
-flags:["Может быть эмоционально простым","Не всегда понимает намёки","Иногда скучноват","Но не устраивает психологический квест"]},
-green:{n:"ЗЕЛЁНЫЙ ФЛАГ",d:["safe","SAFE MODE / ПОДОЗРИТЕЛЬНО СТАБИЛЕН"],q:"Уважает границы, слышит слова и умеет извиняться. Подозрительно стабилен.",
-desc:"Он не превращает близость в войну за власть. Может сказать «я был неправ», услышать «мне неприятно» и не превратить это в спектакль о своей боли.",
-how:"Береги, но не превращай в спасителя. Здоровые отношения — это всё равно выбор и участие двух людей, а не награда за терпение.",
+manip:{n:"МАНИПУЛЯТОР-ЗЕРКАЛЬЩИК",d:["red","RED FLAG / ИГРА НАЧАЛАСЬ"],q:"Он спорит так, что ты извиняешься за то, что он тебе сделал.",
+desc:"Любой конфликт превращается в разговор о твоих недостатках.",
+how:"Смотри на действия, а не на формулировки. Здоровый человек меняет поведение, а не объяснения.",
+flags:["Двойные стандарты","Игра на вине","Наказывает молчанием","Ты всегда виновата"]},
+pickme:{n:"ПИКМИ-ВАМПИР",d:["purple","HIGH DRAMA"],q:"Влюбляется быстро, исчезает красиво, возвращается с цитатой.",
+desc:"Он влюбляется в внимание и драму, а не в реального человека.",
+how:"Не спасай и не доказывай, что ты особенная.",
+flags:["Быстрая идеализация","Горячо-холодные качели","Драматичные исчезновения","Любовь через давление"]},
+chaos:{n:"ХАОС-АГЕНТ",d:["yellow","MID CRINGE"],q:"План на завтра отсутствует. План на жизнь — тоже. Зато вайб есть.",
+desc:"Живёт в режиме «разберёмся на месте». Весело на неделю, выматывающе на год.",
+how:"Если нужны стабильность и планы — не пытайся переделать хаос в надёжность.",
+flags:["Срывает договорённости","Нет планов","«Само наладится»","Эмоциональные качели"]},
+norm:{n:"НОРМИС",d:["safe","SAFE MODE"],q:"Ничего экстраординарного. К сожалению, это теперь редкость.",
+desc:"Не идеален, но способен на диалог, извинения и договорённости.",
+how:"Смотри, повторяются ли уважение, честность и действия после слов.",
+flags:["Эмоционально простой","Не всегда понимает намёки","Иногда скучноват","Но не устраивает психологический квест"]},
+green:{n:"ЗЕЛЁНЫЙ ФЛАГ",d:["safe","SAFE MODE"],q:"Уважает границы, слышит слова и умеет извиняться.",
+desc:"Он не превращает близость в войну за власть.",
+how:"Береги, но не превращай в спасителя.",
 flags:["Умеет признавать ошибки","Уважает «нет»","Не давит и не исчезает","Но не обязан быть идеальным"]},
-ctrl:{n:"КОНТРОЛЁР-ИНКВИЗИТОР",d:["red","RED FLAG / ДОСТУП ОГРАНИЧЕН"],q:"Ревность он называет заботой, запреты — защитой, а твой телефон — зоной особого интереса.",
-desc:"Сначала это выглядит как сильная любовь: «я волнуюсь», «мне не нравится этот парень», «почему ты не ответила за 4 минуты». Потом оказывается, что свобода стала угрозой, а твои границы — проблемой.",
-how:"Контроль не усиливается от любви. Не оправдывай изоляцию, не отдавай пароли и не сокращай жизнь ради его спокойствия.",
-flags:["Проверяет телефон и переписки","Запрещает друзей","Наказывает молчанием","Любовь = разрешение только на него"]}};
+ctrl:{n:"КОНТРОЛЁР-ИНКВИЗИТОР",d:["red","RED FLAG"],q:"Ревность он называет заботой, запреты — защитой.",
+desc:"Сначала это «я волнуюсь», потом твоя свобода становится угрозой.",
+how:"Контроль не усиливается от любви. Не отдавай границы ради его спокойствия.",
+flags:["Проверяет телефон","Запрещает друзей","Наказывает молчанием","Любовь = разрешение только на него"]}};
 var step=0,total=10;
-function beep(freq,dur,type){
-try{
-var ctx=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d,t){
+try{var ctx=new (window.AudioContext||window.webkitAudioContext)();
 var o=ctx.createOscillator(),g=ctx.createGain();
-o.type=type||"square";o.frequency.value=freq||700;
-g.gain.value=.03;o.connect(g);g.connect(ctx.destination);
-o.start();g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+(dur||.06));
-o.stop(ctx.currentTime+(dur||.06));
-}catch(e){}
+o.type=t||"square";o.frequency.value=f||700;g.gain.value=.03;
+o.connect(g);g.connect(ctx.destination);o.start();
+g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+(d||.06));
+o.stop(ctx.currentTime+(d||.06));}catch(e){}
 }
 function render(id){
 step++;beep(620,.05);
 var q=Q[id];
-var h='<div class="scan">'+q.s+'</div><div class="bar"><div class="fill" style="width:'+Math.round(step/total*100)+'%"></div></div>';
-h+='<div class="q">'+q.t+'</div>';
-for(var i=0;i<q.a.length;i++){
-h+='<button onclick="pick(\''+q.a[i][1]+'\',\''+q.a[i][2]+'\')">▸ '+q.a[i][0]+'</button>';
-}
+var h='<div class="scan">'+q.s+'</div><div class="bar"><div class="fill" style="width:'+Math.round(step/total*100)+'%"></div></div><div class="q">'+q.t+'</div>';
+for(var i=0;i<q.a.length;i++){h+='<button onclick="pick(\''+q.a[i][1]+'\',\''+q.a[i][2]+'\')">▸ '+q.a[i][0]+'</button>';}
 document.getElementById("app").innerHTML=h;
 }
 function pick(type,next){
-beep(820,.06);
-S[type]++;
+beep(820,.06);S[type]++;
 if(next==="end"){finish();}else{render(next);}
 }
 function finish(){
 beep(220,.25,"sawtooth");
+var redScore=S.narc+S.covert+S.gas+S.manip+S.ctrl;
 var best="norm";
-for(var k in S){if(S[k]>S[best]){best=k;}}
+var maxBad=-1;
+var keys=["narc","covert","gas","manip","pickme","chaos","norm","ctrl"];
+for(var i=0;i<keys.length;i++){var k=keys[i];if(S[k]>maxBad){maxBad=S[k];best=k;}}
+if(S.green>=4&&redScore<=2){best="green";}
 var r=R[best];
-var flagTitle=(best==="green")?"ЗЕЛЁНЫЕ ФЛАГИ":"КРАСНЫЕ ФЛАГИ";
+var isGreen=(best==="green");
+var flagTitle=isGreen?"ЗЕЛЁНЫЕ ФЛАГИ":"КРАСНЫЕ ФЛАГИ";
+var names={narc:"Нарцисс-Архонт",covert:"Скрытый нарцисс",gas:"Газлайт-Гоблин",manip:"Манипулятор",pickme:"Пикми-Вампир",chaos:"Хаос-Агент",norm:"Нормис",green:"Зелёный флаг",ctrl:"Контролёр"};
+var classes={narc:"red",covert:"red",gas:"red",manip:"red",pickme:"purple",chaos:"yellow",norm:"safe",green:"safe",ctrl:"red"};
+var maxScore=Math.max(1,S.narc,S.covert,S.gas,S.manip,S.pickme,S.chaos,S.norm,S.green,S.ctrl);
 var h='<div class="scan">АНАЛИЗ ЗАВЕРШЁН. СУЩНОСТЬ ИДЕНТИФИЦИРОВАНА.</div>';
-h+='<div class="klass">☠ '+r.n+' ☠</div>';
+h+='<div class="klass">'+r.n+'</div>';
 h+='<div class="danger '+r.d[0]+'">'+r.d[1]+'</div>';
 h+='<div class="quote">«'+r.q+'»</div>';
 h+='<div class="block"><b>КТО ОН:</b><br>'+r.desc+'</div>';
 h+='<div class="block"><b>КАК С НИМ ВЗАИМОДЕЙСТВОВАТЬ:</b><br>'+r.how+'</div>';
-h+='<div class="block"><b>'+flagTitle+':</b><ul>';
-for(var i=0;i<r.flags.length;i++){h+='<li>'+r.flags[i]+'</li>';}
+h+='<div class="block"><b>ПРОФИЛЬ СОВМЕСТИМОСТИ С КАСТАМИ:</b>';
+for(var j=0;j<keys.length;j++){
+var k2=keys[j];var pct=Math.round(S[k2]/maxScore*100);
+h+='<div class="stat '+classes[k2]+'"><div class="name"><span>'+names[k2]+'</span><span>'+pct+'%</span></div><div class="track"><div class="val" style="width:'+pct+'%"></div></div></div>';
+}
+h+='</div>';
+h+='<div class="block"><b>'+flagTitle+':</b><ul class="'+(isGreen?'greenflags':'')+'">';
+for(var m=0;m<r.flags.length;m++){h+='<li>'+r.flags[m]+'</li>';}
 h+='</ul></div>';
 h+='<button class="share" onclick="share()">☾ ПОДЕЛИТЬСЯ ВЕРДИКТОМ ☾</button>';
-h+='<button class="again" onclick="location.reload()">☠ ПРОВЕСТИ НОВЫЙ ЭКЗОРЦИЗМ ☠</button>';
+h+='<button class="again" onclick="restart()">☠ ПРОВЕСТИ НОВЫЙ ЭКЗОРЦИЗМ ☠</button>';
 document.getElementById("app").innerHTML=h;
 window.lastResult="Мой результат в «Готическом сканере мужиков»: "+r.n+" — "+r.d[1]+". "+r.q;
+}
+function restart(){
+beep(180,.2,"sawtooth");
+step=0;
+for(var k in S){S[k]=0;}
+render("start");
 }
 function share(){
 beep(900,.08);
@@ -243,11 +261,7 @@ setTimeout(function(){p.style.opacity="0";},650);
 }
 function startQuiz(){
 portal();
-setTimeout(function(){
-step=0;
-for(var k in S){S[k]=0;}
-render("start");
-},500);
+setTimeout(function(){step=0;for(var k in S){S[k]=0;}render("start");},500);
 }
 function refuse(){
 beep(180,.18,"sawtooth");
@@ -263,20 +277,15 @@ var lines=[
 "> СКАНЕР ГОТОВ."
 ];
 var h='<div class="boot">';
-for(var i=0;i<lines.length;i++){
-h+='<div class="bootline'+(i===4?' red':'')+'" style="animation-delay:'+(i*.55)+'s">'+lines[i]+'</div>';
-}
+for(var i=0;i<lines.length;i++){h+='<div class="bootline'+(i===4?' red':'')+'" style="animation-delay:'+(i*.55)+'s">'+lines[i]+'</div>';}
 h+='<div class="bar"><div class="fill" id="bootfill" style="width:0%"></div></div><div id="introq"></div></div>';
 document.getElementById("app").innerHTML=h;
 var w=0;
 var t=setInterval(function(){
 w+=4;beep(520+w*3,.03);
 document.getElementById("bootfill").style.width=w+"%";
-if(w>=100){
-clearInterval(t);
-beep(980,.15);
-document.getElementById("introq").innerHTML='<div class="bigq">ВЫ ГОТОВЫ ПРОВЕСТИ ЭКЗОРЦИЗМ?</div><button class="yes" onclick="startQuiz()">ДА, НАЧНЁМ РИТУАЛ</button><button class="no" onclick="refuse()">НЕТ, Я ЕЩЁ НЕ ГОТОВА</button>';
-}
+if(w>=100){clearInterval(t);beep(980,.15);
+document.getElementById("introq").innerHTML='<div class="bigq">ВЫ ГОТОВЫ ПРОВЕСТИ ЭКЗОРЦИЗМ?</div><button class="yes" onclick="startQuiz()">ДА, НАЧНЁМ РИТУАЛ</button><button class="no" onclick="refuse()">НЕТ, Я ЕЩЁ НЕ ГОТОВА</button>';}
 },110);
 }
 intro();
