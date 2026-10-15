@@ -282,7 +282,7 @@ var box=document.createElement("div");box.className="card";
 box.innerHTML='<b>⚠️ ЖАЛОБА</b> · '+new Date(rep.created_at).toLocaleDateString("ru-RU")+'<br><div class="note">Причина: '+rep.reason.replace(/</g,"&lt;")+'</div><div class="note">История ID: '+rep.story_id+'</div>';
 var b1=document.createElement("button");b1.className="ag";b1.textContent="❌ СКРЫТЬ ИСТОРИЮ ПО ЖАЛОБЕ";b1.onclick=async function(){var up=await sb.from("stories").update({status:"rejected"}).eq("id",rep.story_id);if(up.error){alert(up.error.message);return;}await sb.from("reports").update({status:"closed"}).eq("id",rep.id);beep(180,.2,"sawtooth");moderation();};
 var b2=document.createElement("button");b2.className="pub";b2.textContent="✅ ЖАЛОБА НЕ ОБОСНОВАНА · ЗАКРЫТЬ";b2.onclick=async function(){await sb.from("reports").update({status:"closed"}).eq("id",rep.id);beep(900,.1);moderation();};
-box.appendChild(b1);box.appendChild(b2);a.appendChild(box);})(q);}}
+box.appendChild(b1);box.appendChild(b2);a.appendChild(box);})(q);}
 var bk=document.createElement("button");bk.className="bk";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
 var GAME=[["«Ты слишком чувствительная»",["Газлайт","Забота","Комплимент"],0],["«Я был неправ, извини»",["Газлайт","Здоровая граница","Манипуляция"],1],["«После всего, что я для тебя сделал»",["Чувство вины","Поддержка","Уважение"],0],["«Мне не нравится, когда ты общаешься с ним»",["Контроль","Граница","Забота"],0],["«Ты не обязана решать прямо сейчас»",["Уважение","Давление","Обесценивание"],0],["«Я пошутил, ты что»",["Обесценивание","Извинение","Забота"],0],["«Давай обсудим спокойно»",["Уважение","Газлайт","Ревность"],0],["«Если любишь — удали его»",["Контроль","Граница","Поддержка"],0]];
 var gi=0,gs=0;
