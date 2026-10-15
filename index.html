@@ -31,6 +31,8 @@ button:hover{background:#0d2b1a}
 .bk{border-color:#8fd9b2;color:#8fd9b2;text-align:center;background:#8fd9b214}
 .mn{border-color:#39ff88;color:#39ff88;text-align:center;background:#39ff881a}
 .ag{border:2px solid #ff3b5c;color:#ff3b5c;text-align:center;font-weight:bold;background:#ff3b5c14}
+.del{border-color:#ff3b5c;color:#ff3b5c;text-align:center;background:#ff3b5c14}
+.warn{border:2px solid #ff3b5c;background:#ff3b5c14;color:#ff3b5c;padding:10px;margin:10px 0;font-weight:bold;text-align:center}
 .k{font-family:Cinzel,serif;color:#39ff88;font-size:clamp(21px,6vw,28px);margin:6px 0}
 .d{display:inline-block;border:1px solid currentColor;padding:4px 9px;font-size:10px;letter-spacing:2px;margin:6px 0}
 .red{color:#ff3b5c}.yel{color:#ffd166}.grn{color:#39ff88}.pur{color:#b388ff}
@@ -108,12 +110,11 @@ ctrl:{i:"⛓",n:"КОНТРОЛЁР-ИНКВИЗИТОР",d:["red","ЦИФРОВ
 var FLAGS=["Физическое насилие или избиение","Угрозы, запугивание, агрессия","Проверка телефона и переписок","Требовал прекратить общение с друзьями","Контроль и ревность","Слежка, отчёты, требования паролей","Газлайт","Обесценивание и унижения","Изоляция от друзей и близких","Давление и уговоры","Игра на вине","Финансовый контроль или манипуляции","Сексуальное давление","Резкие исчезновения","Двойные стандарты","Публичные унижения или оскорбления"];
 function beep(f,d,t){try{var c=new(window.AudioContext||window.webkitAudioContext)();var o=c.createOscillator(),g=c.createGain();o.type=t||"square";o.frequency.value=f;g.gain.value=.03;o.connect(g);g.connect(c.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);o.stop(c.currentTime+d);}catch(e){}}
 function load(){var arr=[];try{arr=JSON.parse(localStorage.getItem("gms")||"[]");}catch(e){arr=[];}
-for(var i=0;i<arr.length;i++){var e=arr[i];if(!e.comments)e.comments=[];if(!e.flags)e.flags=[];if(!e.reds)e.reds=[];if(!e.pos)e.pos=[];if(!e.notes)e.notes=[];if(!e.story)e.story="";if(!e.status)e.status="private";if(!e.d)e.d=new Date().toLocaleDateString("ru-RU");if(!R[e.t])e.t="norm";}
+for(var i=0;i<arr.length;i++){var e=arr[i];if(!e.comments)e.comments=[];if(!e.flags)e.flags=[];if(!e.reds)e.reds=[];if(!e.pos)e.pos=[];if(!e.notes)e.notes=[];if(!e.story)e.story="";if(!e.status)e.status="private";if(!e.d)e.d=new Date().toLocaleDateString("ru-RU");if(!e.danger)e.danger=false;if(!e.dangerNote)e.dangerNote="";if(!e.modLink)e.modLink="";if(!R[e.t])e.t="norm";}
 return arr;}
 function save(a){try{localStorage.setItem("gms",JSON.stringify(a));}catch(e){}}
 function setNick(){var n=prompt("Какой никнейм показать под твоими комментариями?",NICK||"");if(n===null)return;NICK=n.trim()||"Аноним";localStorage.setItem("gms_nick",NICK);beep(900,.1);menu();}
 function autoFilter(t){if(!t)return null;
-if(/https?:\/\/|www\.|\.com|\.ru|\.net/i.test(t))return "Ссылки и сайты публиковать нельзя.";
 if(/@[A-Za-z0-9_]{3,}/.test(t))return "Ники и упоминания аккаунтов публиковать нельзя.";
 if(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/.test(t))return "Электронную почту публиковать нельзя.";
 if(/\d{7,}/.test(t.replace(/[\s\-()]/g,"")))return "Похоже на номер телефона или другой личный номер. Убери цифры.";
@@ -135,7 +136,8 @@ c.fillStyle="#eafff3";c.font="bold 40px monospace";c.fillText(r.i+" "+r.n+" "+r.
 c.fillStyle=r.d[0]==="red"?"#ff3b5c":r.d[0]==="yel"?"#ffd166":r.d[0]==="pur"?"#b388ff":"#39ff88";
 c.font="16px monospace";c.fillText(r.d[1],450,225);
 c.fillStyle="#8fd9b2";c.font="14px monospace";c.fillText("Дата: "+e.d+(e.n?" · Пометка: "+e.n:""),450,255);
-c.textAlign="left";var y=310;
+if(e.danger){c.fillStyle="#ff3b5c";c.font="bold 22px monospace";c.fillText("⚠️ ОСОБО ОПАСЕН",450,295);}
+c.textAlign="left";var y=e.danger?340:310;
 c.fillStyle="#39ff88";c.font="bold 18px monospace";c.fillText("ИНДИКАТОРЫ ОБЩЕНИЯ",60,y);y+=30;
 var ms=[["Уважение к границам",G.respect,"#39ff88"],["Эмпатия",G.empathy,"#39ff88"],["Ответственность",G.resp,"#39ff88"],["Склонность к контролю",G.control,"#ff3b5c"],["Склонность к манипуляциям",G.manip,"#ff3b5c"]];
 for(var i=0;i<ms.length;i++){c.fillStyle="#d8ffe9";c.font="15px monospace";c.fillText(ms[i][0],60,y);c.textAlign="right";c.fillText(ms[i][1]+"%",840,y);c.textAlign="left";y+=10;
@@ -183,6 +185,7 @@ var nm={narc:"Нарцисс-Архонт",covert:"Скрытый нарцисс
 var cl={narc:"red",covert:"red",gas:"red",manip:"red",pickme:"pur",chaos:"yel",norm:"grn",green:"grn",ctrl:"red"};
 var mx2=Math.max(1,S.narc,S.covert,S.gas,S.manip,S.pickme,S.chaos,S.norm,S.green,S.ctrl);
 var h='<div class="t">КАРТОЧКА МУЖИКА</div><div class="k">'+r.i+" "+r.n+" "+r.i+'</div><div class="d '+r.d[0]+'">'+r.d[1]+'</div>';
+if(e.danger)h+='<div class="warn">⚠️ ОСОБО ОПАСЕН</div>';
 if(e.n)h+='<div class="note">📝 '+e.n+'</div>';
 if(e.dbStatus==="pending")h+='<div class="bl yel"><b>СТАТУС:</b> отправлено на модерацию</div>';
 if(e.dbStatus==="approved")h+='<div class="bl grn"><b>СТАТУС:</b> опубликовано в общем архиве</div>';
@@ -217,14 +220,16 @@ h+='<button class="ag" onclick="startTest()">☠ НОВЫЙ АНАЛИЗ ☠</bu
 document.getElementById("app").innerHTML=h;
 window.res="Мой результат: "+r.n+" — "+r.d[1]+". "+r.q;window.ty=best;window.cur=e;}
 function finish(){beep(220,.25,"sawtooth");var c=calc();
-var e={id:Date.now()+"-"+Math.random().toString(36).slice(2),t:c.best,d:new Date().toLocaleDateString("ru-RU"),n:"",s:JSON.parse(JSON.stringify(S)),reds:[],pos:[],notes:[],flags:[],story:"",status:"private",comments:[],dbId:null,dbStatus:null};
+var e={id:Date.now()+"-"+Math.random().toString(36).slice(2),t:c.best,d:new Date().toLocaleDateString("ru-RU"),n:"",s:JSON.parse(JSON.stringify(S)),reds:[],pos:[],notes:[],flags:[],story:"",status:"private",comments:[],dbId:null,dbStatus:null,danger:false,dangerNote:"",modLink:""};
 var arr=load();arr.push(e);save(arr);window.cur=e;showResult(e);}
 function cope(){beep(700,.1);var r=R[window.ty||"norm"]||R.norm,h='<div class="k">'+r.i+" "+r.n+" "+r.i+'</div><div class="bl yel"><b>ГЛАВНОЕ:</b><br>Ты не обязана сразу обрывать общение, чтобы начать заботиться о себе. Но ты имеешь право замечать, как тебе после общения, и менять дистанцию.</div><div class="bl"><b>ЧТО МОЖНО ДЕЛАТЬ:</b><ul><li>Записывай: что обещано, что сделано, как ты себя чувствовала после.</li><li>Оценивай повторяющиеся действия, а не отдельные хорошие моменты.</li><li>Формулируй границы коротко: «Мне не подходит такое общение».</li><li>Не принимай решения в момент вины, страха или сильной надежды.</li><li>Обсуди ситуацию с подругой, близким человеком или психологом.</li><li>Если есть страх, угрозы, контроль или насилие — безопасность важнее объяснений.</li></ul></div><div class="bl"><b>ДЛЯ ТИПА «'+r.n+'»:</b><br>'+r.co+'</div><div class="bl yel"><b>НАПОМИНАНИЕ:</b><br>Ты не обязана спасать взрослого человека или терпеть боль ради его потенциала.</div><button class="bk" onclick="showResult(window.cur)">← НАЗАД К КАРТОЧКЕ</button><button class="mn" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';document.getElementById("app").innerHTML=h;}
 function findIdx(e){var arr=load();for(var i=0;i<arr.length;i++){if(arr[i].id===e.id)return i;}return -1;}
 function updateE(e){var arr=load(),i=findIdx(e);if(i>=0){arr[i]=e;save(arr);return true;}return false;}
-function cardView(e){try{beep(700,.1);window.cur=e;if(!R[e.t])e.t="norm";if(!e.reds)e.reds=[];if(!e.pos)e.pos=[];if(!e.notes)e.notes=[];if(!e.flags)e.flags=[];if(!e.story)e.story="";
+function deleteE(e){if(!confirm("Удалить эту карточку из твоего архива? Действие нельзя отменить."))return;var arr=load(),i=findIdx(e);if(i>=0){arr.splice(i,1);save(arr);beep(180,.2,"sawtooth");collection();}}
+function cardView(e){try{beep(700,.1);window.cur=e;if(!R[e.t])e.t="norm";if(!e.reds)e.reds=[];if(!e.pos)e.pos=[];if(!e.notes)e.notes=[];if(!e.flags)e.flags=[];if(!e.story)e.story="";if(!e.danger)e.danger=false;if(!e.dangerNote)e.dangerNote="";if(!e.modLink)e.modLink="";
 var r=R[e.t]||R.norm,a=document.getElementById("app");
 a.innerHTML='<div class="t">РЕДАКТОР КАРТОЧКИ СУЩЕСТВА</div><div class="k">'+r.i+" "+r.n+" "+r.i+'</div><div class="d '+r.d[0]+'">'+r.d[1]+' · '+e.d+'</div>';
+if(e.danger)a.innerHTML+='<div class="warn">⚠️ ОСОБО ОПАСЕН</div>';
 a.innerHTML+='<div class="sec yel"><h3>✏ ИМЯ / ПОМЕТКА</h3><div class="big">'+(e.n||"Без пометки")+'</div><div class="note">Например: «Коллега», «Бывший», «Мужчина из приложения».</div></div>';
 a.innerHTML+='<div class="sec red"><h3>🔴 МОИ КРАСНЫЕ ФЛАГИ</h3>'+(e.reds.length?"":"<div class='note'>Пока не добавлено.</div>");
 for(var i=0;i<e.reds.length;i++)a.innerHTML+='<div class="tag">🔴 '+e.reds[i]+'</div>';
@@ -235,38 +240,48 @@ a.innerHTML+='</div>';
 a.innerHTML+='<div class="sec yel"><h3>📝 МОИ ЗАМЕТКИ</h3>'+(e.notes.length?"":"<div class='note'>Пока нет заметок.</div>");
 for(var m=0;m<e.notes.length;m++)a.innerHTML+='<div class="note">• '+e.notes[m]+'</div>';
 a.innerHTML+='</div>';
+if(e.dangerNote)a.innerHTML+='<div class="bl red"><b>⚠️ ОПАСНЫЕ СИГНАЛЫ:</b><br>'+e.dangerNote.replace(/</g,"&lt;")+'</div>';
 var b0=document.createElement("button");b0.className="opt";b0.textContent="✏ ИЗМЕНИТЬ ИМЯ / ПОМЕТКУ";b0.onclick=function(){var n=prompt("Кто это?",e.n||"");if(n!==null){e.n=n;updateE(e);cardView(e);}};a.appendChild(b0);
 var b1=document.createElement("button");b1.className="opt";b1.textContent="🔴 ДОБАВИТЬ КРАСНЫЙ ФЛАГ";b1.onclick=function(){var v=prompt("Какой красный флаг ты заметила?");if(v){e.reds.push(v);updateE(e);cardView(e);}};a.appendChild(b1);
 var b2=document.createElement("button");b2.className="opt";b2.textContent="🟢 ДОБАВИТЬ ВИДИМЫЙ ПЛЮС";b2.onclick=function(){var v=prompt("Какой видимый плюс ты заметила?");if(v){e.pos.push(v);updateE(e);cardView(e);}};a.appendChild(b2);
 var b3=document.createElement("button");b3.className="opt";b3.textContent="📝 ДОБАВИТЬ ЗАМЕТКУ";b3.onclick=function(){var v=prompt("Твоя заметка:");if(v){e.notes.push(v);updateE(e);cardView(e);}};a.appendChild(b3);
+var bd=document.createElement("button");bd.className="opt";bd.textContent=e.danger?"⚠️ СНЯТЬ ПОМЕТКУ «ОСОБО ОПАСЕН»":"⚠️ ОТМЕТИТЬ КАК ОСОБО ОПАСНОГО";bd.onclick=function(){if(!e.danger){e.danger=true;var v=prompt("Опиши опасные сигналы без ссылок и личных данных (это увидят в общем архиве после модерации):");if(v!==null)e.dangerNote=v;}else{e.danger=false;e.dangerNote="";}updateE(e);cardView(e);};a.appendChild(bd);
 var b7=document.createElement("button");b7.className="pub";b7.textContent="💾 СОХРАНИТЬ КАРТОЧКУ";b7.onclick=function(){if(updateE(e)){beep(900,.12);alert("Карточка сохранена в твоём архиве.");}else{alert("Не удалось сохранить карточку.");}};a.appendChild(b7);
 var b9=document.createElement("button");b9.className="exp";b9.textContent="🖼 СКАЧАТЬ КАРТОЧКУ КАРТИНКОЙ";b9.onclick=function(){exportCard(e);};a.appendChild(b9);
+var b6=document.createElement("button");b6.className="pub";b6.textContent="📤 ОТПРАВИТЬ В ОБЩИЙ АРХИВ";b6.onclick=function(){shareForm(e);};a.appendChild(b6);
 var b4=document.createElement("button");b4.className="bk";b4.textContent="← НАЗАД В МОЙ АРХИВ";b4.onclick=collection;a.appendChild(b4);
 var b5=document.createElement("button");b5.className="bk";b5.textContent="📖 ВЕРНУТЬСЯ К КАРТОЧКЕ МУЖИКА";b5.onclick=function(){showResult(e);};a.appendChild(b5);
-var b6=document.createElement("button");b6.className="pub";b6.textContent="📤 ОТПРАВИТЬ В ОБЩИЙ АРХИВ";b6.onclick=function(){shareForm(e);};a.appendChild(b6);
 var b8=document.createElement("button");b8.className="mn";b8.textContent="☰ ГЛАВНОЕ МЕНЮ";b8.onclick=menu;a.appendChild(b8);
+var bx=document.createElement("button");bx.className="del";bx.textContent="🗑 УДАЛИТЬ КАРТОЧКУ";bx.onclick=function(){deleteE(e);};a.appendChild(bx);
 }catch(err){document.getElementById("app").innerHTML='<div class="bl red">Ошибка в редакторе карточки: '+err.message+'</div><button class="bk" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';}}
 function collection(){try{beep(700,.1);var arr=load(),a=document.getElementById("app");
 a.innerHTML='<div class="t">АРХИВ СУЩЕСТВ</div><div class="k">🗂 МОЯ КОЛЛЕКЦИЯ</div>';
 if(!arr.length){a.innerHTML+='<div class="bl">Архив пока пуст. Пройди анализ, чтобы поймать первое существо.</div>';}
-else{for(var i=0;i<arr.length;i++){(function(idx){var e=arr[idx];if(!R[e.t])e.t="norm";var r=R[e.t]||R.norm;
+else{for(var i=0;i<arr.length;i++){(function(idx){var e=arr[idx];if(!R[e.t])e.t="norm";if(!e.reds)e.reds=[];if(!e.pos)e.pos=[];if(!e.notes)e.notes=[];var r=R[e.t]||R.norm;
 var box=document.createElement("div");box.className="card";
 var st=e.dbStatus==="pending"?" · ⏳ на модерации":e.dbStatus==="approved"?" · 🌐 в общем архиве":e.dbStatus==="rejected"?" · ❌ отклонено":"";
-box.innerHTML='<b>'+r.i+" "+r.n+"</b> · "+e.d+st+'<br>'+r.d[1]+(e.n?'<div class="note">📝 '+e.n+'</div>':'')+'<div class="note">🔴 флагов: '+(e.reds?e.reds.length:0)+' · 🟢 плюсов: '+(e.pos?e.pos.length:0)+' · 📝 заметок: '+(e.notes?e.notes.length:0)+'</div>';
-var b1=document.createElement("button");b1.className="opt";b1.textContent="🗂 ОТКРЫТЬ И РЕДАКТИРОВАТЬ КАРТОЧКУ";b1.onclick=function(){beep(700,.1);cardView(e);};
-box.appendChild(b1);a.appendChild(box);})(i);}}
+box.innerHTML='<b>'+r.i+" "+r.n+"</b> · "+e.d+st+'<br>'+r.d[1]+(e.danger?'<div class="warn">⚠️ ОСОБО ОПАСЕН</div>':'')+(e.n?'<div class="note">📝 '+e.n+'</div>':'')+'<div class="note">🔴 флагов: '+e.reds.length+' · 🟢 плюсов: '+e.pos.length+' · 📝 заметок: '+e.notes.length+'</div>';
+var b1=document.createElement("button");b1.className="opt";b1.textContent="📖 ОТКРЫТЬ КАРТОЧКУ";b1.onclick=function(){beep(700,.1);cardView(e);};
+var b2=document.createElement("button");b2.className="opt";b2.textContent="🖼 СКАЧАТЬ КАРТОЧКУ КАРТИНКОЙ";b2.onclick=function(){exportCard(e);};
+var b3=document.createElement("button");b3.className="opt";b3.textContent="✏ РЕДАКТИРОВАТЬ КАРТОЧКУ";b3.onclick=function(){beep(700,.1);cardView(e);};
+var b4=document.createElement("button");b4.className="pub";b4.textContent="📤 ОПУБЛИКОВАТЬ В ОБЩИЙ АРХИВ";b4.onclick=function(){shareForm(e);};
+var b5=document.createElement("button");b5.className="del";b5.textContent="🗑 УДАЛИТЬ КАРТОЧКУ";b5.onclick=function(){deleteE(e);};
+box.appendChild(b1);box.appendChild(b2);box.appendChild(b3);box.appendChild(b4);box.appendChild(b5);a.appendChild(box);})(i);}}
 var bk=document.createElement("button");bk.className="bk";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);
 var b3=document.createElement("button");b3.className="ag";b3.textContent="☠ НОВЫЙ АНАЛИЗ ☠";b3.onclick=startTest;a.appendChild(b3);
 }catch(err){document.getElementById("app").innerHTML='<div class="bl red">Ошибка в архиве: '+err.message+'</div><button class="bk" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';}}
-function shareForm(e){beep(700,.1);window.cur=e;if(!R[e.t])e.t="norm";var a=document.getElementById("app");
-a.innerHTML='<div class="t">ОБЩИЙ АРХИВ</div><div class="k">📤 АНОНИМНАЯ ИСТОРИЯ</div><div class="bl yel"><b>ПРАВИЛА:</b><br>Не указывай ФИО. Не публикуй ссылки, адреса, телефоны, ники, фото или любые данные, по которым можно узнать человека. Расскажи свою историю о поведении и о том, как ты себя чувствовала. История попадёт на модерацию и будет опубликована только после проверки.</div><div class="bl"><b>КАСТА:</b> '+(R[e.t]||R.norm).n+'</div>';
+function shareForm(e){beep(700,.1);window.cur=e;if(!R[e.t])e.t="norm";if(!e.danger)e.danger=false;if(!e.dangerNote)e.dangerNote="";if(!e.modLink)e.modLink="";var a=document.getElementById("app");
+a.innerHTML='<div class="t">ОБЩИЙ АРХИВ</div><div class="k">📤 АНОНИМНАЯ ИСТОРИЯ</div><div class="bl yel"><b>ПРАВИЛА:</b><br>В публичной части нельзя указывать ФИО, ссылки на профили, адреса, телефоны, ники и любые данные, по которым можно узнать человека. Ссылку или данные для проверки можно оставить модератору — они не будут видны в общем архиве.</div><div class="bl"><b>КАСТА:</b> '+(R[e.t]||R.norm).n+'</div>';
 var box=document.createElement("div");box.className="bl";box.innerHTML="<b>ЧТО БЫЛО В ОБЩЕНИИ?</b>";
 for(var i=0;i<FLAGS.length;i++){(function(fl){var l=document.createElement("label");l.className="chk";var cb=document.createElement("input");cb.type="checkbox";cb.value=fl;if(e.flags.indexOf(fl)>=0)cb.checked=true;cb.onchange=function(){if(cb.checked){if(e.flags.indexOf(fl)<0)e.flags.push(fl);}else{e.flags=e.flags.filter(function(x){return x!==fl;});}};l.appendChild(cb);l.appendChild(document.createTextNode(fl));box.appendChild(l);})(FLAGS[i]);}
 a.appendChild(box);
 var ta=document.createElement("textarea");ta.rows=6;ta.placeholder="Расскажи свою историю без имён и узнаваемых деталей: что происходило, какие фразы повторялись, как ты себя чувствовала после общения.";ta.value=e.story||"";ta.oninput=function(){e.story=ta.value;};a.appendChild(ta);
+var dng=document.createElement("label");dng.className="chk";var dc=document.createElement("input");dc.type="checkbox";dc.checked=!!e.danger;dc.onchange=function(){e.danger=dc.checked;if(!dc.checked)e.dangerNote="";};dng.appendChild(dc);dng.appendChild(document.createTextNode("⚠️ Отметить как ОСОБО ОПАСНОГО"));a.appendChild(dng);
+var dn=document.createElement("textarea");dn.rows=3;dn.placeholder="Опиши опасные сигналы для общего архива: без имён, ссылок и узнаваемых данных.";dn.value=e.dangerNote||"";dn.oninput=function(){e.dangerNote=dn.value;};a.appendChild(dn);
+var lk=document.createElement("input");lk.placeholder="Ссылка / данные для модератора (не публикуются): профиль, переписка, доказательства";lk.value=e.modLink||"";lk.oninput=function(){e.modLink=lk.value;};a.appendChild(lk);
 var b1=document.createElement("button");b1.className="pub";b1.textContent="📤 ОТПРАВИТЬ НА МОДЕРАЦИЮ";b1.onclick=async function(){if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}var bad=autoFilter(ta.value);if(bad){alert(bad);return;}if(!e.story||e.story.trim().length<20){alert("Добавь историю минимум из 20 символов.");return;}
 b1.textContent="⏳ ОТПРАВЛЯЮ…";b1.disabled=true;
-var res=await sb.from("stories").insert({archetype:e.t,card_data:{n:e.n,s:e.s,reds:e.reds,pos:e.pos,notes:e.notes},story:e.story,flags:e.flags,status:"pending"}).select("id").single();
+var res=await sb.from("stories").insert({archetype:e.t,card_data:{n:e.n,s:e.s,reds:e.reds,pos:e.pos,notes:e.notes,danger:e.danger,dangerNote:e.dangerNote,modLink:e.modLink},story:e.story,flags:e.flags,status:"pending"}).select("id").single();
 if(res.error){alert("Ошибка отправки: "+res.error.message);b1.textContent="📤 ОТПРАВИТЬ НА МОДЕРАЦИЮ";b1.disabled=false;return;}
 e.dbId=res.data.id;e.dbStatus="pending";updateE(e);beep(900,.15);
 document.getElementById("app").innerHTML='<div class="k">⏳ ОТПРАВЛЕНО</div><div class="bl">История отправлена на модерацию. Она появится в общем архиве только после одобрения.</div><button class="bk" onclick="showResult(window.cur)">← НАЗАД К КАРТОЧКЕ МУЖИКА</button><button class="mn" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';};a.appendChild(b1);
@@ -279,9 +294,9 @@ if(res.error){a.innerHTML='<div class="k">ОШИБКА</div><div class="bl red">
 var arr=res.data||[];
 a.innerHTML='<div class="t">ОБЩИЙ АРХИВ</div><div class="k">🌐 ИСТОРИИ ПОСЛЕ МОДЕРАЦИИ</div><div class="bl yel">Это анонимные личные истории, а не юридические факты или диагнозы. Цель — заметить повторяющиеся паттерны, поддержать друг друга и не остаться одной с ситуацией.</div>';
 if(!arr.length){a.innerHTML+='<div class="bl">Пока нет опубликованных историй.</div>';}
-else{for(var i=0;i<arr.length;i++){(function(idx){var e=arr[idx],r=R[e.archetype]||R.norm;
+else{for(var i=0;i<arr.length;i++){(function(idx){var e=arr[idx],r=R[e.archetype]||R.norm,cd=e.card_data||{};
 var box=document.createElement("div");box.className="card";
-box.innerHTML='<b>'+r.i+" "+r.n+"</b> · "+(e.published_at?new Date(e.published_at).toLocaleDateString("ru-RU"):"")+'<br><div class="note">'+(e.flags&&e.flags.length?e.flags.map(function(f){return "🔴 "+f;}).join(" · "):"Паттерны не выбраны")+'</div><div style="margin-top:6px;line-height:1.5">'+e.story.replace(/</g,"&lt;")+'</div>';
+box.innerHTML='<b>'+r.i+" "+r.n+"</b> · "+(e.published_at?new Date(e.published_at).toLocaleDateString("ru-RU"):"")+(cd.danger?'<div class="warn">⚠️ ОСОБО ОПАСЕН</div>':'')+'<br><div class="note">'+(e.flags&&e.flags.length?e.flags.map(function(f){return "🔴 "+f;}).join(" · "):"Паттерны не выбраны")+'</div>'+(cd.danger&&cd.dangerNote?'<div class="bl red"><b>⚠️ ОПАСНЫЕ СИГНАЛЫ:</b><br>'+cd.dangerNote.replace(/</g,"&lt;")+'</div>':'')+'<div style="margin-top:6px;line-height:1.5">'+e.story.replace(/</g,"&lt;")+'</div>';
 var b1=document.createElement("button");b1.className="opt";b1.textContent="💬 ОТКРЫТЬ КАРТОЧКУ И КОММЕНТИРОВАТЬ";b1.onclick=function(){beep(700,.1);publicCard(e);};
 box.appendChild(b1);a.appendChild(box);})(i);}}
 var b2=document.createElement("button");b2.className="arc";b2.textContent="🗂 МОЙ АРХИВ";b2.onclick=collection;a.appendChild(b2);
@@ -290,8 +305,8 @@ async function publicCard(e){beep(700,.1);var a=document.getElementById("app");i
 a.innerHTML='<div class="t">ОБЩИЙ АРХИВ</div><div class="k">💬 ЗАГРУЗКА…</div>';
 var res=await sb.from("comments").select("id,nickname,text,created_at").eq("story_id",e.id).order("created_at",{ascending:true});
 var comments=res.data||[];
-var r=R[e.archetype]||R.norm;
-a.innerHTML='<div class="t">ОБЩИЙ АРХИВ</div><div class="k">'+r.i+" "+r.n+" "+r.i+'</div><div class="bl"><b>ИСТОРИЯ:</b><br>'+e.story.replace(/</g,"&lt;")+'</div><div class="bl red"><b>ОТМЕЧЕННЫЕ ПАТТЕРНЫ:</b><br>'+(e.flags&&e.flags.length?e.flags.map(function(f){return "🔴 "+f;}).join("<br>"):"Не выбраны")+'</div><div class="bl"><b>КОММЕНТАРИИ:</b>';
+var r=R[e.archetype]||R.norm,cd=e.card_data||{};
+a.innerHTML='<div class="t">ОБЩИЙ АРХИВ</div><div class="k">'+r.i+" "+r.n+" "+r.i+'</div>'+(cd.danger?'<div class="warn">⚠️ ОСОБО ОПАСЕН</div>':'')+'<div class="bl"><b>ИСТОРИЯ:</b><br>'+e.story.replace(/</g,"&lt;")+'</div>'+(cd.danger&&cd.dangerNote?'<div class="bl red"><b>⚠️ ОПАСНЫЕ СИГНАЛЫ:</b><br>'+cd.dangerNote.replace(/</g,"&lt;")+'</div>':'')+'<div class="bl red"><b>ОТМЕЧЕННЫЕ ПАТТЕРНЫ:</b><br>'+(e.flags&&e.flags.length?e.flags.map(function(f){return "🔴 "+f;}).join("<br>"):"Не выбраны")+'</div><div class="bl"><b>КОММЕНТАРИИ:</b>';
 if(comments.length){for(var j=0;j<comments.length;j++)a.innerHTML+='<div class="cmt"><b>'+(comments[j].nickname||"Аноним")+'</b><br>'+comments[j].text.replace(/</g,"&lt;")+'<div class="note">'+new Date(comments[j].created_at).toLocaleDateString("ru-RU")+'</div></div>';}
 else a.innerHTML+='<div class="note">Пока нет комментариев.</div>';
 a.innerHTML+='</div>';
@@ -321,9 +336,9 @@ if(st.error||rp.error){a.innerHTML='<div class="k">ОШИБКА</div><div class=
 var pend=st.data||[],reports=rp.data||[];
 a.innerHTML='<div class="t">МОДЕРАЦИЯ</div><div class="k">🛡 ОЧЕРЕДЬ</div>';
 if(!pend.length&&!reports.length){a.innerHTML+='<div class="bl">Новых заявок и жалоб нет.</div>';}
-for(var i=0;i<pend.length;i++){(function(idx){var e=pend[idx],r=R[e.archetype]||R.norm;
+for(var i=0;i<pend.length;i++){(function(idx){var e=pend[idx],r=R[e.archetype]||R.norm,cd=e.card_data||{};
 var box=document.createElement("div");box.className="card";
-box.innerHTML='<b>'+r.i+" "+r.n+"</b> · "+new Date(e.created_at).toLocaleDateString("ru-RU")+'<br><div class="note">⏳ НОВАЯ ЗАЯВКА</div><div class="note">'+(e.flags&&e.flags.length?e.flags.join(" · "):"Флаги не выбраны")+'</div><div style="margin-top:6px">'+e.story.replace(/</g,"&lt;")+'</div>';
+box.innerHTML='<b>'+r.i+" "+r.n+"</b> · "+new Date(e.created_at).toLocaleDateString("ru-RU")+(cd.danger?'<div class="warn">⚠️ ОСОБО ОПАСЕН</div>':'')+'<br><div class="note">⏳ НОВАЯ ЗАЯВКА</div><div class="note">'+(e.flags&&e.flags.length?e.flags.join(" · "):"Флаги не выбраны")+'</div>'+(cd.danger&&cd.dangerNote?'<div class="bl red"><b>ОПАСНЫЕ СИГНАЛЫ:</b><br>'+cd.dangerNote.replace(/</g,"&lt;")+'</div>':'')+(cd.modLink?'<div class="bl yel"><b>ДАННЫЕ ДЛЯ МОДЕРАТОРА:</b><br>'+cd.modLink.replace(/</g,"&lt;")+'</div>':'')+'<div style="margin-top:6px">'+e.story.replace(/</g,"&lt;")+'</div>';
 var b1=document.createElement("button");b1.className="pub";b1.textContent="✅ ОДОБРИТЬ И ОПУБЛИКОВАТЬ";b1.onclick=async function(){var up=await sb.from("stories").update({status:"approved",published_at:new Date().toISOString()}).eq("id",e.id);if(up.error){alert(up.error.message);return;}beep(900,.15);moderation();};
 var b2=document.createElement("button");b2.className="ag";b2.textContent="❌ ОТКЛОНИТЬ И СКРЫТЬ";b2.onclick=async function(){var up=await sb.from("stories").update({status:"rejected"}).eq("id",e.id);if(up.error){alert(up.error.message);return;}beep(180,.2,"sawtooth");moderation();};
 box.appendChild(b1);box.appendChild(b2);a.appendChild(box);})(i);}
