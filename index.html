@@ -52,12 +52,13 @@ ul{margin:5px 0 0 17px}li{margin:3px 0;line-height:1.45}
 textarea,input{width:100%;background:#06170e;border:1px solid #39ff88;color:#d8ffe9;font-family:inherit;font-size:12.5px;padding:10px;margin:6px 0;box-sizing:border-box}
 .chk{display:flex;gap:8px;align-items:flex-start;font-size:12px;margin:6px 0}
 .chk input{width:auto;margin:0}
+.cmt{border-left:3px solid #b388ff;padding:6px 10px;margin:6px 0;font-size:12px;background:#00000055}
 </style></head><body>
 <canvas id="m"></canvas><div id="p"></div><div class="w">
 <h1>СКАНЕР МУЖИКА</h1>
 <div class="s">ЦИФРОВАЯ ИНКВИЗИЦИЯ • АНАЛИЗ ПАТТЕРНОВ • САТИРА, НЕ ДИАГНОЗ</div>
 <div class="c" id="app"></div>
-<div class="sm">Сатирический развлекательный тест. Не ставит психиатрические диагнозы и не заменяет помощь специалиста. В общем архиве запрещены имена, фото, ссылки, телефоны и другие данные, по которым можно узнать человека.</div></div>
+<div class="sm">Сатирический развлекательный тест. Не ставит психиатрические диагнозы и не заменяет помощь специалиста. В общем архиве запрещены ФИО, фото, ссылки, адреса, телефоны и любые данные, по которым можно узнать человека.</div></div>
 <script>
 var S={narc:0,covert:0,gas:0,manip:0,pickme:0,chaos:0,norm:0,green:0,ctrl:0};
 var replaces=2,qi=0,total=12;
@@ -85,15 +86,15 @@ chaos:{i:"🎲",n:"ХАОС-АГЕНТ",d:["yel","MID CRINGE / ПЛАН ОТСУ
 norm:{i:"☕",n:"НОРМИС",d:["grn","SAFE MODE / БЕЗ МАГИИ"],q:"Ничего экстраординарного. Это теперь почти редкость.",desc:"Не идеален, но способен на диалог, извинения и выполнение базовых договорённостей.",rec:"Отвечает, не исчезает, не превращает спор в войну. Слова и поступки в целом совпадают.",ph:["«Давай обсудим»","«Я понял, что тебя задело»","«В следующий раз иначе»","«Как ты?»"],exp:"Стабильность без фейерверков.",co:"Не проверяй на «настоящую любовь» и не создавай драму. Прямо говори о потребностях и смотри на повторяющиеся действия.",fl:["Эмоционально простой","Не понимает намёки","Иногда скучноват","Но не устраивает квест"]},
 green:{i:"🌿",n:"ЗЕЛЁНЫЙ ФЛАГ",d:["grn","SAFE MODE / ПОСЛЕДОВАТЕЛЕН"],q:"Уважает границы, слышит слова и умеет извиняться.",desc:"Он не превращает близость в борьбу за контроль. Может признать ошибку и услышать «мне неприятно».",rec:"Спрашивает, как ты, не наказывает молчанием, не требует отчётов, уважает «нет».",ph:["«Что тебя задело?»","«Я был неправ, извини»","«Что тебе комфортнее?»","«Ты не обязана решать сейчас»"],exp:"Спокойствие, последовательность, уважение.",co:"Береги, но не превращай в спасителя. Продолжай говорить о потребностях и границах.",fl:["Признаёт ошибки","Уважает «нет»","Не давит","Не исчезает","Слышит чувства"]},
 ctrl:{i:"⛓",n:"КОНТРОЛЁР-ИНКВИЗИТОР",d:["red","ЦИФРОВАЯ ИНКВИЗИЦИЯ / ДОСТУП ОГРАНИЧЕН"],q:"Ревность он называет заботой, запреты — защитой.",desc:"Сначала «я волнуюсь», потом твоя свобода становится угрозой, друзья — конкурентами, границы — проблемой.",rec:"Хочет знать, где ты, с кем ты, требует пароли и отчёты.",ph:["«Удали его из друзей»","«Почему не ответила?»","«Я просто забочусь»","«Если любишь — ты бы не так вела»"],exp:"Постепенное сужение жизни и изоляция.",co:"Контроль не усиливается от любви. Не отдавай пароли, не сокращай жизнь ради его спокойствия. Если есть страх, угрозы или насилие — обратись за поддержкой к близким или специалисту.",fl:["Проверяет телефон","Запрещает друзей","Наказывает молчанием","Ревность = забота","Любовь = разрешение только на него"]}};
-var FLAGS=["Контроль и ревность","Газлайт","Обесценивание","Изоляция от друзей","Давление и уговоры","Игра на вине","Финансовые манипуляции","Угрозы или агрессия","Резкие исчезновения","Двойные стандарты"];
+var FLAGS=["Физическое насилие или избиение","Угрозы, запугивание, агрессия","Проверка телефона и переписок","Требовал прекратить общение с друзьями","Контроль и ревность","Слежка, отчёты, требования паролей","Газлайт","Обесценивание и унижения","Изоляция от друзей и близких","Давление и уговоры","Игра на вине","Финансовый контроль или манипуляции","Сексуальное давление","Резкие исчезновения","Двойные стандарты","Публичные унижения или оскорбления"];
 function beep(f,d,t){try{var c=new(window.AudioContext||window.webkitAudioContext)();var o=c.createOscillator(),g=c.createGain();o.type=t||"square";o.frequency.value=f;g.gain.value=.03;o.connect(g);g.connect(c.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);o.stop(c.currentTime+d);}catch(e){}}
 function load(){var arr=[];try{arr=JSON.parse(localStorage.getItem("gms")||"[]");}catch(e){}return arr;}
 function save(a){try{localStorage.setItem("gms",JSON.stringify(a));}catch(e){}}
 function menu(){beep(700,.1);var a=document.getElementById("app");
-a.innerHTML='<div class="t">ГЛАВНОЕ МЕНЮ</div><div class="k">☰ СКАНЕР МУЖИКА</div><div class="bl">Пройди цифровую инквизицию, открой свой архив, посмотри общий архив паттернов или возьми готовую фразу-границу.</div>';
+a.innerHTML='<div class="t">ГЛАВНОЕ МЕНЮ</div><div class="k">☰ СКАНЕР МУЖИКА</div><div class="bl">Пройди цифровую инквизицию, открой свой архив, посмотри общий архив или возьми готовую фразу-границу.</div>';
 var b1=document.createElement("button");b1.className="mn";b1.textContent="☠ НОВЫЙ АНАЛИЗ";b1.onclick=startTest;a.appendChild(b1);
 var b2=document.createElement("button");b2.className="arc";b2.textContent="🗂 МОЙ АРХИВ СУЩЕСТВ";b2.onclick=collection;a.appendChild(b2);
-var b5=document.createElement("button");b5.className="pub";b5.textContent="🌐 ОБЩИЙ АРХИВ ПАТТЕРНОВ";b5.onclick=publicArchive;a.appendChild(b5);
+var b5=document.createElement("button");b5.className="pub";b5.textContent="🌐 ОБЩИЙ АРХИВ";b5.onclick=publicArchive;a.appendChild(b5);
 var b3=document.createElement("button");b3.textContent="🎮 ФРАЗЫ-ДЕТЕКТОРЫ";b3.onclick=game;a.appendChild(b3);
 var b4=document.createElement("button");b4.textContent="✍ ГЕНЕРАТОР ФРАЗ-ГРАНИЦ";b4.onclick=gen;a.appendChild(b4);
 var b6=document.createElement("button");b6.className="mod";b6.textContent="🛡 МОДЕРАЦИЯ ОБЩЕГО АРХИВА";b6.onclick=moderation;a.appendChild(b6);}
@@ -106,7 +107,8 @@ function calc(){var red=S.narc+S.covert+S.gas+S.manip+S.ctrl,best="norm",mx=-1,k
 for(var i=0;i<ks.length;i++){if(S[ks[i]]>mx){mx=S[ks[i]];best=ks[i];}}
 if(S.green>=6&&red<=3)best="green";
 return{best:best,red:red,ks:ks};}
-function metrics(){return{respect:Math.max(0,100-S.ctrl*12-S.manip*8),empathy:Math.max(0,S.green*15+S.norm*8-S.gas*10-S.narc*8),resp:Math.max(0,S.green*15+S.norm*8-S.chaos*8-S.pickme*6),control:Math.min(100,S.ctrl*18+S.manip*8),manip:Math.min(100,S.manip*15+S.gas*10+S.narc*6)};}
+function cap(v){return Math.max(0,Math.min(100,Math.round(v)));}
+function metrics(){return{respect:cap(100-S.ctrl*8-S.manip*5),empathy:cap(S.green*9+S.norm*5-S.gas*7-S.narc*5),resp:cap(S.green*9+S.norm*5-S.chaos*6-S.pickme*5),control:cap(S.ctrl*12+S.manip*6),manip:cap(S.manip*11+S.gas*8+S.narc*5)};}
 function showResult(e){for(var k in S)S[k]=e.s[k];var c=calc(),best=c.best,red=c.red,ks=c.ks,r=R[best],isG=best==="green";
 var G=metrics();
 var hope=red<=2&&S.green>=5?"НЕ РАЗВИВАЙ НАДЕЖДУ НА ПОТЕНЦИАЛ — ОН УЖЕ ПОКАЗЫВАЕТ ДЕЙСТВИЯ":red>=6?"«ОН ИЗМЕНИТСЯ» — САМЫЙ ДОРОГОЙ ЖАНР ФАНТАСТИКИ":"СМОТРИ НА ПОВТОРЯЮЩИЕСЯ ДЕЙСТВИЯ, А НЕ НА ЛУЧШИЕ ЭПИЗОДЫ";
@@ -146,7 +148,7 @@ h+='<button class="ag" onclick="startTest()">☠ НОВЫЙ АНАЛИЗ ☠</bu
 document.getElementById("app").innerHTML=h;
 window.res="Мой результат: "+r.n+" — "+r.d[1]+". "+r.q;window.ty=best;window.cur=e;}
 function finish(){beep(220,.25,"sawtooth");var c=calc();
-var e={id:Date.now()+"-"+Math.random().toString(36).slice(2),t:c.best,d:new Date().toLocaleDateString("ru-RU"),n:"",s:JSON.parse(JSON.stringify(S)),reds:[],pos:[],notes:[],flags:[],story:"",status:"private"};
+var e={id:Date.now()+"-"+Math.random().toString(36).slice(2),t:c.best,d:new Date().toLocaleDateString("ru-RU"),n:"",s:JSON.parse(JSON.stringify(S)),reds:[],pos:[],notes:[],flags:[],story:"",status:"private",comments:[]};
 var arr=load();arr.push(e);save(arr);window.cur=e;showResult(e);}
 function cope(){beep(700,.1);var r=R[window.ty||"norm"],h='<div class="k">'+r.i+" "+r.n+" "+r.i+'</div><div class="bl yel"><b>ГЛАВНОЕ:</b><br>Ты не обязана сразу обрывать общение, чтобы начать заботиться о себе. Но ты имеешь право замечать, как тебе после общения, и менять дистанцию.</div><div class="bl"><b>ЧТО МОЖНО ДЕЛАТЬ:</b><ul><li>Записывай: что обещано, что сделано, как ты себя чувствовала после.</li><li>Оценивай повторяющиеся действия, а не отдельные хорошие моменты.</li><li>Формулируй границы коротко: «Мне не подходит такое общение».</li><li>Не принимай решения в момент вины, страха или сильной надежды.</li><li>Обсуди ситуацию с подругой, близким человеком или психологом.</li><li>Если есть страх, угрозы, контроль или насилие — безопасность важнее объяснений.</li></ul></div><div class="bl"><b>ДЛЯ ТИПА «'+r.n+'»:</b><br>'+r.co+'</div><div class="bl yel"><b>НАПОМИНАНИЕ:</b><br>Ты не обязана спасать взрослого человека или терпеть боль ради его потенциала.</div><button class="bk" onclick="showResult(window.cur)">← НАЗАД К КАРТОЧКЕ</button><button class="mn" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';document.getElementById("app").innerHTML=h;}
 function findIdx(e){var arr=load();for(var i=0;i<arr.length;i++){if(arr[i].id===e.id)return i;}return -1;}
@@ -166,8 +168,9 @@ var b1=document.createElement("button");b1.className="opt";b1.textContent="🔴 
 var b2=document.createElement("button");b2.className="opt";b2.textContent="🟢 ДОБАВИТЬ ПОЗИТИВНЫЙ МОМЕНТ";b2.onclick=function(){var v=prompt("Какой позитивный момент ты заметила?");if(v){e.pos.push(v);updateE(e);cardView(e);}};a.appendChild(b2);
 var b3=document.createElement("button");b3.className="opt";b3.textContent="📝 ДОБАВИТЬ ЗАМЕТКУ";b3.onclick=function(){var v=prompt("Твоя заметка:");if(v){e.notes.push(v);updateE(e);cardView(e);}};a.appendChild(b3);
 var b4=document.createElement("button");b4.className="bk";b4.textContent="← НАЗАД В АРХИВ";b4.onclick=collection;a.appendChild(b4);
-var b5=document.createElement("button");b5.className="bk";b5.textContent="📖 ОТКРЫТЬ РЕЗУЛЬТАТ АНАЛИЗА";b5.onclick=function(){showResult(e);};a.appendChild(b5);
-var b6=document.createElement("button");b6.className="mn";b6.textContent="☰ ГЛАВНОЕ МЕНЮ";b6.onclick=menu;a.appendChild(b6);}
+var b5=document.createElement("button");b5.className="bk";b5.textContent="📖 ВЕРНУТЬСЯ К КАРТОЧКЕ МУЖИКА";b5.onclick=function(){showResult(e);};a.appendChild(b5);
+var b6=document.createElement("button");b6.className="pub";b6.textContent="📤 ОТПРАВИТЬ В ОБЩИЙ АРХИВ";b6.onclick=function(){shareForm(e);};a.appendChild(b6);
+var b7=document.createElement("button");b7.className="mn";b7.textContent="☰ ГЛАВНОЕ МЕНЮ";b7.onclick=menu;a.appendChild(b7);}
 function collection(){beep(700,.1);var arr=load(),a=document.getElementById("app");
 a.innerHTML='<div class="t">АРХИВ СУЩЕСТВ</div><div class="k">🗂 МОЯ КОЛЛЕКЦИЯ</div>';
 if(!arr.length){a.innerHTML+='<div class="bl">Архив пока пуст. Пройди анализ, чтобы поймать первое существо.</div>';}
@@ -180,22 +183,33 @@ box.appendChild(b1);a.appendChild(box);})(i);}}
 var bk=document.createElement("button");bk.className="bk";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);
 var b3=document.createElement("button");b3.className="ag";b3.textContent="☠ НОВЫЙ АНАЛИЗ ☠";b3.onclick=startTest;a.appendChild(b3);}
 function shareForm(e){beep(700,.1);window.cur=e;var a=document.getElementById("app");
-a.innerHTML='<div class="t">ОБЩИЙ АРХИВ ПАТТЕРНОВ</div><div class="k">📤 АНОНИМНАЯ ИСТОРИЯ</div><div class="bl yel"><b>ПРАВИЛА:</b><br>Не указывай имя, фото, ник, телефон, ссылку, адрес, место работы или другие данные, по которым можно узнать человека. Расскажи о паттерне поведения, а не «приговори» личность. История попадёт к модератору и будет опубликована только после проверки.</div><div class="bl"><b>КАСТА:</b> '+R[e.t].n+'</div>';
-var box=document.createElement("div");box.className="bl";box.innerHTML="<b>КАКИЕ ПАТТЕРНЫ БЫЛИ?</b>";
+a.innerHTML='<div class="t">ОБЩИЙ АРХИВ</div><div class="k">📤 АНОНИМНАЯ ИСТОРИЯ</div><div class="bl yel"><b>ПРАВИЛА:</b><br>Не указывай ФИО, не публикуй ссылки, адреса, телефоны, ники, фото или любые данные, по которым можно узнать человека. Расскажи свою историю о поведении и о том, как ты себя чувствовала. История попадёт на модерацию и будет опубликована только после проверки.</div><div class="bl"><b>КАСТА:</b> '+R[e.t].n+'</div>';
+var box=document.createElement("div");box.className="bl";box.innerHTML="<b>ЧТО БЫЛО В ОБЩЕНИИ?</b>";
 for(var i=0;i<FLAGS.length;i++){(function(fl){var l=document.createElement("label");l.className="chk";var cb=document.createElement("input");cb.type="checkbox";cb.value=fl;if(e.flags.indexOf(fl)>=0)cb.checked=true;cb.onchange=function(){if(cb.checked){if(e.flags.indexOf(fl)<0)e.flags.push(fl);}else{e.flags=e.flags.filter(function(x){return x!==fl;});}};l.appendChild(cb);l.appendChild(document.createTextNode(fl));box.appendChild(l);})(FLAGS[i]);}
 a.appendChild(box);
-var ta=document.createElement("textarea");ta.rows=6;ta.placeholder="Коротко и без узнаваемых деталей: что происходило, какие фразы повторялись, как ты себя чувствовала после общения.";ta.value=e.story||"";ta.oninput=function(){e.story=ta.value;};a.appendChild(ta);
-var b1=document.createElement("button");b1.className="pub";b1.textContent="📤 ОТПРАВИТЬ НА МОДЕРАЦИЮ";b1.onclick=function(){if(!e.story||e.story.trim().length<20){alert("Добавь историю минимум из 20 символов.");return;}e.status="pending";e.pubDate=new Date().toLocaleDateString("ru-RU");updateE(e);beep(900,.15);document.getElementById("app").innerHTML='<div class="k">⏳ ОТПРАВЛЕНО</div><div class="bl">История отправлена на модерацию. Она появится в общем архиве только после одобрения.</div><button class="bk" onclick="showResult(window.cur)">← НАЗАД К КАРТОЧКЕ</button><button class="mn" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';};a.appendChild(b1);
-var b2=document.createElement("button");b2.className="bk";b2.textContent="← НАЗАД К КАРТОЧКЕ";b2.onclick=function(){showResult(e);};a.appendChild(b2);
+var ta=document.createElement("textarea");ta.rows=6;ta.placeholder="Расскажи свою историю без имён и узнаваемых деталей: что происходило, какие фразы повторялись, как ты себя чувствовала после общения.";ta.value=e.story||"";ta.oninput=function(){e.story=ta.value;};a.appendChild(ta);
+var b1=document.createElement("button");b1.className="pub";b1.textContent="📤 ОТПРАВИТЬ НА МОДЕРАЦИЮ";b1.onclick=function(){if(!e.story||e.story.trim().length<20){alert("Добавь историю минимум из 20 символов.");return;}e.status="pending";e.pubDate=new Date().toLocaleDateString("ru-RU");updateE(e);beep(900,.15);document.getElementById("app").innerHTML='<div class="k">⏳ ОТПРАВЛЕНО</div><div class="bl">История отправлена на модерацию. Она появится в общем архиве только после одобрения.</div><button class="bk" onclick="showResult(window.cur)">← НАЗАД К КАРТОЧКЕ МУЖИКА</button><button class="mn" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';};a.appendChild(b1);
+var b2=document.createElement("button");b2.className="bk";b2.textContent="← НАЗАД К КАРТОЧКЕ МУЖИКА";b2.onclick=function(){showResult(e);};a.appendChild(b2);
 var b3=document.createElement("button");b3.className="mn";b3.textContent="☰ ГЛАВНОЕ МЕНЮ";b3.onclick=menu;a.appendChild(b3);}
 function publicArchive(){beep(700,.1);var arr=load().filter(function(e){return e.status==="approved";}),a=document.getElementById("app");
-a.innerHTML='<div class="t">ОБЩИЙ АРХИВ ПАТТЕРНОВ</div><div class="k">🌐 ОПУБЛИКОВАННЫЕ ИСТОРИИ</div><div class="bl yel">Это анонимные личные истории, а не юридические факты или диагнозы. Цель — заметить повторяющиеся паттерны и не остаться одной с ситуацией.</div>';
+a.innerHTML='<div class="t">ОБЩИЙ АРХИВ</div><div class="k">🌐 ИСТОРИИ ПОСЛЕ МОДЕРАЦИИ</div><div class="bl yel">Это анонимные личные истории, а не юридические факты или диагнозы. Цель — заметить повторяющиеся паттерны, поддержать друг друга и не остаться одной с ситуацией.</div>';
 if(!arr.length){a.innerHTML+='<div class="bl">Пока нет опубликованных историй.</div>';}
-else{for(var i=0;i<arr.length;i++){var e=arr[i],r=R[e.t];
+else{for(var i=0;i<arr.length;i++){(function(idx){var e=arr[idx],r=R[e.t];
 var box=document.createElement("div");box.className="card";
-box.innerHTML='<b>'+r.i+" "+r.n+"</b> · "+(e.pubDate||e.d)+'<br><div class="note">'+(e.flags&&e.flags.length?e.flags.map(function(f){return "🔴 "+f;}).join(" · "):"Паттерны не выбраны")+'</div><div style="margin-top:6px;line-height:1.5">'+e.story.replace(/</g,"&lt;")+'</div>';
-a.appendChild(box);}}
+box.innerHTML='<b>'+r.i+" "+r.n+"</b> · "+(e.pubDate||e.d)+'<br><div class="note">'+(e.flags&&e.flags.length?e.flags.map(function(f){return "🔴 "+f;}).join(" · "):"Паттерны не выбраны")+'</div><div style="margin-top:6px;line-height:1.5">'+e.story.replace(/</g,"&lt;")+'</div><div class="note">💬 комментариев: '+(e.comments?e.comments.length:0)+'</div>';
+var b1=document.createElement("button");b1.className="opt";b1.textContent="💬 ОТКРЫТЬ КАРТОЧКУ И КОММЕНТИРОВАТЬ";b1.onclick=function(){beep(700,.1);publicCard(e);};
+box.appendChild(b1);a.appendChild(box);})(i);}}
 var bk=document.createElement("button");bk.className="bk";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+function publicCard(e){beep(700,.1);var arr=load(),i=-1;for(var q=0;q<arr.length;q++){if(arr[q].id===e.id){i=q;e=arr[q];break;}}
+var r=R[e.t],a=document.getElementById("app");
+a.innerHTML='<div class="t">ОБЩИЙ АРХИВ</div><div class="k">'+r.i+" "+r.n+" "+r.i+'</div><div class="d '+r.d[0]+'">'+r.d[1]+' · '+(e.pubDate||e.d)+'</div><div class="bl"><b>ИСТОРИЯ:</b><br>'+e.story.replace(/</g,"&lt;")+'</div><div class="bl red"><b>ОТМЕЧЕННЫЕ ПАТТЕРНЫ:</b><br>'+(e.flags&&e.flags.length?e.flags.map(function(f){return "🔴 "+f;}).join("<br>"):"Не выбраны")+'</div><div class="bl"><b>КОММЕНТАРИИ:</b>';
+if(e.comments&&e.comments.length){for(var j=0;j<e.comments.length;j++)a.innerHTML+='<div class="cmt">'+e.comments[j].text.replace(/</g,"&lt;")+'<div class="note">'+e.comments[j].date+'</div></div>';}
+else a.innerHTML+='<div class="note">Пока нет комментариев.</div>';
+a.innerHTML+='</div>';
+var ta=document.createElement("textarea");ta.rows=3;ta.placeholder="Поддержи, задай вопрос или поделись похожим опытом. Без имён, ссылок и узнаваемых данных.";a.appendChild(ta);
+var b=document.createElement("button");b.className="pub";b.textContent="💬 ОСТАВИТЬ КОММЕНТАРИЙ";b.onclick=function(){var v=ta.value.trim();if(v.length<3){alert("Напиши комментарий.");return;}e.comments.push({text:v,date:new Date().toLocaleDateString("ru-RU")});arr[i]=e;save(arr);beep(900,.1);publicCard(e);};a.appendChild(b);
+var bk=document.createElement("button");bk.className="bk";bk.textContent="← НАЗАД В ОБЩИЙ АРХИВ";bk.onclick=publicArchive;a.appendChild(bk);
+var b2=document.createElement("button");b2.className="mn";b2.textContent="☰ ГЛАВНОЕ МЕНЮ";b2.onclick=menu;a.appendChild(b2);}
 function moderation(){beep(700,.1);var p=prompt("Код модератора:");if(p===null)return;if(p!=="QUEEN2026"){alert("Неверный код.");return;}
 var arr=load(),pend=arr.filter(function(e){return e.status==="pending";}),a=document.getElementById("app");
 a.innerHTML='<div class="t">МОДЕРАЦИЯ</div><div class="k">🛡 ОЧЕРЕДЬ</div>';
