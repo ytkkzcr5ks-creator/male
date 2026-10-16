@@ -78,7 +78,7 @@ window.onerror=function(msg,src,line,col){var ap=document.getElementById("app");
 var SUPABASE_URL="https://nfvwxkpzwakcavlsabin.supabase.co";
 var SUPABASE_KEY="sb_publishable_-bZbipJiWgKXSUYm5xLlqQ_mLXvYFwr";
 var sb=null,SB_ERR="";
-try{if(window.supabase&&window.supabase.createClient){sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);}else{SB_ERR="Библиотека Supabase не загрузилась.";}}
+try{if(window.supabase&&window.supabase.createClient){sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});}else{SB_ERR="Библиотека Supabase не загрузилась.";}}
 catch(e){SB_ERR="Ошибка Supabase: "+e.message;}
 var NICK=localStorage.getItem("gms_nick")||"";
 var S={narc:0,covert:0,gas:0,manip:0,pickme:0,chaos:0,norm:0,green:0,ctrl:0};
@@ -412,10 +412,26 @@ beep(500,.15);document.getElementById("app").innerHTML='<div class="k">⚠️ Ж
 var bk=document.createElement("button");bk.className="bk";bk.textContent="← НАЗАД В АРХИВ";bk.onclick=publicArchive;a.appendChild(bk);
 var b2=document.createElement("button");b2.className="arc";b2.textContent="🗂 МОЙ АРХИВ";b2.onclick=collection;a.appendChild(b2);
 var b3=document.createElement("button");b3.className="bigact";b3.textContent="☰ ГЛАВНОЕ МЕНЮ";b3.onclick=menu;a.appendChild(b3);}
-async function modLogin(){var em=prompt("Email администратора:");if(!em)return false;var pw=prompt("Пароль:");if(!pw)return false;
-var res=await sb.auth.signInWithPassword({email:em,password:pw});
+async function modLogin(){
+if(!sb){alert(SB_ERR||"Supabase не подключён.");return false;}
+try{
+var sess=await sb.auth.getSession();
+if(!sess.error&&sess.data&&sess.data.session)return true;
+var em=prompt("Email администратора:");if(!em)return false;
+var pw=prompt("Пароль:");if(!pw)return false;
+var res=await sb.auth.signInWithPassword({email:em.trim(),password:pw});
 if(res.error){alert("Ошибка входа: "+res.error.message);return false;}
-return true;}
+return !!(res.data&&res.data.session);
+}catch(err){alert("Ошибка входа: "+err.message);return false;}
+}
+async function modLogout(){
+if(!confirm("Выйти из аккаунта администратора на этом сайте?"))return;
+try{
+var res=await sb.auth.signOut({scope:"local"});
+if(res.error){alert("Не удалось выйти: "+res.error.message);return;}
+beep(300,.15,"sawtooth");menu();
+}catch(err){alert("Не удалось выйти: "+err.message);}
+}
 async function moderation(){beep(700,.1);if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}var ok=await modLogin();if(!ok)return;
 var a=document.getElementById("app");a.innerHTML='<div class="t">ПАНЕЛЬ АДМИНИСТРАТОРА</div><div class="k">🛡 ЗАГРУЗКА…</div>';
 var st=await sb.from("stories").select("id,archetype,card_data,story,flags,status,created_at").in("status",["pending","reported"]).order("created_at",{ascending:false});
@@ -447,6 +463,7 @@ box.innerHTML='<b>⚠️ ЖАЛОБА</b> · '+new Date(rep.created_at).toLocale
 var b1=document.createElement("button");b1.className="ag";b1.textContent="❌ СКРЫТЬ ИСТОРИЮ ПО ЖАЛОБЕ";b1.onclick=async function(){var up=await sb.from("stories").update({status:"rejected"}).eq("id",rep.story_id);if(up.error){alert(up.error.message);return;}await sb.from("reports").update({status:"closed"}).eq("id",rep.id);beep(180,.2,"sawtooth");moderation();};
 var b2=document.createElement("button");b2.className="pub";b2.textContent="✅ ЖАЛОБА НЕ ОБОСНОВАНА · ЗАКРЫТЬ";b2.onclick=async function(){await sb.from("reports").update({status:"closed"}).eq("id",rep.id);beep(900,.1);moderation();};
 box.appendChild(b1);box.appendChild(b2);a.appendChild(box);})(q);}
+var lo=document.createElement("button");lo.className="bk";lo.textContent="🚪 ВЫЙТИ ИЗ АККАУНТА АДМИНИСТРАТОРА";lo.onclick=modLogout;a.appendChild(lo);
 var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
 var GAME=[["«Ты слишком чувствительная»",["Газлайт","Забота","Комплимент"],0],["«Я был неправ, извини»",["Газлайт","Здоровая граница","Манипуляция"],1],["«После всего, что я для тебя сделал»",["Чувство вины","Поддержка","Уважение"],0],["«Мне не нравится, когда ты общаешься с ним»",["Контроль","Граница","Забота"],0],["«Ты не обязана решать прямо сейчас»",["Уважение","Давление","Обесценивание"],0],["«Я пошутил, ты что»",["Обесценивание","Извинение","Забота"],0],["«Давай обсудим спокойно»",["Уважение","Газлайт","Ревность"],0],["«Если любишь — удали его»",["Контроль","Граница","Поддержка"],0]];
 var gi=0,gs=0;
