@@ -539,6 +539,76 @@ a.innerHTML+='<div class="bl"><b>СТАТИСТИКА:</b><br>Карточек �
 var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
 function toggleQuiet(){var q=localStorage.getItem("gms_quiet")==="1";localStorage.setItem("gms_quiet",q?"0":"1");applyQuiet();beep(q?900:400,.1);menu();}
 function applyQuiet(){document.body.classList.toggle("quiet",localStorage.getItem("gms_quiet")==="1");}
+async function messagesHome(){beep(700,.1);var a=document.getElementById("app");
+a.innerHTML='<div class="t">ЛИЧНЫЕ СООБЩЕНИЯ</div><div class="k">✉ ДИАЛОГ С АДМИНИСТРАТОРОМ</div><div class="bl yel">Придумай секретный код — например, несколько случайных слов. По нему ты будешь открывать свою переписку. Никому его не передавай.</div>';
+var inp=document.createElement("input");inp.placeholder="Твой секретный код";inp.value=localStorage.getItem("gms_thread")||"";a.appendChild(inp);
+var b=document.createElement("button");b.className="pub";b.textContent="🔍 ОТКРЫТЬ / СОЗДАТЬ ДИАЛОГ";b.onclick=function(){var c=inp.value.trim();if(c.length<4){alert("Код должен быть минимум из 4 символов.");return;}localStorage.setItem("gms_thread",c);openThread(c);};a.appendChild(b);
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+async function openThread(code){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
+a.innerHTML='<div class="t">ЛИЧНЫЕ СООБЩЕНИЯ</div><div class="k">✉ ЗАГРУЗКА…</div>';
+var res=await sb.from("messages").select("id,sender,text,created_at").eq("thread_code",code).order("created_at",{ascending:true});
+if(res.error){a.innerHTML='<div class="k">ОШИБКА</div><div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="messagesHome()">← НАЗАД</button>';return;}
+var msgs=res.data||[];
+a.innerHTML='<div class="t">ЛИЧНЫЕ СООБЩЕНИЯ</div><div class="k">✉ ТВОЙ ДИАЛОГ</div><div class="bl">Код диалога: <b>'+code.replace(/</g,"&lt;")+'</b>. Сохрани его: без него переписку не открыть.</div>';
+if(!msgs.length)a.innerHTML+='<div class="bl">Напиши администратору, что происходит. Ответ появится здесь.</div>';
+for(var i=0;i<msgs.length;i++){var m=msgs[i];
+a.innerHTML+='<div class="'+(m.sender==="admin"?"cmt":"bl")+'"><b>'+(m.sender==="admin"?"✉ АДМИНИСТРАТОР":"ТЫ")+'</b><br>'+m.text.replace(/</g,"&lt;")+'<div class="note">'+new Date(m.created_at).toLocaleString("ru-RU")+'</div></div>';}
+var ta=document.createElement("textarea");ta.rows=3;ta.placeholder="Написать администратору…";a.appendChild(ta);
+var b=document.createElement("button");b.className="pub";b.textContent="✉ ОТПРАВИТЬ";b.onclick=async function(){var v=ta.value.trim();if(v.length<2){alert("Напиши сообщение.");return;}var bad=autoFilter(v);if(bad){alert(bad);return;}
+b.textContent="⏳ ОТПРАВЛЯЮ…";b.disabled=true;
+var ins=await sb.from("messages").insert({thread_code:code,sender:"user",text:v});
+if(ins.error){alert("Ошибка: "+ins.error.message);b.textContent="✉ ОТПРАВИТЬ";b.disabled=false;return;}
+bump("gms_threads");beep(900,.1);openThread(code);};a.appendChild(b);
+var bk=document.createElement("button");bk.className="bk";bk.textContent="← ДРУГОЙ КОД";bk.onclick=messagesHome;a.appendChild(bk);
+var b2=document.createElement("button");b2.className="bigact";b2.textContent="☰ ГЛАВНОЕ МЕНЮ";b2.onclick=menu;a.appendChild(b2);}
+async function adminThreads(){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
+a.innerHTML='<div class="t">АДМИН-ПАНЕЛЬ</div><div class="k">✉ ДИАЛОГИ</div>';
+var res=await sb.from("messages").select("*").order("created_at",{ascending:false});
+if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="moderation()">← НАЗАД</button>';return;}
+var rows=res.data||[],seen={},list=[];
+for(var i=0;i<rows.length;i++){var c=rows[i].thread_code;if(!seen[c]){seen[c]=1;list.push({code:c,last:rows[i]});}}
+if(!list.length)a.innerHTML+='<div class="bl">Пока нет личных диалогов.</div>';
+for(var j=0;j<list.length;j++){(function(it){var box=document.createElement("div");box.className="card";
+box.innerHTML='<b>✉ '+it.code.replace(/</g,"&lt;")+'</b><br><div class="note">Последнее: '+(it.last.sender==="admin"?"администратор":"посетитель")+' · '+new Date(it.last.created_at).toLocaleString("ru-RU")+'</div><div style="margin-top:6px">'+it.last.text.replace(/</g,"&lt;")+'</div>';
+var b=document.createElement("button");b.className="opt";b.textContent="💬 ОТКРЫТЬ ДИАЛОГ";b.onclick=function(){adminThread(it.code);};box.appendChild(b);a.appendChild(box);})(list[j]);}
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="← В АДМИН-ПАНЕЛЬ";bk.onclick=moderation;a.appendChild(bk);}
+async function adminThread(code){beep(700,.1);var a=document.getElementById("app");
+a.innerHTML='<div class="t">ДИАЛОГ</div><div class="k">✉ ЗАГРУЗКА…</div>';
+var res=await sb.from("messages").select("*").eq("thread_code",code).order("created_at",{ascending:true});
+if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="adminThreads()">← НАЗАД</button>';return;}
+var msgs=res.data||[];
+a.innerHTML='<div class="t">ДИАЛОГ С ПОСЕТИТЕЛЕМ</div><div class="k">✉ '+code.replace(/</g,"&lt;")+'</div>';
+for(var i=0;i<msgs.length;i++){var m=msgs[i];
+a.innerHTML+='<div class="'+(m.sender==="admin"?"bl grn":"cmt")+'"><b>'+(m.sender==="admin"?"ТЫ (АДМИН)":"ПОСЕТИТЕЛЬ")+'</b><br>'+m.text.replace(/</g,"&lt;")+'<div class="note">'+new Date(m.created_at).toLocaleString("ru-RU")+'</div></div>';}
+var ta=document.createElement("textarea");ta.rows=3;ta.placeholder="Твой ответ посетителю…";a.appendChild(ta);
+var b=document.createElement("button");b.className="pub";b.textContent="✉ ОТВЕТИТЬ";b.onclick=async function(){var v=ta.value.trim();if(v.length<2){alert("Напиши ответ.");return;}
+b.textContent="⏳ ОТПРАВЛЯЮ…";b.disabled=true;
+var ins=await sb.from("messages").insert({thread_code:code,sender:"admin",text:v});
+if(ins.error){alert("Ошибка: "+ins.error.message);b.textContent="✉ ОТВЕТИТЬ";b.disabled=false;return;}
+beep(900,.1);adminThread(code);};a.appendChild(b);
+var bk=document.createElement("button");bk.className="bk";bk.textContent="← ВСЕ ДИАЛОГИ";bk.onclick=adminThreads;a.appendChild(bk);
+var b2=document.createElement("button");b2.className="bigact";b2.textContent="← В АДМИН-ПАНЕЛЬ";b2.onclick=moderation;a.appendChild(b2);}
+async function addrBook(){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
+a.innerHTML='<div class="t">АДРЕСНАЯ КНИГА</div><div class="k">📇 ЗАГРУЗКА…</div>';
+var res=await sb.from("contacts").select("*").order("created_at",{ascending:false});
+if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="moderation()">← НАЗАД</button>';return;}
+var rows=res.data||[];
+a.innerHTML='<div class="t">АДРЕСНАЯ КНИГА</div><div class="k">📇 МОИ КОНТАКТЫ</div><div class="bl yel">Видна только тебе в админ-панели. Не сохраняй здесь лишние личные данные.</div>';
+var n1=document.createElement("input");n1.placeholder="Кодовое имя / никнейм";a.appendChild(n1);
+var n2=document.createElement("input");n2.placeholder="Контакт для связи";a.appendChild(n2);
+var n3=document.createElement("textarea");n3.rows=2;n3.placeholder="Заметка: ситуация, статус, что важно помнить";a.appendChild(n3);
+var add=document.createElement("button");add.className="pub";add.textContent="➕ ДОБАВИТЬ КОНТАКТ";add.onclick=async function(){if(!n1.value.trim()){alert("Введи кодовое имя.");return;}
+var ins=await sb.from("contacts").insert({nickname:n1.value.trim(),contact:n2.value.trim(),notes:n3.value.trim(),status:"в работе"});
+if(ins.error){alert("Ошибка: "+ins.error.message);return;}beep(900,.1);addrBook();};a.appendChild(add);
+if(!rows.length)a.innerHTML+='<div class="bl">Пока нет сохранённых контактов.</div>';
+for(var i=0;i<rows.length;i++){(function(c){var box=document.createElement("div");box.className="card";
+box.innerHTML='<b>👤 '+c.nickname.replace(/</g,"&lt;")+'</b> · '+(c.status||"в работе")+'<br><div class="note">Контакт: '+(c.contact||"—").replace(/</g,"&lt;")+'</div><div class="note">'+(c.notes||"").replace(/</g,"&lt;")+'</div>';
+var st=document.createElement("input");st.value=c.status||"в работе";st.placeholder="Статус";box.appendChild(st);
+var nt=document.createElement("textarea");nt.rows=2;nt.value=c.notes||"";nt.placeholder="Заметка";box.appendChild(nt);
+var b1=document.createElement("button");b1.className="pub";b1.textContent="💾 СОХРАНИТЬ";b1.onclick=async function(){var up=await sb.from("contacts").update({status:st.value,notes:nt.value}).eq("id",c.id);if(up.error){alert(up.error.message);return;}beep(900,.1);addrBook();};box.appendChild(b1);
+var b2=document.createElement("button");b2.className="del";b2.textContent="🗑 УДАЛИТЬ";b2.onclick=async function(){if(!confirm("Удалить контакт из адресной книги?"))return;var del=await sb.from("contacts").delete().eq("id",c.id);if(del.error){alert(del.error.message);return;}beep(180,.2,"sawtooth");addrBook();};box.appendChild(b2);
+a.appendChild(box);})(rows[i]);}
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="← В АДМИН-ПАНЕЛЬ";bk.onclick=moderation;a.appendChild(bk);}
 async function hiddenArchive(){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
 a.innerHTML='<div class="t">АДМИН-ПАНЕЛЬ</div><div class="k">🗄 ЗАГРУЗКА…</div>';
 var res=await sb.from("stories").select("id,archetype,card_data,story,flags,status,created_at,published_at").in("status",["hidden","archived"]).order("created_at",{ascending:false});
