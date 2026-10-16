@@ -382,7 +382,7 @@ a.innerHTML='<div class="t">ПУБЛИЧНЫЙ АРХИВ</div><div class="k">�
 var res=await sb.from("comments").select("id,nickname,text,created_at").eq("story_id",e.id).order("created_at",{ascending:true});
 var comments=res.data||[];window.curStory=e;
 var sess=await sb.auth.getSession();
-var ADMIN_UID="ВСТАВЬ_СВОЙ_UID";
+var ADMIN_UID="30b53f52-21b3-4ba5-8cc7-01069315d457";
 var isAdmin=!!(sess.data&&sess.data.session&&sess.data.session.user&&sess.data.session.user.id===ADMIN_UID);
 
 var r=R[e.archetype]||R.norm,cd=e.card_data||{};
