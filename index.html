@@ -392,6 +392,18 @@ var ins=await sb.from("comments").insert({story_id:e.id,text:v,nickname:NICK||"�
 if(ins.error){alert("Ошибка: "+ins.error.message);b.textContent="💬 ОСТАВИТЬ КОММЕНТАРИЙ";b.disabled=false;return;}
 beep(900,.1);publicCard(e);};a.appendChild(b);
 var sm=document.createElement("button");sm.className="opt";sm.textContent="🔗 ПОХОЖИЕ ИСТОРИИ";sm.onclick=function(){beep(700,.1);publicSimilar(e);};a.appendChild(sm);
+var sess=await sb.auth.getSession();
+var isAdmin=!!(sess.data&&sess.data.session&&sess.data.session.user);
+if(isAdmin){
+var hideB=document.createElement("button");hideB.className="mod";hideB.textContent="🙈 СКРЫТЬ ИСТОРИЮ";
+hideB.onclick=async function(){if(!confirm("Скрыть историю из публичного архива?"))return;var up=await sb.from("stories").update({status:"hidden"}).eq("id",e.id);if(up.error){alert(up.error.message);return;}beep(500,.15);publicArchive();};
+a.appendChild(hideB);
+var archB=document.createElement("button");archB.className="arc";archB.textContent="🗄 АРХИВИРОВАТЬ";
+archB.onclick=async function(){if(!confirm("Архивировать историю?"))return;var up=await sb.from("stories").update({status:"archived"}).eq("id",e.id);if(up.error){alert(up.error.message);return;}beep(700,.1);publicArchive();};
+a.appendChild(archB);
+var delB=document.createElement("button");delB.className="del";delB.textContent="🗑 УДАЛИТЬ НАВСЕГДА";
+delB.onclick=async function(){if(!confirm("Удалить историю навсегда? Действие нельзя отменить."))return;var up=await sb.from("stories").delete().eq("id",e.id);if(up.error){alert(up.error.message);return;}beep(180,.2,"sawtooth");publicArchive();};
+a.appendChild(delB);}                             
 var rep=document.createElement("button");rep.className="rep";rep.textContent="⚠️ ПОЖАЛОВАТЬСЯ НА ИСТОРИЮ";rep.onclick=async function(){var reason=prompt("Что не так с этой историей?");if(reason===null)return;
 rep.textContent="⏳ ОТПРАВЛЯЮ…";rep.disabled=true;
 var ins=await sb.from("reports").insert({story_id:e.id,reason:reason});
