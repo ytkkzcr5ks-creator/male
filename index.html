@@ -390,7 +390,7 @@ var rxRes=await sb.from("comment_reactions").select("comment_id,reaction").eq("s
 var rx={};
 if(!rxRes.error&&rxRes.data){for(var ri=0;ri<rxRes.data.length;ri++){var rr=rxRes.data[ri];if(!rx[rr.comment_id])rx[rr.comment_id]={};rx[rr.comment_id][rr.reaction]=(rx[rr.comment_id][rr.reaction]||0)+1;}}
 var sess=await sb.auth.getSession();
-var ADMIN_UID="ВСТАВЬ_СВОЙ_UID";
+var ADMIN_UID="30b53f52-21b3-4ba5-8cc7-01069315d457";
 var isAdmin=!!(sess.data&&sess.data.session&&sess.data.session.user&&sess.data.session.user.id===ADMIN_UID);
 
 var r=R[e.archetype]||R.norm,cd=e.card_data||{};
