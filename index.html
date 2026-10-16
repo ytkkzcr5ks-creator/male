@@ -67,6 +67,7 @@ textarea,input,select{width:100%;background:#06170e;border:1px solid #2c6b4a;col
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
 .chip{width:auto;display:inline-block;padding:6px 9px;font-size:11px;margin:0}
 .chip.on{background:#39ff8822;border-color:var(--g);color:var(--g)}
+body.quiet #m{display:none}body.quiet .ln{animation:none;opacity:1}body.quiet #p{display:none}
 </style></head><body>
 <canvas id="m"></canvas><div id="p"></div><div class="w">
 <h1>СКАНЕР МУЖИКА</h1>
@@ -108,7 +109,7 @@ norm:{i:"☕",n:"НОРМИС",d:["grn","SAFE MODE / БЕЗ МАГИИ"],q:"Ни
 green:{i:"🌿",n:"ЗЕЛЁНЫЙ ФЛАГ",d:["grn","SAFE MODE / ПОСЛЕДОВАТЕЛЕН"],q:"Уважает границы, слышит слова и умеет извиняться.",desc:"Он не превращает близость в борьбу за контроль. Может признать ошибку и услышать «мне неприятно».",rec:"Спрашивает, как ты, не наказывает молчанием, не требует отчётов, уважает «нет».",ph:["«Что тебя задело?»","«Я был неправ, извини»","«Что тебе комфортнее?»","«Ты не обязана решать сейчас»"],exp:"Спокойствие, последовательность, уважение.",co:"Береги, но не превращай в спасителя. Продолжай говорить о потребностях и границах.",fl:["Признаёт ошибки","Уважает «нет»","Не давит","Не исчезает","Слышит чувства"]},
 ctrl:{i:"⛓",n:"КОНТРОЛЁР-ИНКВИЗИТОР",d:["red","ЦИФРОВАЯ ИНКВИЗИЦИЯ / ДОСТУП ОГРАНИЧЕН"],q:"Ревность он называет заботой, запреты — защитой.",desc:"Сначала «я волнуюсь», потом твоя свобода становится угрозой, друзья — конкурентами, границы — проблемой.",rec:"Хочет знать, где ты, с кем ты, требует пароли и отчёты.",ph:["«Удали его из друзей»","«Почему не ответила?»","«Я просто забочусь»","«Если любишь — ты бы не так вела»"],exp:"Постепенное сужение жизни и изоляция.",co:"Контроль не усиливается от любви. Не отдавай пароли, не сокращай жизнь ради его спокойствия. Если есть страх, угрозы или насилие — обратись за поддержкой к близким или специалисту.",fl:["Проверяет телефон","Запрещает друзей","Наказывает молчанием","Ревность = забота","Любовь = разрешение только на него"]}};
 var FLAGS=["Физическое насилие или избиение","Угрозы, запугивание, агрессия","Проверка телефона и переписок","Требовал прекратить общение с друзьями","Контроль и ревность","Слежка, отчёты, требования паролей","Газлайт","Обесценивание и унижения","Изоляция от друзей и близких","Давление и уговоры","Игра на вине","Финансовый контроль или манипуляции","Сексуальное давление","Резкие исчезновения","Двойные стандарты","Публичные унижения или оскорбления"];
-function beep(f,d,t){try{var c=new(window.AudioContext||window.webkitAudioContext)();var o=c.createOscillator(),g=c.createGain();o.type=t||"square";o.frequency.value=f;g.gain.value=.03;o.connect(g);g.connect(c.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);o.stop(c.currentTime+d);}catch(e){}}
+function beep(f,d,t){if(localStorage.getItem("gms_quiet")==="1")return;try{var c=new(window.AudioContext||window.webkitAudioContext)();var o=c.createOscillator(),g=c.createGain();o.type=t||"square";o.frequency.value=f;g.gain.value=.03;o.connect(g);g.connect(c.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);o.stop(c.currentTime+d);}catch(e){}}
 function normCard(e){if(!e||typeof e!=="object")return null;
 if(!e.id)e.id=Date.now()+"-"+Math.random().toString(36).slice(2);
 if(!Array.isArray(e.comments))e.comments=[];
@@ -184,6 +185,10 @@ var b4=document.createElement("button");b4.className="ctr";b4.textContent="✍ �
 var b8=document.createElement("button");b8.className="ctr";b8.textContent="✏ МОЙ НИКНЕЙМ";b8.onclick=setNick;a.appendChild(b8);
 var b9=document.createElement("button");b9.className="ctr";b9.textContent="✉ ПРОВЕРИТЬ ОТВЕТ АДМИНИСТРАТОРА";b9.onclick=replyCheck;a.appendChild(b9);
 var b7=document.createElement("button");b7.className="sos";b7.textContent="🆘 МНЕ СТРАШНО — ПОМОЩЬ АДМИНИСТРАТОРА";b7.onclick=function(){helpForm(null);};a.appendChild(b7);
+var bd=document.createElement("button");bd.className="ctr";bd.textContent="🚩 КРАСНЫЙ ФЛАГ ДНЯ";bd.onclick=dailyFlag;a.appendChild(bd);
+var bs=document.createElement("button");bs.className="ctr";bs.textContent="📖 ИСТОРИЯ ДНЯ";bs.onclick=storyOfDay;a.appendChild(bs);
+var ba=document.createElement("button");ba.className="ctr";ba.textContent="🏅 МОИ ДОСТИЖЕНИЯ";ba.onclick=badges;a.appendChild(ba);
+var bq=document.createElement("button");bq.className="ctr";bq.textContent="🌙 ТИХИЙ РЕЖИМ: "+(localStorage.getItem("gms_quiet")==="1"?"ВКЛ":"ВЫКЛ");bq.onclick=toggleQuiet;a.appendChild(bq);
 var bm=document.createElement("button");bm.className="pub";bm.textContent="✉ МОИ СООБЩЕНИЯ";bm.onclick=messagesHome;a.appendChild(bm);
 var b6=document.createElement("button");b6.className="mod";b6.textContent="🛡 ПАНЕЛЬ АДМИНИСТРАТОРА";b6.onclick=moderation;a.appendChild(b6);
 var b0=document.createElement("button");b0.className="bigact";b0.textContent="☰ В ГЛАВНОЕ МЕНЮ";b0.onclick=menu;a.appendChild(b0);}
@@ -242,7 +247,7 @@ document.getElementById("app").innerHTML=h;
 window.res="Мой результат: "+r.n+" — "+r.d[1]+". "+r.q;window.ty=best;window.cur=e;}
 function finish(){beep(220,.25,"sawtooth");var c=calc();
 var e=normCard({id:Date.now()+"-"+Math.random().toString(36).slice(2),t:c.best,d:new Date().toLocaleDateString("ru-RU"),n:"",s:JSON.parse(JSON.stringify(S)),dbId:null,dbStatus:null});
-var arr=load();arr.push(e);save(arr);window.cur=e;showResult(e);}
+var arr=load();arr.push(e);save(arr);bump("gms_cards");window.cur=e;showResult(e);}
 function cope(){beep(700,.1);var r=R[window.ty||"norm"]||R.norm,h='<div class="k">'+r.i+" "+r.n+" "+r.i+'</div><div class="bl yel"><b>ГЛАВНОЕ:</b><br>Ты не обязана сразу обрывать общение, чтобы начать заботиться о себе. Но ты имеешь право замечать, как тебе после общения, и менять дистанцию.</div><div class="bl"><b>ЧТО МОЖНО ДЕЛАТЬ:</b><ul><li>Записывай: что обещано, что сделано, как ты себя чувствовала после.</li><li>Оценивай повторяющиеся действия, а не отдельные хорошие моменты.</li><li>Формулируй границы коротко: «Мне не подходит такое общение».</li><li>Не принимай решения в момент вины, страха или сильной надежды.</li><li>Обсуди ситуацию с подругой, близким человеком или психологом.</li><li>Если есть страх, угрозы, контроль или насилие — безопасность важнее объяснений.</li></ul></div><div class="bl"><b>ДЛЯ ТИПА «'+r.n+'»:</b><br>'+r.co+'</div><div class="bl yel"><b>НАПОМИНАНИЕ:</b><br>Ты не обязана спасать взрослого человека или терпеть боль ради его потенциала.</div><button class="bk" onclick="showResult(window.cur)">← НАЗАД К КАРТОЧКЕ</button><button class="bigact" onclick="menu()">☰ В ГЛАВНОЕ МЕНЮ</button>';document.getElementById("app").innerHTML=h;}
 function findIdx(e){var arr=load();for(var i=0;i<arr.length;i++){if(arr[i].id===e.id)return i;}return -1;}
 function updateE(e){var arr=load(),i=findIdx(e);if(i>=0){arr[i]=e;save(arr);return true;}return false;}
@@ -305,7 +310,7 @@ var b1=document.createElement("button");b1.className="pub";b1.textContent="📤 
 b1.textContent="⏳ ОТПРАВЛЯЮ…";b1.disabled=true;
 var res=await sb.from("stories").insert({archetype:e.t,card_data:{n:e.n,s:e.s,reds:e.reds,pos:e.pos,notes:e.notes,diary:e.diary,danger:e.danger,dangerNote:e.dangerNote,modLink:e.modLink},story:e.story,flags:e.flags,status:"pending"});
 if(res.error){alert("Ошибка отправки: "+res.error.message+"\n\nПроверь, что в Supabase выполнен SQL для политики public_insert_stories.");b1.textContent="📤 ОТПРАВИТЬ НА ПРОВЕРКУ";b1.disabled=false;return;}
-e.dbStatus="pending";updateE(e);beep(900,.15);
+e.dbStatus="pending";updateE(e);bump("gms_published");beep(900,.15);
 document.getElementById("app").innerHTML='<div class="k">⏳ ОТПРАВЛЕНО</div><div class="bl">История отправлена на проверку. Она появится в публичном архиве после одобрения.</div><button class="bk" onclick="showResult(window.cur)">← НАЗАД К КАРТОЧКЕ</button><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';};a.appendChild(b1);
 var b2=document.createElement("button");b2.className="bk";b2.textContent="← НАЗАД К КАРТОЧКЕ";b2.onclick=function(){showResult(e);};a.appendChild(b2);
 var b3=document.createElement("button");b3.className="bigact";b3.textContent="☰ В ГЛАВНОЕ МЕНЮ";b3.onclick=menu;a.appendChild(b3);}
@@ -381,13 +386,23 @@ async function publicCard(e){beep(700,.1);var a=document.getElementById("app");i
 a.innerHTML='<div class="t">ПУБЛИЧНЫЙ АРХИВ</div><div class="k">💬 ЗАГРУЗКА…</div>';
 var res=await sb.from("comments").select("id,nickname,text,created_at").eq("story_id",e.id).order("created_at",{ascending:true});
 var comments=res.data||[];window.curStory=e;
+var rxRes=await sb.from("comment_reactions").select("comment_id,reaction").eq("story_id",e.id);
+var rx={};
+if(!rxRes.error&&rxRes.data){for(var ri=0;ri<rxRes.data.length;ri++){var rr=rxRes.data[ri];if(!rx[rr.comment_id])rx[rr.comment_id]={};rx[rr.comment_id][rr.reaction]=(rx[rr.comment_id][rr.reaction]||0)+1;}}
 var sess=await sb.auth.getSession();
 var ADMIN_UID="ВСТАВЬ_СВОЙ_UID";
 var isAdmin=!!(sess.data&&sess.data.session&&sess.data.session.user&&sess.data.session.user.id===ADMIN_UID);
 
 var r=R[e.archetype]||R.norm,cd=e.card_data||{};
 a.innerHTML='<div class="t">ПУБЛИЧНЫЙ АРХИВ</div><div class="k">'+r.i+" "+r.n+" "+r.i+'</div>'+(cd.danger?'<div class="warn">⚠️ ОСОБО ОПАСЕН</div>':'')+'<div class="bl"><b>ИСТОРИЯ:</b><br>'+e.story.replace(/</g,"&lt;")+'</div>'+(cd.danger&&cd.dangerNote?'<div class="bl red"><b>⚠️ ОПАСНЫЕ СИГНАЛЫ:</b><br>'+cd.dangerNote.replace(/</g,"&lt;")+'</div>':'')+(cd.publicLink?'<div class="bl yel"><b>🔗 ССЫЛКА / ДОКАЗАТЕЛЬСТВА ОТ АДМИНИСТРАТОРА:</b><br>'+cd.publicLink.replace(/</g,"&lt;")+'</div>':'')+'<div class="bl red"><b>ПАТТЕРНЫ:</b><br>'+(e.flags&&e.flags.length?e.flags.map(function(f){return "🔴 "+f;}).join("<br>"):"Не выбраны")+'</div><div class="bl"><b>КОММЕНТАРИИ:</b>';
-if(comments.length){for(var j=0;j<comments.length;j++){a.innerHTML+='<div class="cmt"><b>'+(comments[j].nickname||"Аноним")+'</b><br>'+comments[j].text.replace(/</g,"&lt;")+'<div class="note">'+new Date(comments[j].created_at).toLocaleDateString("ru-RU")+'</div>'+(isAdmin?'<button class="del" onclick="deleteComment(\''+comments[j].id+'\')">🗑 УДАЛИТЬ КОММЕНТАРИЙ</button>':'')+'</div>';}}
+if(comments.length){for(var j=0;j<comments.length;j++){var rid=comments[j].id,rc=rx[rid]||{};
+a.innerHTML+='<div class="cmt"><b>'+(comments[j].nickname||"Аноним")+'</b><br>'+comments[j].text.replace(/</g,"&lt;")+'<div class="note">'+new Date(comments[j].created_at).toLocaleDateString("ru-RU")+'</div>';
+a.innerHTML+='<div class="chips">';
+var rks=[["support","🤍","Я рядом"],["relate","🔥","Точно про меня"],["bound","🛡","Ты не виновата"]];
+for(var q2=0;q2<rks.length;q2++){(function(rr){var cnt=rc[rr[0]]||0;
+var rb=document.createElement("button");rb.className="chip";rb.textContent=rr[1]+" "+rr[2]+(cnt?" · "+cnt:"");
+rb.onclick=function(){react(rid,rr[0]);};a.appendChild(rb);})(rks[q2]);}
+a.innerHTML+='</div>'+(isAdmin?'<button class="del" onclick="deleteComment(\''+rid+'\')">🗑 УДАЛИТЬ КОММЕНТАРИЙ</button>':'')+'</div>';}}
 else a.innerHTML+='<div class="note">Пока нет комментариев.</div>';
 a.innerHTML+='</div>';
 var ta=document.createElement("textarea");ta.rows=3;ta.placeholder="Поддержи, задай вопрос или поделись похожим опытом.";a.appendChild(ta);
@@ -395,7 +410,7 @@ var b=document.createElement("button");b.className="pub";b.textContent="💬 О�
 b.textContent="⏳ ОТПРАВЛЯЮ…";b.disabled=true;
 var ins=await sb.from("comments").insert({story_id:e.id,text:v,nickname:NICK||"Аноним"});
 if(ins.error){alert("Ошибка: "+ins.error.message);b.textContent="💬 ОСТАВИТЬ КОММЕНТАРИЙ";b.disabled=false;return;}
-beep(900,.1);publicCard(e);};a.appendChild(b);
+bump("gms_comments");beep(900,.1);publicCard(e);};a.appendChild(b);
 var sm=document.createElement("button");sm.className="opt";sm.textContent="🔗 ПОХОЖИЕ ИСТОРИИ";sm.onclick=function(){beep(700,.1);publicSimilar(e);};a.appendChild(sm);
 if(isAdmin){
 var hideB=document.createElement("button");hideB.className="mod";hideB.textContent="🙈 СКРЫТЬ ИСТОРИЮ";
@@ -472,83 +487,58 @@ var ha=document.createElement("button");ha.className="bk";ha.textContent="🗄 �
 var lo=document.createElement("button");lo.className="bk";lo.textContent="🚪 ВЫЙТИ ИЗ АККАУНТА АДМИНИСТРАТОРА";lo.onclick=modLogout;a.appendChild(lo);
 var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
 
+function bump(k){try{localStorage.setItem(k,(parseInt(localStorage.getItem(k)||"0",10)+1)+"");}catch(e){}}
+function visitorId(){var v=localStorage.getItem("gms_vid");if(!v){v="v-"+Date.now()+"-"+Math.random().toString(36).slice(2);localStorage.setItem("gms_vid",v);}return v;}
+async function react(commentId,type){
+if(!sb)return;var bad=await sb.from("comment_reactions").insert({comment_id:commentId,story_id:window.curStory.id,reaction:type,visitor_id:visitorId()});
+if(bad.error){alert("Ошибка: "+bad.error.message);return;}
+beep(900,.08);if(window.curStory)publicCard(window.curStory);}
 async function deleteComment(id){
 if(!confirm("Удалить этот комментарий?"))return;
 var del=await sb.from("comments").delete().eq("id",id);
 if(del.error){alert("Ошибка: "+del.error.message);return;}
 beep(180,.2,"sawtooth");
-if(window.curStory)publicCard(window.curStory);
-}
-async function messagesHome(){beep(700,.1);var a=document.getElementById("app");
-a.innerHTML='<div class="t">ЛИЧНЫЕ СООБЩЕНИЯ</div><div class="k">✉ ДИАЛОГ С АДМИНИСТРАТОРОМ</div><div class="bl yel">Придумай секретный код — например, несколько случайных слов. По нему ты будешь открывать свою переписку. Никому его не передавай.</div>';
-var inp=document.createElement("input");inp.placeholder="Твой секретный код";inp.value=localStorage.getItem("gms_thread")||"";a.appendChild(inp);
-var b=document.createElement("button");b.className="pub";b.textContent="🔍 ОТКРЫТЬ / СОЗДАТЬ ДИАЛОГ";b.onclick=function(){var c=inp.value.trim();if(c.length<4){alert("Код должен быть минимум из 4 символов.");return;}localStorage.setItem("gms_thread",c);openThread(c);};a.appendChild(b);
+if(window.curStory)publicCard(window.curStory);}
+var DAILY=[
+{q:"Он сказал: «Ты слишком остро реагируешь» после того, как тебе было неприятно.",a:["Газлайт","Забота","Случайность"],c:0,e:"Обесценивание твоих чувств и перевод разговора с поступка на твою реакцию — частый признак газлайта."},
+{q:"Он исчез на неделю, а потом вернулся, будто ничего не произошло.",a:["Уважение","Хаос-паттерн","Забота"],c:1,e:"Возвращение без объяснений создаёт тревогу и непредсказуемость. Твоё право — спросить прямо или взять дистанцию."},
+{q:"Он требует удалить друга из контактов, потому что «ревнует».",a:["Граница","Контроль","Поддержка"],c:1,e:"Ревность не даёт права управлять твоими друзьями. Контроль часто начинается именно с таких требований."},
+{q:"Он говорит: «После всего, что я для тебя сделал».",a:["Игра на вине","Извинение","Уважение"],c:0,e:"Забота не становится долгом. Если за помощью требуют благодарность и подчинение — это манипуляция."},
+{q:"Он признаёт ошибку и меняет поведение без повторных упрёков.",a:["Манипуляция","Зелёный флаг","Газлайт"],c:1,e:"Важны не красивые слова, а устойчивые действия и уважение к твоим границам."},
+{q:"Он читает твою переписку «для твоей же безопасности».",a:["Доверие","Контроль","Забота"],c:1,e:"Чтение переписки без согласия — нарушение границ и признак контроля."},
+{q:"Он называет твоё «нет» обидой и давит: «Значит, я тебе не нужен».",a:["Уважение","Давление","Поддержка"],c:1,e:"«Нет» — полноценный ответ. Уважающий человек принимает его без наказания и манипуляций."},
+{q:"Он спокойно уточняет, что тебя задело, и учитывает это дальше.",a:["Зелёный флаг","Газлайт","Контроль"],c:0,e:"Способность услышать и изменить поведение — хороший знак."},
+{q:"Он сравнивает тебя с бывшими и говорит, что все «такие же».",a:["Поддержка","Обесценивание","Забота"],c:1,e:"Обобщения и сравнения унижают и уходят от конкретной проблемы."},
+{q:"Он обещает измениться, но спустя месяцы всё повторяется.",a:["Потенциал","Паттерн","Случайность"],c:1,e:"Смотри на повторяющиеся действия, а не на обещания. Паттерн важнее отдельных хороших эпизодов."}];
+function dayIndex(){var d=new Date();var start=new Date(d.getFullYear(),0,0);return Math.floor((d-start)/86400000);}
+function dailyFlag(){beep(700,.1);var d=DAILY[dayIndex()%DAILY.length],a=document.getElementById("app");
+a.innerHTML='<div class="t">ЕЖЕДНЕВНЫЙ ВЫЗОВ</div><div class="k">🚩 КРАСНЫЙ ФЛАГ ДНЯ</div><div class="qq">'+d.q+'</div>';
+for(var i=0;i<d.a.length;i++){(function(idx){var b=document.createElement("button");b.className="opt";b.textContent=d.a[idx];
+b.onclick=function(){var ok=idx===d.c;
+a.innerHTML='<div class="t">РАЗБОР</div><div class="k">'+(ok?"✅ ВЕРНО":"❌ НЕ СОВСЕМ")+'</div><div class="bl '+(ok?"grn":"red")+'"><b>ПРАВИЛЬНЫЙ ОТВЕТ:</b> '+d.a[d.c]+'</div><div class="bl yel"><b>ПОЧЕМУ:</b><br>'+d.e+'</div><button class="opt" onclick="dailyFlag()">↻ ЕЩЁ РАЗ</button><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';
+beep(ok?900:180,ok?.1:.2,ok?"square":"sawtooth");};a.appendChild(b);})(i);}
 var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
-async function openThread(code){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
-a.innerHTML='<div class="t">ЛИЧНЫЕ СООБЩЕНИЯ</div><div class="k">✉ ЗАГРУЗКА…</div>';
-var res=await sb.from("messages").select("id,sender,text,created_at").eq("thread_code",code).order("created_at",{ascending:true});
-if(res.error){a.innerHTML='<div class="k">ОШИБКА</div><div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="messagesHome()">← НАЗАД</button>';return;}
-var msgs=res.data||[];
-a.innerHTML='<div class="t">ЛИЧНЫЕ СООБЩЕНИЯ</div><div class="k">✉ ТВОЙ ДИАЛОГ</div><div class="bl">Код диалога: <b>'+code.replace(/</g,"&lt;")+'</b>. Сохрани его: без него переписку не открыть.</div>';
-if(!msgs.length)a.innerHTML+='<div class="bl">Напиши администратору, что происходит. Ответ появится здесь.</div>';
-for(var i=0;i<msgs.length;i++){var m=msgs[i];
-a.innerHTML+='<div class="'+(m.sender==="admin"?"cmt":"bl")+'"><b>'+(m.sender==="admin"?"✉ АДМИНИСТРАТОР":"ТЫ")+'</b><br>'+m.text.replace(/</g,"&lt;")+'<div class="note">'+new Date(m.created_at).toLocaleString("ru-RU")+'</div></div>';}
-var ta=document.createElement("textarea");ta.rows=3;ta.placeholder="Написать администратору…";a.appendChild(ta);
-var b=document.createElement("button");b.className="pub";b.textContent="✉ ОТПРАВИТЬ";b.onclick=async function(){var v=ta.value.trim();if(v.length<2){alert("Напиши сообщение.");return;}var bad=autoFilter(v);if(bad){alert(bad);return;}
-b.textContent="⏳ ОТПРАВЛЯЮ…";b.disabled=true;
-var ins=await sb.from("messages").insert({thread_code:code,sender:"user",text:v});
-if(ins.error){alert("Ошибка: "+ins.error.message);b.textContent="✉ ОТПРАВИТЬ";b.disabled=false;return;}
-beep(900,.1);openThread(code);};a.appendChild(b);
-var bk=document.createElement("button");bk.className="bk";bk.textContent="← ДРУГОЙ КОД";bk.onclick=messagesHome;a.appendChild(bk);
-var b2=document.createElement("button");b2.className="bigact";b2.textContent="☰ ГЛАВНОЕ МЕНЮ";b2.onclick=menu;a.appendChild(b2);}
-async function adminThreads(){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
-a.innerHTML='<div class="t">АДМИН-ПАНЕЛЬ</div><div class="k">✉ ДИАЛОГИ</div>';
-var res=await sb.from("messages").select("*").order("created_at",{ascending:false});
-if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="moderation()">← НАЗАД</button>';return;}
-var rows=res.data||[],seen={},list=[];
-for(var i=0;i<rows.length;i++){var c=rows[i].thread_code;if(!seen[c]){seen[c]=1;list.push({code:c,last:rows[i]});}}
-if(!list.length)a.innerHTML+='<div class="bl">Пока нет личных диалогов.</div>';
-for(var j=0;j<list.length;j++){(function(it){var box=document.createElement("div");box.className="card";
-box.innerHTML='<b>✉ '+it.code.replace(/</g,"&lt;")+'</b><br><div class="note">Последнее: '+(it.last.sender==="admin"?"администратор":"посетитель")+' · '+new Date(it.last.created_at).toLocaleString("ru-RU")+'</div><div style="margin-top:6px">'+it.last.text.replace(/</g,"&lt;")+'</div>';
-var b=document.createElement("button");b.className="opt";b.textContent="💬 ОТКРЫТЬ ДИАЛОГ";b.onclick=function(){adminThread(it.code);};box.appendChild(b);a.appendChild(box);})(list[j]);}
-var bk=document.createElement("button");bk.className="bigact";bk.textContent="← В АДМИН-ПАНЕЛЬ";bk.onclick=moderation;a.appendChild(bk);}
-async function adminThread(code){beep(700,.1);var a=document.getElementById("app");
-a.innerHTML='<div class="t">ДИАЛОГ</div><div class="k">✉ ЗАГРУЗКА…</div>';
-var res=await sb.from("messages").select("*").eq("thread_code",code).order("created_at",{ascending:true});
-if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="adminThreads()">← НАЗАД</button>';return;}
-var msgs=res.data||[];
-a.innerHTML='<div class="t">ДИАЛОГ С ПОСЕТИТЕЛЕМ</div><div class="k">✉ '+code.replace(/</g,"&lt;")+'</div>';
-for(var i=0;i<msgs.length;i++){var m=msgs[i];
-a.innerHTML+='<div class="'+(m.sender==="admin"?"bl grn":"cmt")+'"><b>'+(m.sender==="admin"?"ТЫ (АДМИН)":"ПОСЕТИТЕЛЬ")+'</b><br>'+m.text.replace(/</g,"&lt;")+'<div class="note">'+new Date(m.created_at).toLocaleString("ru-RU")+'</div></div>';}
-var ta=document.createElement("textarea");ta.rows=3;ta.placeholder="Твой ответ посетителю…";a.appendChild(ta);
-var b=document.createElement("button");b.className="pub";b.textContent="✉ ОТВЕТИТЬ";b.onclick=async function(){var v=ta.value.trim();if(v.length<2){alert("Напиши ответ.");return;}
-b.textContent="⏳ ОТПРАВЛЯЮ…";b.disabled=true;
-var ins=await sb.from("messages").insert({thread_code:code,sender:"admin",text:v});
-if(ins.error){alert("Ошибка: "+ins.error.message);b.textContent="✉ ОТВЕТИТЬ";b.disabled=false;return;}
-beep(900,.1);adminThread(code);};a.appendChild(b);
-var bk=document.createElement("button");bk.className="bk";bk.textContent="← ВСЕ ДИАЛОГИ";bk.onclick=adminThreads;a.appendChild(bk);
-var b2=document.createElement("button");b2.className="bigact";b2.textContent="← В АДМИН-ПАНЕЛЬ";b2.onclick=moderation;a.appendChild(b2);}
-async function addrBook(){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
-a.innerHTML='<div class="t">АДРЕСНАЯ КНИГА</div><div class="k">📇 ЗАГРУЗКА…</div>';
-var res=await sb.from("contacts").select("*").order("created_at",{ascending:false});
-if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="moderation()">← НАЗАД</button>';return;}
-var rows=res.data||[];
-a.innerHTML='<div class="t">АДРЕСНАЯ КНИГА</div><div class="k">📇 МОИ КОНТАКТЫ</div><div class="bl yel">Видна только тебе в админ-панели. Не сохраняй здесь лишние личные данные.</div>';
-var n1=document.createElement("input");n1.placeholder="Кодовое имя / никнейм";a.appendChild(n1);
-var n2=document.createElement("input");n2.placeholder="Контакт для связи";a.appendChild(n2);
-var n3=document.createElement("textarea");n3.rows=2;n3.placeholder="Заметка: ситуация, статус, что важно помнить";a.appendChild(n3);
-var add=document.createElement("button");add.className="pub";add.textContent="➕ ДОБАВИТЬ КОНТАКТ";add.onclick=async function(){if(!n1.value.trim()){alert("Введи кодовое имя.");return;}
-var ins=await sb.from("contacts").insert({nickname:n1.value.trim(),contact:n2.value.trim(),notes:n3.value.trim(),status:"в работе"});
-if(ins.error){alert("Ошибка: "+ins.error.message);return;}beep(900,.1);addrBook();};a.appendChild(add);
-if(!rows.length)a.innerHTML+='<div class="bl">Пока нет сохранённых контактов.</div>';
-for(var i=0;i<rows.length;i++){(function(c){var box=document.createElement("div");box.className="card";
-box.innerHTML='<b>👤 '+c.nickname.replace(/</g,"&lt;")+'</b> · '+(c.status||"в работе")+'<br><div class="note">Контакт: '+(c.contact||"—").replace(/</g,"&lt;")+'</div><div class="note">'+(c.notes||"").replace(/</g,"&lt;")+'</div>';
-var st=document.createElement("input");st.value=c.status||"в работе";st.placeholder="Статус";box.appendChild(st);
-var nt=document.createElement("textarea");nt.rows=2;nt.value=c.notes||"";nt.placeholder="Заметка";box.appendChild(nt);
-var b1=document.createElement("button");b1.className="pub";b1.textContent="💾 СОХРАНИТЬ";b1.onclick=async function(){var up=await sb.from("contacts").update({status:st.value,notes:nt.value}).eq("id",c.id);if(up.error){alert(up.error.message);return;}beep(900,.1);addrBook();};box.appendChild(b1);
-var b2=document.createElement("button");b2.className="del";b2.textContent="🗑 УДАЛИТЬ";b2.onclick=async function(){if(!confirm("Удалить контакт из адресной книги?"))return;var del=await sb.from("contacts").delete().eq("id",c.id);if(del.error){alert(del.error.message);return;}beep(180,.2,"sawtooth");addrBook();};box.appendChild(b2);
-a.appendChild(box);})(rows[i]);}
-var bk=document.createElement("button");bk.className="bigact";bk.textContent="← В АДМИН-ПАНЕЛЬ";bk.onclick=moderation;a.appendChild(bk);}
+async function storyOfDay(){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
+a.innerHTML='<div class="t">ИСТОРИЯ ДНЯ</div><div class="k">📖 ЗАГРУЗКА…</div>';
+var res=await sb.from("stories").select("id,archetype,card_data,story,flags,published_at").eq("status","approved").order("published_at",{ascending:false});
+if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';return;}
+var arr=res.data||[];
+if(!arr.length){a.innerHTML='<div class="bl">Пока нет опубликованных историй.</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';return;}
+var e=arr[dayIndex()%arr.length],r=R[e.archetype]||R.norm;
+a.innerHTML='<div class="t">ИСТОРИЯ ДНЯ</div><div class="k">📖 '+r.i+" "+r.n+'</div><div class="bl yel">Сегодня в фокусе — одна история из публичного архива. Читай бережно: это чужой опыт, а не диагноз.</div><div class="bl">'+e.story.replace(/</g,"&lt;")+'</div>';
+var b=document.createElement("button");b.className="opt";b.textContent="💬 ОТКРЫТЬ ИСТОРИЮ И КОММЕНТАРИИ";b.onclick=function(){publicCard(e);};a.appendChild(b);
+var b2=document.createElement("button");b2.className="opt";b2.textContent="🔗 ПОХОЖИЕ ИСТОРИИ";b2.onclick=function(){publicSimilar(e);};a.appendChild(b2);
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+function badges(){beep(700,.1);var a=document.getElementById("app");
+var cards=parseInt(localStorage.getItem("gms_cards")||"0",10),pub=parseInt(localStorage.getItem("gms_published")||"0",10),com=parseInt(localStorage.getItem("gms_comments")||"0",10),thr=parseInt(localStorage.getItem("gms_threads")||"0",10);
+var list=[["🗂 Первое досье",cards>=1,"Сохрани первую карточку в архив"],["📚 Инквизитор архива",cards>=3,"Сохрани 3 карточки"],["📤 Первый выход в свет",pub>=1,"Отправь историю на проверку"],["💬 Голос поддержки",com>=1,"Оставь комментарий"],["✉ Открытый диалог",thr>=1,"Начни диалог с администратором"]];
+a.innerHTML='<div class="t">ТВОЙ ПРОГРЕСС</div><div class="k">🏅 ДОСТИЖЕНИЯ</div><div class="bl yel">Здесь нет гонки и наказаний. Только отметки твоего пути: ты замечаешь, записываешь и заботишься о себе.</div>';
+for(var i=0;i<list.length;i++){var b=list[i];
+a.innerHTML+='<div class="bl '+(b[1]?"grn":"")+'">'+(b[1]?"🏅":"🔒")+" <b>"+b[0]+'</b><br><span class="note">'+b[2]+'</span></div>';}
+a.innerHTML+='<div class="bl"><b>СТАТИСТИКА:</b><br>Карточек в архиве: '+cards+'<br>Историй отправлено: '+pub+'<br>Комментариев: '+com+'<br>Диалогов: '+thr+'</div>';
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+function toggleQuiet(){var q=localStorage.getItem("gms_quiet")==="1";localStorage.setItem("gms_quiet",q?"0":"1");applyQuiet();beep(q?900:400,.1);menu();}
+function applyQuiet(){document.body.classList.toggle("quiet",localStorage.getItem("gms_quiet")==="1");}
 async function hiddenArchive(){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
 a.innerHTML='<div class="t">АДМИН-ПАНЕЛЬ</div><div class="k">🗄 ЗАГРУЗКА…</div>';
 var res=await sb.from("stories").select("id,archetype,card_data,story,flags,status,created_at,published_at").in("status",["hidden","archived"]).order("created_at",{ascending:false});
@@ -589,7 +579,7 @@ function intro(){var L=["> ИНИЦИАЛИЗАЦИЯ СКАНЕРА МУЖИК�
 for(var i=0;i<L.length;i++)h+='<div class="ln'+(i===4?" red":"")+'" style="animation-delay:'+(i*.5)+'s">'+L[i]+'</div>';
 h+='<div class="b"><div class="f" id="bf" style="width:0"></div></div><div id="iq"></div></div>';
 document.getElementById("app").innerHTML=h;var w=0,t=setInterval(function(){w+=4;beep(500+w*3,.03);document.getElementById("bf").style.width=w+"%";if(w>=100){clearInterval(t);beep(980,.15);document.getElementById("iq").innerHTML='<div class="bq">ВЫ ГОТОВЫ НАЧАТЬ АНАЛИЗ?</div><button class="y" onclick="startTest()">ДА, НАЧНЁМ</button><button class="n" onclick="no()">НЕТ</button><button class="bigact" onclick="menu()">☰ В ГЛАВНОЕ МЕНЮ</button>';}},110);}
-intro();
+applyQuiet();intro();
 var c=document.getElementById("m"),x=c.getContext("2d"),cols,dr;
 function rs(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/16);dr=[];for(var i=0;i<cols;i++)dr.push(Math.random()*50);}
 rs();addEventListener("resize",rs);
