@@ -382,7 +382,7 @@ a.innerHTML='<div class="t">ПУБЛИЧНЫЙ АРХИВ</div><div class="k">�
 var res=await sb.from("comments").select("id,nickname,text,created_at").eq("story_id",e.id).order("created_at",{ascending:true});
 var comments=res.data||[];window.curStory=e;
 var sess=await sb.auth.getSession();
-var ADMIN_UID="30b53f52-21b3-4ba5-8cc7-01069315d457";
+var ADMIN_UID="ВСТАВЬ_СВОЙ_UID";
 var isAdmin=!!(sess.data&&sess.data.session&&sess.data.session.user&&sess.data.session.user.id===ADMIN_UID);
 
 var r=R[e.archetype]||R.norm,cd=e.card_data||{};
@@ -468,6 +468,7 @@ var b2=document.createElement("button");b2.className="pub";b2.textContent="✅ �
 box.appendChild(b1);box.appendChild(b2);a.appendChild(box);})(q);}
 var th=document.createElement("button");th.className="pub";th.textContent="✉ ДИАЛОГИ С ПОСЕТИТЕЛЯМИ";th.onclick=adminThreads;a.appendChild(th);
 var ab=document.createElement("button");ab.className="arc";ab.textContent="📇 АДРЕСНАЯ КНИГА";ab.onclick=addrBook;a.appendChild(ab);
+var ha=document.createElement("button");ha.className="bk";ha.textContent="🗄 СКРЫТЫЕ И АРХИВНЫЕ";ha.onclick=hiddenArchive;a.appendChild(ha);
 var lo=document.createElement("button");lo.className="bk";lo.textContent="🚪 ВЫЙТИ ИЗ АККАУНТА АДМИНИСТРАТОРА";lo.onclick=modLogout;a.appendChild(lo);
 var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
 
@@ -546,6 +547,25 @@ var st=document.createElement("input");st.value=c.status||"в работе";st.p
 var nt=document.createElement("textarea");nt.rows=2;nt.value=c.notes||"";nt.placeholder="Заметка";box.appendChild(nt);
 var b1=document.createElement("button");b1.className="pub";b1.textContent="💾 СОХРАНИТЬ";b1.onclick=async function(){var up=await sb.from("contacts").update({status:st.value,notes:nt.value}).eq("id",c.id);if(up.error){alert(up.error.message);return;}beep(900,.1);addrBook();};box.appendChild(b1);
 var b2=document.createElement("button");b2.className="del";b2.textContent="🗑 УДАЛИТЬ";b2.onclick=async function(){if(!confirm("Удалить контакт из адресной книги?"))return;var del=await sb.from("contacts").delete().eq("id",c.id);if(del.error){alert(del.error.message);return;}beep(180,.2,"sawtooth");addrBook();};box.appendChild(b2);
+a.appendChild(box);})(rows[i]);}
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="← В АДМИН-ПАНЕЛЬ";bk.onclick=moderation;a.appendChild(bk);}
+async function hiddenArchive(){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
+a.innerHTML='<div class="t">АДМИН-ПАНЕЛЬ</div><div class="k">🗄 ЗАГРУЗКА…</div>';
+var res=await sb.from("stories").select("id,archetype,card_data,story,flags,status,created_at,published_at").in("status",["hidden","archived"]).order("created_at",{ascending:false});
+if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="moderation()">← НАЗАД</button>';return;}
+var rows=res.data||[];
+a.innerHTML='<div class="t">АДМИН-ПАНЕЛЬ</div><div class="k">🗄 СКРЫТЫЕ И АРХИВНЫЕ</div><div class="bl yel">Здесь истории, которые ты скрыла или заархивировала. Они не видны посетителям, но сохранены в базе.</div>';
+if(!rows.length)a.innerHTML+='<div class="bl">Пока нет скрытых или архивных историй.</div>';
+for(var i=0;i<rows.length;i++){(function(e){var r=R[e.archetype]||R.norm,box=document.createElement("div");box.className="card";
+box.innerHTML='<b>'+r.i+" "+r.n+'</b> · '+(e.status==="hidden"?"🙈 скрыта":"🗄 в архиве")+'<br><div class="note">'+new Date(e.created_at).toLocaleDateString("ru-RU")+'</div><div style="margin-top:6px">'+e.story.replace(/</g,"&lt;").slice(0,300)+'…</div>';
+var b1=document.createElement("button");b1.className="pub";b1.textContent="✅ ВЕРНУТЬ В ПУБЛИЧНЫЙ АРХИВ";
+b1.onclick=async function(){if(!confirm("Вернуть эту историю в публичный архив?"))return;
+var up=await sb.from("stories").update({status:"approved",published_at:new Date().toISOString()}).eq("id",e.id);
+if(up.error){alert(up.error.message);return;}beep(900,.15);hiddenArchive();};box.appendChild(b1);
+var b2=document.createElement("button");b2.className="del";b2.textContent="🗑 УДАЛИТЬ НАВСЕГДА";
+b2.onclick=async function(){if(!confirm("Удалить историю навсегда? Действие нельзя отменить."))return;
+var del=await sb.from("stories").delete().eq("id",e.id);
+if(del.error){alert(del.error.message);return;}beep(180,.2,"sawtooth");hiddenArchive();};box.appendChild(b2);
 a.appendChild(box);})(rows[i]);}
 var bk=document.createElement("button");bk.className="bigact";bk.textContent="← В АДМИН-ПАНЕЛЬ";bk.onclick=moderation;a.appendChild(bk);}
 var GAME=[["«Ты слишком чувствительная»",["Газлайт","Забота","Комплимент"],0],["«Я был неправ, извини»",["Газлайт","Здоровая граница","Манипуляция"],1],["«После всего, что я для тебя сделал»",["Чувство вины","Поддержка","Уважение"],0],["«Мне не нравится, когда ты общаешься с ним»",["Контроль","Граница","Забота"],0],["«Ты не обязана решать прямо сейчас»",["Уважение","Давление","Обесценивание"],0],["«Я пошутил, ты что»",["Обесценивание","Извинение","Забота"],0],["«Давай обсудим спокойно»",["Уважение","Газлайт","Ревность"],0],["«Если любишь — удали его»",["Контроль","Граница","Поддержка"],0]];
