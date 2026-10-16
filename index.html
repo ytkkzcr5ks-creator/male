@@ -307,7 +307,7 @@ var dn=document.createElement("textarea");dn.rows=3;dn.placeholder="Опиши �
 var lk=document.createElement("input");lk.placeholder="Ссылка / доказательства для администратора";lk.value=e.modLink||"";lk.oninput=function(){e.modLink=lk.value;};a.appendChild(lk);
 var b1=document.createElement("button");b1.className="pub";b1.textContent="📤 ОТПРАВИТЬ НА ПРОВЕРКУ";b1.onclick=async function(){if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}var bad=autoFilter(ta.value);if(bad){alert(bad);return;}if(!e.story||e.story.trim().length<20){alert("Добавь историю минимум из 20 символов.");return;}
 b1.textContent="⏳ ОТПРАВЛЯЮ…";b1.disabled=true;
-var res=await sb.from("stories").insert({archetype:e.t,card_data:{n:e.n,s:e.s,reds:e.reds,pos:e.pos,notes:e.notes,diary:e.diary,danger:e.danger,dangerNote:e.dangerNote,modLink:e.modLink},story:e.story,flags:e.flags,status:"pending"}).select("id");
+var res=await sb.from("stories").insert({archetype:e.t,card_data:{n:e.n,s:e.s,reds:e.reds,pos:e.pos,notes:e.notes,diary:e.diary,danger:e.danger,dangerNote:e.dangerNote,modLink:e.modLink},story:e.story,flags:e.flags,status:"pending"});
 if(res.error){alert("Ошибка отправки: "+res.error.message+"\n\nПроверь, что в Supabase выполнен SQL для политики public_insert_stories.");b1.textContent="📤 ОТПРАВИТЬ НА ПРОВЕРКУ";b1.disabled=false;return;}
 if(res.data&&res.data[0])e.dbId=res.data[0].id;
 e.dbStatus="pending";updateE(e);bump("gms_published");beep(900,.15);
