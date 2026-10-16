@@ -185,6 +185,37 @@ var b7=document.createElement("button");b7.className="sos";b7.textContent="🆘 
 var b6=document.createElement("button");b6.className="mod";b6.textContent="🛡 ПАНЕЛЬ АДМИНИСТРАТОРА";b6.onclick=moderation;a.appendChild(b6);
 var b0=document.createElement("button");b0.className="bigact";b0.textContent="☰ В ГЛАВНОЕ МЕНЮ";b0.onclick=menu;a.appendChild(b0);}
 function startTest(){portal();setTimeout(function(){qi=0;replaces=2;for(var k in S)S[k]=0;renderQ(0);},500);}
+function cap(v){return Math.max(0,Math.min(100,Math.round(v)));}
+function metrics(){return{respect:cap(100-S.ctrl*8-S.manip*5),empathy:cap(S.green*9+S.norm*5-S.gas*7-S.narc*5),resp:cap(S.green*9+S.norm*5-S.chaos*6-S.pickme*5),control:cap(S.ctrl*12+S.manip*6),manip:cap(S.manip*11+S.gas*8+S.narc*5)};}
+function showResult(e){
+e=normCard(e);for(var k in S)S[k]=e.s[k]||0;
+var c=calc(),best=c.best,red=c.red,ks=c.ks,r=R[best]||R.norm,isG=best==="green",G=metrics();
+var hope=red<2&&S.green>5?"Пока заметен скорее здоровый паттерн. Продолжай смотреть на действия, а не только на слова.":red>6?"Паттернов много. Это не приговор ему и не диагноз, но повод беречь свои границы и не оставаться в ситуации, где тебе небезопасно.":"Есть тревожные сигналы. Смотри на повторяемость: один случай — разговор, повторяющийся паттерн — система.";
+var nm={narc:"Нарциссический",covert:"Скрытый",gas:"Газлайтинг",manip:"Манипулятивный",pickme:"Пикми",chaos:"Хаотичный",norm:"Нормальный",green:"Зелёный флаг",ctrl:"Контролирующий"};
+var cl={narc:"red",covert:"red",gas:"red",manip:"red",pickme:"pur",chaos:"yel",norm:"grn",green:"grn",ctrl:"red"};
+var mx=2,all=["narc","covert","gas","manip","pickme","chaos","norm","green","ctrl"];
+for(var z=0;z<all.length;z++)mx=Math.max(mx,S[all[z]]);
+var h='<div class="t">РЕЗУЛЬТАТ АНАЛИЗА</div><div class="k">'+r.i+" "+r.n+'</div><div class="d">'+r.d0+" · "+r.d1+'</div>';
+if(e.danger)h+='<div class="warn">⚠ ОБНАРУЖЕН ПРИЗНАК ОПАСНОСТИ</div>';
+if(e.n)h+='<div class="note">Имя: '+e.n+'</div>';
+if(e.dbStatus==="pending")h+='<div class="bl yel"><b>СТАТУС:</b> история отправлена на проверку.</div>';
+if(e.dbStatus==="approved")h+='<div class="bl grn"><b>СТАТУС:</b> история опубликована.</div>';
+if(e.dbStatus==="rejected")h+='<div class="bl red"><b>СТАТУС:</b> история не прошла проверку.</div>';
+h+='<div class="qt">'+r.q+'</div><div class="bl"><b>ЧТО ЭТО:</b><br>'+r.desc+'</div><div class="bl"><b>ЧТО ДЕЛАТЬ:</b><br>'+r.rec+'</div><div class="bl red"><b>КРАСНЫЕ ФЛАГИ:</b><ul class="rf">';
+for(var i=0;i<r.ph.length;i++)h+='<li>'+r.ph[i]+'</li>';
+h+='</ul></div><div class="bl"><b>ОПЫТ ДРУГИХ:</b><br>'+r.exp+'</div><div class="bl"><b>ШКАЛЫ:</b></div>';
+var ms=[["Уважение",G.respect,"var(--g)"],["Эмпатия",G.empathy,"var(--g)"],["Надёжность",G.resp,"var(--g)"],["Контроль",G.control,"#ff3b5c"],["Манипуляции",G.manip,"#ff3b5c"]];
+for(var j=0;j<ms.length;j++)h+='<div class="lamp"><span>'+ms[j][0]+'</span><span>'+ms[j][1]+'%</span></div><div class="bar"><div class="f" style="width:'+ms[j][1]+'%;background:'+ms[j][2]+'"></div></div>';
+h+='<div class="bl"><b>ЗЕЛЁНЫЕ ФЛАГИ:</b> '+S.green+'. '+(S.green>4?"Это хорошие признаки.":"Пока их мало — наблюдай за поступками.")+'</div><div class="bl yel"><b>ВЫВОД:</b> '+hope+'</div><div class="bl"><b>ПРОФИЛЬ:</b></div>';
+for(var q=0;q<ks.length;q++){var kk=ks[q],pc=Math.round(S[kk]/mx*100);
+h+='<div class="st '+cl[kk]+'"><div class="n"><span>'+nm[kk]+'</span><span>'+pc+'%</span></div><div class="tr"><div class="v" style="width:'+pc+'%"></div></div></div>';}
+h+='<div class="bl '+(isG?"grn":"red")+'"><b>'+(isG?"ЗЕЛЁНЫЕ ФЛАГИ":"КРАСНЫЕ ФЛАГИ")+'</b><ul class="'+(isG?"gf":"rf")+'">';
+for(var m=0;m<r.fl.length;m++)h+='<li>'+r.fl[m]+'</li>';
+h+='</ul></div><div class="bl"><b>ПОМНИ:</b><ul><li>Это сатира и анализ паттернов, не психиатрический диагноз.</li><li>Смотри на действия и повторяемость.</li><li>Твои границы действуют и через 24 часа, и через год.</li></ul></div>';
+h+='<button class="cp" onclick="cope()">🧘 ЧТО МНЕ С ЭТИМ ДЕЛАТЬ</button><button class="arc" onclick="cardView(window.cur)">🗂 ОТКРЫТЬ КАРТОЧКУ</button><button class="pub" onclick="shareForm(window.cur)">📤 ПОДЕЛИТЬСЯ ИСТОРИЕЙ</button><button class="sos" onclick="safety()">🆘 БЕЗОПАСНОСТЬ</button><button class="exp" onclick="exportCard(window.cur)">🖼 СКАЧАТЬ КАРТОЧКУ</button><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button><button class="sh" onclick="share()">🔗 ПОДЕЛИТЬСЯ РЕЗУЛЬТАТОМ</button><button class="ag" onclick="startTest()">↻ НОВЫЙ АНАЛИЗ</button>';
+document.getElementById("app").innerHTML=h;
+window.res=r.n+" — "+r.d1;window.ty=best;window.cur=e;
+}
 function finish(){beep(220,.25,"sawtooth");var c=calc();
 var e=normCard({id:Date.now()+"-"+Math.random().toString(36).slice(2),t:c.best,d:new Date().toLocaleDateString("ru-RU"),n:"",s:JSON.parse(JSON.stringify(S)),dbId:null,dbStatus:null});
 var arr=load();arr.push(e);save(arr);bump("gms_cards");window.cur=e;showResult(e);}
