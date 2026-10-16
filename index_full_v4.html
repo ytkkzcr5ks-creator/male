@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>СКАНЕР МУЖИКА</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root{--g:#39ff88;--r:#ff3b5c;--y:#ffd166;--p:#b388ff;--n:#8fd9b2}
+body{margin:0;background:#040506;color:#d8ffe9;font-family:'Share Tech Mono',monospace;padding:16px;overflow-x:hidden}
+#m{position:fixed;inset:0;z-index:0;opacity:.22}
+#p{position:fixed;inset:0;z-index:9;background:radial-gradient(circle,#39ff88aa,#000 70%);opacity:0;pointer-events:none;transition:.5s}
+.w{position:relative;z-index:2;max-width:660px;margin:auto}
+h1{font-family:Cinzel,serif;color:var(--g);text-align:center;font-size:clamp(20px,5vw,32px);text-shadow:0 0 15px var(--g)}
+.s{text-align:center;color:var(--n);font-size:10px;letter-spacing:2px;margin:8px 0 16px}
+.c{border:1px solid var(--g);background:#020805ee;padding:18px}
+.t{color:var(--g);font-size:10px;letter-spacing:2px;margin-bottom:8px}
+.b{height:7px;background:#07130c;border:1px solid var(--g);margin:8px 0 14px}
+.f{height:100%;background:var(--g);transition:.4s}
+.qq{font-family:Cinzel,serif;color:#eafff3;font-size:clamp(15px,4vw,20px);margin-bottom:12px;line-height:1.4}
+button{display:block;width:100%;margin:6px 0;padding:10px 12px;background:#06170ecc;border:1px solid #2c6b4a;color:#cfe9db;font-family:inherit;font-size:12.5px;text-align:center;cursor:pointer;transition:.18s}
+button:hover{background:#0d2b1a}
+.mn,.pub,.exp,.ctr,.opt{border-color:var(--g);color:#d8ffe9;background:#06170ecc}
+.mn{font-weight:bold}
+.bigact{border:2px solid var(--g);background:#0d2b1a;color:#eafff3;font-weight:bold;box-shadow:0 0 14px #39ff8844}
+.arc{border-color:var(--p);color:#e6d9ff;background:#150825}
+.bk{border-color:#5d8f75;color:var(--n);background:#0a1510}
+.cp,.rp,.mod,.rep{border-color:var(--y);color:var(--y);background:#1a1405}
+.rep{border-color:#ff9f43;color:#ff9f43;background:#1a1005}
+.del,.ag,.sos,.fin{border-color:var(--r);color:#ffccd4;background:#1a0508}
+.sos,.ag{font-weight:bold}
+.fin,.rp{border-style:dashed}
+.sh{border-color:var(--p);color:#e6d9ff;background:#150825}
+.warn{border:2px solid var(--r);background:#1a0508;color:var(--r);padding:10px;margin:10px 0;font-weight:bold;text-align:center}
+.k{font-family:Cinzel,serif;color:var(--g);font-size:clamp(21px,6vw,28px);margin:6px 0}
+.d{display:inline-block;border:1px solid currentColor;padding:4px 9px;font-size:10px;letter-spacing:2px;margin:6px 0}
+.red{color:var(--r)}.yel{color:var(--y)}.grn{color:var(--g)}.pur{color:var(--p)}
+.qt{border-left:3px solid var(--r);padding:8px 11px;margin:11px 0;color:#ffd7de;font-style:italic}
+.bl{border:1px dashed #39ff8866;padding:10px;margin:10px 0;font-size:12.5px;line-height:1.55;background:#00000055}
+.bl b{color:var(--g)}.bl.red{border-color:#ff3b5c88}.bl.red b{color:var(--r)}.bl.yel{border-color:#ffd16688}.bl.yel b{color:var(--y)}.bl.grn{border-color:var(--g)}
+.st{margin:4px 0}.st .n{display:flex;justify-content:space-between;font-size:11.5px}.st .tr{height:6px;background:#07130c;border:1px solid #39ff8844}.st .v{height:100%;background:var(--g)}
+.st.red .v{background:var(--r)}.st.pur .v{background:var(--p)}.st.yel .v{background:var(--y)}
+ul{margin:5px 0 0 17px}li{margin:3px 0;line-height:1.45}
+.rf li::before{content:"🔴 "}.gf li::before{content:"🟢 "}
+.lamp{display:flex;justify-content:space-between;font-size:11.5px;margin:5px 0}
+.bar{height:6px;margin:2px 0 6px}
+.sm{font-size:9.5px;color:#5d8f75;text-align:center;margin-top:14px;line-height:1.5}
+.bt{min-height:200px}.ln{color:var(--g);font-size:12px;margin:4px 0;opacity:0;animation:a .3s forwards}.ln.red{color:var(--r)}
+@keyframes a{to{opacity:1}}
+.bq{font-family:Cinzel,serif;color:#eafff3;text-align:center;font-size:clamp(17px,5vw,25px);margin:16px 0}
+.y{border-color:var(--g);color:var(--g);background:#06170e}
+.n{border-color:var(--r);color:var(--r);background:#1a0508}
+.card{border:1px solid var(--p);background:#150825;padding:10px;margin:6px 0;font-size:12px}
+.card b{color:var(--p)}
+.note{color:var(--y);font-size:11.5px;margin-top:4px}
+.tag{display:inline-block;border:1px solid var(--r);color:var(--r);font-size:11px;padding:3px 7px;margin:3px 3px 0 0}
+.ptag{display:inline-block;border:1px solid var(--g);color:var(--g);font-size:11px;padding:3px 7px;margin:3px 3px 0 0}
+textarea,input,select{width:100%;background:#06170e;border:1px solid #2c6b4a;color:#d8ffe9;font-family:inherit;font-size:12.5px;padding:10px;margin:6px 0;box-sizing:border-box}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:12px;margin:6px 0}
+.chk input{width:auto;margin:0}
+.cmt{border-left:3px solid var(--p);padding:6px 10px;margin:6px 0;font-size:12px;background:#00000055}
+.sec{border:1px solid #39ff8844;background:#04120b;padding:12px;margin:10px 0}
+.sec h3{margin:0 0 8px;font-family:Cinzel,serif;color:var(--g);font-size:14px;letter-spacing:1px}
+.sec.red{border-color:#ff3b5c66}.sec.red h3{color:var(--r)}
+.sec.grn{border-color:#39ff8866}.sec.grn h3{color:var(--g)}
+.sec.yel{border-color:#ffd16666}.sec.yel h3{color:var(--y)}
+.big{font-family:Cinzel,serif;color:#eafff3;font-size:clamp(18px,5vw,24px);margin:4px 0 8px}
+.dentry{border-left:3px solid var(--y);padding:6px 10px;margin:6px 0;font-size:12px;background:#00000055}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{width:auto;display:inline-block;padding:6px 9px;font-size:11px;margin:0}
+.chip.on{background:#39ff8822;border-color:var(--g);color:var(--g)}
+body.quiet #m{display:none}body.quiet .ln{animation:none;opacity:1}body.quiet #p{display:none}
+</style></head><body>
+<canvas id="m"></canvas><div id="p"></div><div class="w">
+<h1>СКАНЕР МУЖИКА</h1>
+<div class="s">ЦИФРОВАЯ ИНКВИЗИЦИЯ • АНАЛИЗ ПАТТЕРНОВ • САТИРА, НЕ ДИАГНОЗ</div>
+<div class="c" id="app"></div>
+<div class="sm">Сатирический развлекательный тест. Не ставит психиатрические диагнозы и не заменяет помощь специалиста.</div></div>
+<script>
+window.onerror=function(msg,src,line,col){var ap=document.getElementById("app");if(ap)ap.innerHTML='<div class="t">ОШИБКА СТРАНИЦЫ</div><div class="bl red"><b>'+String(msg)+'</b><br>Строка: '+line+'</div><button class="bigact" onclick="menu()">☰ В ГЛАВНОЕ МЕНЮ</button><button class="bk" onclick="location.reload()">↻ ПЕРЕЗАГРУЗИТЬ</button>';};
+var SUPABASE_URL="https://nfvwxkpzwakcavlsabin.supabase.co";
+var SUPABASE_KEY="sb_publishable_-bZbipJiWgKXSUYm5xLlqQ_mLXvYFwr";
+var sb=null,SB_ERR="";
+try{if(window.supabase&&window.supabase.createClient){sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});}else{SB_ERR="Библиотека Supabase не загрузилась.";}}
+catch(e){SB_ERR="Ошибка Supabase: "+e.message;}
+var NICK=localStorage.getItem("gms_nick")||"";
+var S={narc:0,covert:0,gas:0,manip:0,pickme:0,chaos:0,norm:0,green:0,ctrl:0};
+var replaces=2,qi=0,total=12;
+var ORDER=["start","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12"];
+var Q={
+start:{t:"Как он начал с тобой общение?",a:[["Спрашивал обо мне, слушал и проявлял интерес","green"],["В основном говорил о себе: работа, достижения, проблемы","narc"],["Скидывал мемы, шутил и общался легко, без плана","chaos"],["Сразу назвал меня особенной, писал круглосуточно и обещал многое","pickme"],["Общение было спокойным и обычным, без громких заявлений","norm"]]},
+q2:{t:"Вы договорились встретиться, но у него меняются планы.",a:[["Предупреждает заранее и предлагает другое время","green"],["Переносит без объяснений","chaos"],["Говорит, что его обстоятельства важнее","narc"],["Обижается, будто я его обвиняю","covert"],["Давит: «Ты не понимаешь, как мне тяжело»","manip"]]},
+q3:{t:"Вы не согласны друг с другом.",a:[["Предлагает спокойно обсудить","green"],["Слушает, но поступает по-своему","norm"],["Вспоминает мои прошлые ошибки","manip"],["Повышает голос или уходит","ctrl"],["Говорит, что все бывшие его не понимали","covert"]]},
+q4:{t:"Я говорю, что мне было неприятно из-за его слов или поступка.",a:[["Уточняет, что задело, и учитывает это","green"],["Говорит, что не хотел задеть, и обсуждает","norm"],["Отвечает, что я слишком остро реагирую","gas"],["Переводит разговор на мои недостатки","manip"],["Исчезает, потом возвращается без объяснений","chaos"]]},
+q5:{t:"Я заболела или плохо себя чувствую.",a:[["Спрашивает, чем помочь, и учитывает состояние","green"],["Желает выздороветь, но не включается","norm"],["Рассказывает, как ему самому было плохо","pickme"],["Говорит, что я драматизирую","gas"],["Исчезает, потом присылает мем","chaos"]]},
+q6:{t:"Я рассказываю, что меня кто-то обидел или расстроил.",a:[["Слушает и спрашивает, чем поддержать","green"],["Советует не переживать и переключиться","norm"],["Сразу рассказывает о своей проблеме","pickme"],["Спрашивает, точно ли я не спровоцировала","gas"],["Говорит, что все токсичны, кроме него","covert"]]},
+q7:{t:"У меня сложный период на работе или учёбе.",a:[["Интересуется, как помочь или снизить нагрузку","green"],["Поддерживает словами, без действий","norm"],["Сравнивает с своими трудностями","narc"],["Обижается, что я уделяю ему меньше внимания","manip"],["Предлагает бросить всё и уехать","chaos"]]},
+q8:{t:"В начале он активно дарит подарки, пишет круглосуточно и называет меня идеальной.",a:[["Тепло и без давления","green"],["Приятно, но слишком быстро и навязчиво","pickme"],["Позже упрекал: «Я столько для тебя сделал»","manip"],["Требовал ответной любви и ревновал","ctrl"],["Исчез так же внезапно, как появился","chaos"]]},
+q9:{t:"Я говорю, чего хочу: времени, спокойствия или конкретной помощи.",a:[["Слышит и старается учитывать","green"],["Слышит, но быстро забывает","norm"],["Говорит, что я слишком многого хочу","gas"],["Соглашается, потом делает по-своему","manip"],["Говорит, что таким его не изменить","chaos"]]},
+q10:{t:"Он узнаёт, что я общаюсь с другим человеком.",a:[["Спокойно уточняет контекст","green"],["Требует прекратить общение","ctrl"],["Флиртует с другими назло","manip"],["Проверяет телефон или требует отчёты","ctrl"],["Говорит, что ему всё равно","chaos"]]},
+q11:{t:"Я говорю «нет» на его предложение.",a:[["Принимает без давления","green"],["Уговаривает и настаивает","ctrl"],["Обижается: «Значит, я не нужен»","manip"],["Соглашается, потом делает по-своему","manip"],["Говорит, что я его не люблю","gas"]]},
+q12:{t:"Я прошу время подумать или взять паузу.",a:[["Уважает мою потребность в паузе","green"],["Требует объяснений","ctrl"],["Давит виной: «После всего, что я сделал»","manip"],["Исчезает и возвращается без разговора","chaos"],["Сначала умоляет, потом обесценивает","manip"]]}};
+var R={
+narc:{i:"👑",n:"НАРЦИСС-АРХОНТ",d:["red","ЦИФРОВАЯ ИНКВИЗИЦИЯ / FINAL BOSS"],q:"Он не разговаривает — он проводит пресс-конференцию о собственной значимости.",desc:"Он воспринимает себя как центр истории, а других — как аудиторию. Его обаяние работает в одну сторону: ему нужно восхищение, а не равный контакт.",rec:"Разговоры постоянно возвращаются к нему. Критика воспринимается как нападение, комплименты — как должное.",ph:["«Меня просто не ценят»","«Я слишком умный для этих людей»","«Она не понимала, кого потеряла»","«Я лучше знаю, что тебе нужно»"],exp:"Сначала интенсивное восхищение, затем холод, обесценивание и дистанция.",co:"Не заслуживай уважение идеальным поведением. Веди факты: обещал — сделал. Не спорь о его значимости, обсуждай конкретные поступки. Если после общения ты регулярно чувствуешь себя виноватой, поговори с близким человеком или психологом.",fl:["Обесценивает твои чувства","Не признаёт ошибки искренне","Переводит разговор на себя","Воспринимает критику как нападение","Нуждается в восхищении"]},
+covert:{i:"🎭",n:"СКРЫТЫЙ НАРЦИСС",d:["red","ЦИФРОВАЯ ИНКВИЗИЦИЯ / ВЕЧНАЯ ЖЕРТВА"],q:"Виноваты все: бывшие, обстоятельства, карма и ты.",desc:"Он не хвастается — он страдает так, что кажется: его надо спасать. Его чувства реальны, но используются как разрешение на обиды, молчание и пассивную агрессию.",rec:"Все его предали, но его роль в конфликтах остаётся загадкой. Может молчать днями, а потом сказать: «Я не хотел мешать».",ph:["«Все меня предавали»","«Я слишком много отдавал»","«Ты тоже скоро уйдёшь»","«Я не хотел мешать»"],exp:"Обиды, намёки, молчание и чувство вины у тебя.",co:"Сочувствие — не обязанность спасать. Ты не его терапевт. Отделяй его переживания от своей ответственности и не решай ничего в момент вины.",fl:["Позиция вечной жертвы","Пассивная агрессия","Границы = предательство","Не признаёт свой вклад","Наказывает молчанием"]},
+gas:{i:"🌀",n:"ГАЗЛАЙТ-ГОБЛИН",d:["red","ЦИФРОВАЯ ИНКВИЗИЦИЯ / РЕАЛЬНОСТЬ ПОВРЕЖДЕНА"],q:"Ты не помнишь разговор? Значит, его не было. Так решил он.",desc:"Он постепенно делает твою версию событий ненадёжной: отрицает сказанное, намекает на проблемы с памятью, а в итоге ты извиняешься за то, что заметила.",rec:"После общения часто возникает мысль: «Может, я преувеличиваю?»",ph:["«Я этого не говорил»","«Ты всё придумала»","«Ты слишком чувствительная»","«Из-за тебя мне приходится так себя вести»"],exp:"Путаница, двойные стандарты, ощущение минного поля.",co:"Не спорь «было или не было». Фиксируй факты, возвращай разговор к конкретному поступку. Расскажи о ситуации человеку вне этой истории.",fl:["Отрицает очевидное","Обесценивает чувства","Перекладывает вину","Заставляет сомневаться в себе","Наказывает за вопросы"]},
+manip:{i:"🐍",n:"МАНИПУЛЯТОР-ЗЕРКАЛЬЩИК",d:["red","ЦИФРОВАЯ ИНКВИЗИЦИЯ / ИГРА НАЧАЛАСЬ"],q:"Он спорит так, что ты извиняешься за то, что он сделал.",desc:"Любой конфликт превращается в разговор о твоих недостатках. Ревность называется заботой, обесценивание — честностью.",rec:"Если он сделал больно — ты спровоцировала. Если ты злишься — ты «слишком эмоциональная».",ph:["«Я пошутил»","«Ты сама спровоцировала»","«После всего, что я сделал»","«Нормальные люди так не реагируют»"],exp:"Двойные стандарты: ему можно, тебе нельзя.",co:"Смотри на повторяющиеся действия, а не объяснения. Здоровый человек меняет поведение, манипулятор — формулировки. Не оправдывайся за свои чувства.",fl:["Двойные стандарты","Игра на вине","Наказывает молчанием","Ты всегда виновата","«Шутки» для унижения"]},
+pickme:{i:"🦋",n:"ПИКМИ-ВАМПИР",d:["pur","HIGH DRAMA / ЭМОЦИОНАЛЬНЫЙ ПАРАЗИТ"],q:"Влюбляется быстро, исчезает красиво, возвращается с цитатой.",desc:"Он влюбляется в внимание и драму, а не в реального человека. Сначала ты «единственная», потом «слишком сложная», потом он исчезает и возвращается.",rec:"Быстрая идеализация, круглосуточные сообщения, крупные обещания — и исчезновение, когда нужны действия.",ph:["«Ты не такая, как все»","«Я никогда так не привязывался»","«Я изменился, дай шанс»","«Мне никто не нужен, кроме тебя»"],exp:"Горячо-холодные качели.",co:"Не спасай и не доказывай, что ты особенная. Проверяй не слова, а простые договорённости. Если после возвращения легко, а потом тревожно — это паттерн.",fl:["Быстрая идеализация","Горячо-холодные качели","Драматичные исчезновения","Любовь через давление","Обещания без действий"]},
+chaos:{i:"🎲",n:"ХАОС-АГЕНТ",d:["yel","MID CRINGE / ПЛАН ОТСУТСТВУЕТ"],q:"Плана на завтра нет. Плана на жизнь — тоже. Зато есть вайб.",desc:"Он живёт в режиме «разберёмся на месте». Это не обязательно вредный человек, но если тебе важны договорённости, его спонтанность превращается в «само наладится».",rec:"Появляется, когда удобно ему, исчезает без объяснений, возвращается без разговора.",ph:["«Давай посмотрим, как пойдёт»","«Я не люблю планировать»","«Само наладится»","«Ты считала дни?»"],exp:"Сорванные планы и непредсказуемость.",co:"Не переделывай хаос в надёжность. Если тебе важны стабильность и ясность — это критерий совместимости, а не «слишком много требований».",fl:["Срывает договорённости","Нет планов","«Само наладится»","Эмоциональные качели"]},
+norm:{i:"☕",n:"НОРМИС",d:["grn","SAFE MODE / БЕЗ МАГИИ"],q:"Ничего экстраординарного. Это теперь почти редкость.",desc:"Не идеален, но способен на диалог, извинения и выполнение базовых договорённостей.",rec:"Отвечает, не исчезает, не превращает спор в войну. Слова и поступки в целом совпадают.",ph:["«Давай обсудим»","«Я понял, что тебя задело»","«В следующий раз иначе»","«Как ты?»"],exp:"Стабильность без фейерверков.",co:"Не проверяй на «настоящую любовь» и не создавай драму. Прямо говори о потребностях и смотри на повторяющиеся действия.",fl:["Эмоционально простой","Не понимает намёки","Иногда скучноват","Но не устраивает квест"]},
+green:{i:"🌿",n:"ЗЕЛЁНЫЙ ФЛАГ",d:["grn","SAFE MODE / ПОСЛЕДОВАТЕЛЕН"],q:"Уважает границы, слышит слова и умеет извиняться.",desc:"Он не превращает близость в борьбу за контроль. Может признать ошибку и услышать «мне неприятно».",rec:"Спрашивает, как ты, не наказывает молчанием, не требует отчётов, уважает «нет».",ph:["«Что тебя задело?»","«Я был неправ, извини»","«Что тебе комфортнее?»","«Ты не обязана решать сейчас»"],exp:"Спокойствие, последовательность, уважение.",co:"Береги, но не превращай в спасителя. Продолжай говорить о потребностях и границах.",fl:["Признаёт ошибки","Уважает «нет»","Не давит","Не исчезает","Слышит чувства"]},
+ctrl:{i:"⛓",n:"КОНТРОЛЁР-ИНКВИЗИТОР",d:["red","ЦИФРОВАЯ ИНКВИЗИЦИЯ / ДОСТУП ОГРАНИЧЕН"],q:"Ревность он называет заботой, запреты — защитой.",desc:"Сначала «я волнуюсь», потом твоя свобода становится угрозой, друзья — конкурентами, границы — проблемой.",rec:"Хочет знать, где ты, с кем ты, требует пароли и отчёты.",ph:["«Удали его из друзей»","«Почему не ответила?»","«Я просто забочусь»","«Если любишь — ты бы не так вела»"],exp:"Постепенное сужение жизни и изоляция.",co:"Контроль не усиливается от любви. Не отдавай пароли, не сокращай жизнь ради его спокойствия. Если есть страх, угрозы или насилие — обратись за поддержкой к близким или специалисту.",fl:["Проверяет телефон","Запрещает друзей","Наказывает молчанием","Ревность = забота","Любовь = разрешение только на него"]}};
+var FLAGS=["Физическое насилие или избиение","Угрозы, запугивание, агрессия","Проверка телефона и переписок","Требовал прекратить общение с друзьями","Контроль и ревность","Слежка, отчёты, требования паролей","Газлайт","Обесценивание и унижения","Изоляция от друзей и близких","Давление и уговоры","Игра на вине","Финансовый контроль или манипуляции","Сексуальное давление","Резкие исчезновения","Двойные стандарты","Публичные унижения или оскорбления"];
+function beep(f,d,t){if(localStorage.getItem("gms_quiet")==="1")return;try{var c=new(window.AudioContext||window.webkitAudioContext)();var o=c.createOscillator(),g=c.createGain();o.type=t||"square";o.frequency.value=f;g.gain.value=.03;o.connect(g);g.connect(c.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);o.stop(c.currentTime+d);}catch(e){}}
+function normCard(e){if(!e||typeof e!=="object")return null;
+if(!e.id)e.id=Date.now()+"-"+Math.random().toString(36).slice(2);
+if(!Array.isArray(e.comments))e.comments=[];
+if(!Array.isArray(e.flags))e.flags=[];
+if(!Array.isArray(e.reds))e.reds=[];
+if(!Array.isArray(e.pos))e.pos=[];
+if(!Array.isArray(e.notes))e.notes=[];
+if(!Array.isArray(e.diary))e.diary=[];
+if(typeof e.story!=="string")e.story="";
+if(!e.status)e.status="private";
+if(!e.d)e.d=new Date().toLocaleDateString("ru-RU");
+if(typeof e.danger!=="boolean")e.danger=false;
+if(typeof e.dangerNote!=="string")e.dangerNote="";
+if(typeof e.modLink!=="string")e.modLink="";
+if(!R[e.t])e.t="norm";
+return e;}
+function load(){var arr=[];try{arr=JSON.parse(localStorage.getItem("gms")||"[]");}catch(e){arr=[];}
+if(!Array.isArray(arr))arr=[];
+var out=[];
+for(var i=0;i<arr.length;i++){var e=normCard(arr[i]);if(e)out.push(e);}
+return out;}
+function save(a){try{localStorage.setItem("gms",JSON.stringify(a));}catch(e){}}
+function setNick(){var n=prompt("Какой никнейм показать под твоими комментариями?",NICK||"");if(n===null)return;NICK=n.trim()||"Аноним";localStorage.setItem("gms_nick",NICK);beep(900,.1);menu();}
+function autoFilter(t){if(!t)return null;
+if(/@[A-Za-z0-9_]{3,}/.test(t))return "Ники и упоминания аккаунтов публиковать нельзя.";
+if(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/.test(t))return "Электронную почту публиковать нельзя.";
+if(/\d{7,}/.test(t.replace(/[\s\-()]/g,"")))return "Похоже на номер телефона или другой личный номер. Убери цифры.";
+if(/\b(ул\.|улица|дом \d|кв\.|квартира \d|индекс)\b/i.test(t))return "Адреса и точные места публиковать нельзя.";
+return null;}
+function wrapText(ctx,text,x,y,maxW,lh){var words=String(text||"").split(" "),line="",yy=y;
+for(var i=0;i<words.length;i++){var test=line+words[i]+" ";
+if(ctx.measureText(test).width>maxW&&line){ctx.fillText(line,x,yy);line=words[i]+" ";yy+=lh;}else line=test;}
+if(line)ctx.fillText(line,x,yy);return yy+lh;}
+function exportCard(e){beep(900,.1);try{
+e=normCard(e);var r=R[e.t]||R.norm,G=metrics();
+var cv=document.createElement("canvas");cv.width=900;cv.height=1250;var c=cv.getContext("2d");
+c.fillStyle="#040506";c.fillRect(0,0,900,1250);
+c.strokeStyle="#39ff88";c.lineWidth=3;c.strokeRect(25,25,850,1200);
+c.fillStyle="#39ff88";c.font="bold 26px monospace";c.textAlign="center";
+c.fillText("СКАНЕР МУЖИКА",450,90);
+c.fillStyle="#8fd9b2";c.font="14px monospace";c.fillText("ЦИФРОВАЯ ИНКВИЗИЦИЯ · САТИРА, НЕ ДИАГНОЗ",450,118);
+c.fillStyle="#eafff3";c.font="bold 40px monospace";c.fillText(r.i+" "+r.n+" "+r.i,450,190);
+c.fillStyle=r.d[0]==="red"?"#ff3b5c":r.d[0]==="yel"?"#ffd166":r.d[0]==="pur"?"#b388ff":"#39ff88";
+c.font="16px monospace";c.fillText(r.d[1],450,225);
+c.fillStyle="#8fd9b2";c.font="14px monospace";c.fillText("Дата: "+e.d+(e.n?" · Пометка: "+e.n:""),450,255);
+if(e.danger){c.fillStyle="#ff3b5c";c.font="bold 22px monospace";c.fillText("⚠️ ОСОБО ОПАСЕН",450,295);}
+c.textAlign="left";var y=e.danger?340:310;
+c.fillStyle="#39ff88";c.font="bold 18px monospace";c.fillText("ИНДИКАТОРЫ ОБЩЕНИЯ",60,y);y+=30;
+var ms=[["Уважение к границам",G.respect,"#39ff88"],["Эмпатия",G.empathy,"#39ff88"],["Ответственность",G.resp,"#39ff88"],["Склонность к контролю",G.control,"#ff3b5c"],["Склонность к манипуляциям",G.manip,"#ff3b5c"]];
+for(var i=0;i<ms.length;i++){c.fillStyle="#d8ffe9";c.font="15px monospace";c.fillText(ms[i][0],60,y);c.textAlign="right";c.fillText(ms[i][1]+"%",840,y);c.textAlign="left";y+=10;
+c.fillStyle="#07130c";c.fillRect(60,y,780,10);c.fillStyle=ms[i][2];c.fillRect(60,y,780*ms[i][1]/100,10);y+=34;}
+y+=10;c.fillStyle="#ff3b5c";c.font="bold 18px monospace";c.fillText("МОИ КРАСНЫЕ ФЛАГИ",60,y);y+=28;
+c.fillStyle="#ffd7de";c.font="14px monospace";
+if(e.reds.length){for(var j=0;j<e.reds.length&&y<1050;j++){c.fillText("🔴 "+e.reds[j],60,y);y+=22;}}else{c.fillText("Пока не добавлено",60,y);y+=22;}
+y+=16;c.fillStyle="#39ff88";c.font="bold 18px monospace";c.fillText("ВИДИМЫЕ ПЛЮСЫ",60,y);y+=28;
+c.fillStyle="#d8ffe9";c.font="14px monospace";
+if(e.pos.length){for(var k=0;k<e.pos.length&&y<1120;k++){c.fillText("🟢 "+e.pos[k],60,y);y+=22;}}else{c.fillText("Пока не добавлено",60,y);y+=22;}
+y+=16;c.fillStyle="#ffd166";c.font="bold 18px monospace";c.fillText("МОИ ЗАМЕТКИ",60,y);y+=28;
+c.fillStyle="#d8ffe9";c.font="14px monospace";
+if(e.notes.length){for(var m=0;m<e.notes.length&&y<1180;m++){y=wrapText(c,"• "+e.notes[m],60,y,780,20);}}else{c.fillText("Пока нет заметок",60,y);y+=22;}
+c.fillStyle="#5d8f75";c.font="12px monospace";c.textAlign="center";c.fillText("Сатирическая карточка. Не является диагнозом.",450,1215);
+var u=cv.toDataURL("image/png"),a=document.createElement("a");a.href=u;a.download="karta-muzhika.png";a.click();
+}catch(err){alert("Не удалось создать изображение: "+err.message);}}
+function safety(){beep(700,.1);var a=document.getElementById("app");
+a.innerHTML='<div class="t">БЕЗОПАСНОСТЬ</div><div class="k">🆘 ЕСЛИ СРОЧНО ОПАСНО</div><div class="bl red"><b>ГЛАВНОЕ:</b><br>Если тебе угрожают, применяют насилие, не дают уйти, контролируют каждый шаг или ты боишься за свою безопасность — это не «сложные отношения». Твоя безопасность важнее объяснений, извинений и сохранения отношений.</div><div class="bl"><b>ЧТО СДЕЛАТЬ СЕЙЧАС:</b><ul><li>Если есть непосредственная угроза — обращайся в экстренные службы своей страны.</li><li>Напиши близкому человеку, которому доверяешь, где ты и что происходит.</li><li>Собери важное: документы, деньги, лекарства, зарядку, запасную SIM-карту.</li><li>Сделай скриншоты угроз и переписок, но не отправляй их человеку, который тебя пугает.</li><li>Не удаляй доказательства в спешке; сохрани их в надёжном месте.</li><li>Обратись в кризисный центр, к психологу или в службу поддержки пострадавших от насилия.</li></ul></div><div class="bl yel"><b>ВАЖНО:</b><br>Этот сайт не служба экстренной помощи. В ситуации насилия обращайся к профессиональным службам и людям, которым доверяешь.</div><button class="sos" onclick="helpForm(null)">✉ НАПИСАТЬ АДМИНИСТРАТОРУ ЗА ПОМОЩЬЮ</button><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';}
+function menu(){beep(700,.1);var a=document.getElementById("app");
+a.innerHTML='<div class="t">ГЛАВНОЕ МЕНЮ</div><div class="k">☰ СКАНЕР МУЖИКА</div><div class="bl">Пройди цифровую инквизицию, открой свой архив, посмотри публичный архив или возьми готовую фразу-границу.<br><br>Твой никнейм: <b>'+(NICK||"Аноним")+'</b></div>';
+var b1=document.createElement("button");b1.className="bigact";b1.textContent="☠ НОВЫЙ АНАЛИЗ";b1.onclick=startTest;a.appendChild(b1);
+var b2=document.createElement("button");b2.className="arc";b2.textContent="🗂 МОЙ АРХИВ СУЩЕСТВ";b2.onclick=collection;a.appendChild(b2);
+var b5=document.createElement("button");b5.className="pub";b5.textContent="🌐 ПУБЛИЧНЫЙ АРХИВ";b5.onclick=publicArchive;a.appendChild(b5);
+var b3=document.createElement("button");b3.className="ctr";b3.textContent="🎮 ФРАЗЫ-ДЕТЕКТОРЫ";b3.onclick=game;a.appendChild(b3);
+var b4=document.createElement("button");b4.className="ctr";b4.textContent="✍ ГЕНЕРАТОР ФРАЗ-ГРАНИЦ";b4.onclick=gen;a.appendChild(b4);
+var b8=document.createElement("button");b8.className="ctr";b8.textContent="✏ МОЙ НИКНЕЙМ";b8.onclick=setNick;a.appendChild(b8);
+var b9=document.createElement("button");b9.className="ctr";b9.textContent="✉ ПРОВЕРИТЬ ОТВЕТ АДМИНИСТРАТОРА";b9.onclick=replyCheck;a.appendChild(b9);
+var b7=document.createElement("button");b7.className="sos";b7.textContent="🆘 МНЕ СТРАШНО — ПОМОЩЬ АДМИНИСТРАТОРА";b7.onclick=function(){helpForm(null);};a.appendChild(b7);
+var bd=document.createElement("button");bd.className="ctr";bd.textContent="🚩 КРАСНЫЙ ФЛАГ ДНЯ";bd.onclick=dailyFlag;a.appendChild(bd);
+var bs=document.createElement("button");bs.className="ctr";bs.textContent="📖 ИСТОРИЯ ДНЯ";bs.onclick=storyOfDay;a.appendChild(bs);
+var ba=document.createElement("button");ba.className="ctr";ba.textContent="🏅 МОИ ДОСТИЖЕНИЯ";ba.onclick=badges;a.appendChild(ba);
+var bq=document.createElement("button");bq.className="ctr";bq.textContent="🌙 ТИХИЙ РЕЖИМ: "+(localStorage.getItem("gms_quiet")==="1"?"ВКЛ":"ВЫКЛ");bq.onclick=toggleQuiet;a.appendChild(bq);
+var bm=document.createElement("button");bm.className="pub";bm.textContent="✉ МОИ СООБЩЕНИЯ";bm.onclick=messagesHome;a.appendChild(bm);
+var b6=document.createElement("button");b6.className="mod";b6.textContent="🛡 ПАНЕЛЬ АДМИНИСТРАТОРА";b6.onclick=moderation;a.appendChild(b6);
+var b0=document.createElement("button");b0.className="bigact";b0.textContent="☰ В ГЛАВНОЕ МЕНЮ";b0.onclick=menu;a.appendChild(b0);}
+function startTest(){portal();setTimeout(function(){qi=0;replaces=2;for(var k in S)S[k]=0;renderQ(0);},500);}
+function renderQ(i){if(i>=total){finish();return;}qi=i;beep(620,.05);var q=Q[ORDER[i]],a=document.getElementById("app");
+a.innerHTML='<div class="t">ВОПРОС '+(i+1)+" ИЗ "+total+'</div><div class="b"><div class="f" style="width:'+((i+1)/total*100)+'%"></div></div><div class="qq">'+q.t+'</div>';
+for(var j=0;j<q.a.length;j++){(function(it){var b=document.createElement("button");b.textContent="▸ "+it[0];b.onclick=function(){beep(820,.06);S[it[1]]++;renderQ(i+1);};a.appendChild(b);})(q.a[j]);}
+if(replaces>0){var r=document.createElement("button");r.className="rp";r.textContent="↻ ЗАМЕНИТЬ ВОПРОС · осталось "+replaces;r.onclick=function(){beep(500,.08);replaces--;renderQ(i+1);};a.appendChild(r);}
+var f=document.createElement("button");f.className="fin";f.textContent="⏹ ЗАВЕРШИТЬ АНАЛИЗ И ВЕРНУТЬСЯ В МЕНЮ";f.onclick=function(){if(confirm("Завершить анализ и вернуться в главное меню?")){beep(300,.15,"sawtooth");menu();}};a.appendChild(f);}
+function calc(){var red=S.narc+S.covert+S.gas+S.manip+S.ctrl,best="norm",mx=-1,ks=["narc","covert","gas","manip","pickme","chaos","norm","ctrl"];
+for(var i=0;i<ks.length;i++){if(S[ks[i]]>mx){mx=S[ks[i]];best=ks[i];}}
+if(S.green>=6&&red<=3)best="green";
+return{best:best,red:red,ks:ks};}
+function cap(v){return Math.max(0,Math.min(100,Math.round(v)));}
+function metrics(){return{respect:cap(100-S.ctrl*8-S.manip*5),empathy:cap(S.green*9+S.norm*5-S.gas*7-S.narc*5),resp:cap(S.green*9+S.norm*5-S.chaos*6-S.pickme*5),control:cap(S.ctrl*12+S.manip*6),manip:cap(S.manip*11+S.gas*8+S.narc*5)};}
+function showResult(e){e=normCard(e);for(var k in S)S[k]=e.s[k];var c=calc(),best=c.best,red=c.red,ks=c.ks,r=R[best]||R.norm,isG=best==="green";
+var G=metrics();
+var hope=red<=2&&S.green>=5?"НЕ РАЗВИВАЙ НАДЕЖДУ НА ПОТЕНЦИАЛ — ОН УЖЕ ПОКАЗЫВАЕТ ДЕЙСТВИЯ":red>=6?"«ОН ИЗМЕНИТСЯ» — САМЫЙ ДОРОГОЙ ЖАНР ФАНТАСТИКИ":"СМОТРИ НА ПОВТОРЯЮЩИЕСЯ ДЕЙСТВИЯ, А НЕ НА ЛУЧШИЕ ЭПИЗОДЫ";
+var nm={narc:"Нарцисс-Архонт",covert:"Скрытый нарцисс",gas:"Газлайт-Гоблин",manip:"Манипулятор",pickme:"Пикми-Вампир",chaos:"Хаос-Агент",norm:"Нормис",green:"Зелёный флаг",ctrl:"Контролёр"};
+var cl={narc:"red",covert:"red",gas:"red",manip:"red",pickme:"pur",chaos:"yel",norm:"grn",green:"grn",ctrl:"red"};
+var mx2=Math.max(1,S.narc,S.covert,S.gas,S.manip,S.pickme,S.chaos,S.norm,S.green,S.ctrl);
+var h='<div class="t">КАРТОЧКА МУЖИКА</div><div class="k">'+r.i+" "+r.n+" "+r.i+'</div><div class="d '+r.d[0]+'">'+r.d[1]+'</div>';
+if(e.danger)h+='<div class="warn">⚠️ ОСОБО ОПАСЕН</div>';
+if(e.n)h+='<div class="note">📝 '+e.n+'</div>';
+if(e.dbStatus==="pending")h+='<div class="bl yel"><b>СТАТУС:</b> отправлено на проверку</div>';
+if(e.dbStatus==="approved")h+='<div class="bl grn"><b>СТАТУС:</b> опубликовано в публичном архиве</div>';
+if(e.dbStatus==="rejected")h+='<div class="bl red"><b>СТАТУС:</b> отклонено администратором</div>';
+h+='<div class="qt">«'+r.q+'»</div>';
+h+='<div class="bl"><b>КТО ОН:</b><br>'+r.desc+'</div><div class="bl"><b>КАК РАСПОЗНАТЬ:</b><br>'+r.rec+'</div><div class="bl red"><b>ФРАЗЫ-МАРКЕРЫ:</b><ul class="rf">';
+for(var i=0;i<r.ph.length;i++)h+='<li>'+r.ph[i]+'</li>';
+h+='</ul></div><div class="bl"><b>ЧЕГО ЖДАТЬ:</b><br>'+r.exp+'</div>';
+h+='<div class="bl"><b>ИНДИКАТОРЫ ОБЩЕНИЯ:</b>';
+h+='<div class="lamp"><span>Уважение к границам</span><span>'+G.respect+'%</span></div><div class="bar"><div class="f" style="width:'+G.respect+'%"></div></div>';
+h+='<div class="lamp"><span>Эмпатия</span><span>'+G.empathy+'%</span></div><div class="bar"><div class="f" style="width:'+G.empathy+'%"></div></div>';
+h+='<div class="lamp"><span>Ответственность</span><span>'+G.resp+'%</span></div><div class="bar"><div class="f" style="width:'+G.resp+'%"></div></div>';
+h+='<div class="lamp"><span>Склонность к контролю</span><span>'+G.control+'%</span></div><div class="bar"><div class="f" style="width:'+G.control+'%;background:#ff3b5c"></div></div>';
+h+='<div class="lamp"><span>Склонность к манипуляциям</span><span>'+G.manip+'%</span></div><div class="bar"><div class="f" style="width:'+G.manip+'%;background:#ff3b5c"></div></div></div>';
+h+='<div class="bl"><b>ЗЕЛЁНЫЕ ДОКАЗАТЕЛЬСТВА:</b><br>'+(S.green>=4?"Он способен на уважение, диалог и учёт твоих границ.":"Пока зелёных доказательств мало: слова есть, устойчивых действий — нет.")+'</div>';
+h+='<div class="bl yel"><b>УРОВЕНЬ НАДЕЖДЫ НА ПОТЕНЦИАЛ:</b><br>'+hope+'</div>';
+h+='<div class="bl"><b>ПРОФИЛЬ ПО КАСТАМ:</b>';
+for(var j=0;j<ks.length;j++){var k=ks[j],pc=Math.round(S[k]/mx2*100);h+='<div class="st '+cl[k]+'"><div class="n"><span>'+nm[k]+'</span><span>'+pc+'%</span></div><div class="tr"><div class="v" style="width:'+pc+'%"></div></div></div>';}
+h+='</div>';
+h+='<div class="bl '+(isG?"grn":"red")+'"><b>'+(isG?"🟢 ЗЕЛЁНЫЕ ФЛАГИ":"🔴 ЦИФРОВАЯ ИНКВИЗИЦИЯ")+':</b><ul class="'+(isG?"gf":"rf")+'">';
+for(var m=0;m<r.fl.length;m++)h+='<li>'+r.fl[m]+'</li>';
+h+='</ul></div>';
+h+='<div class="bl"><b>ПЛАН НА ТРИ ШАГА:</b><ul><li>Заметь: что ты чувствуешь после общения с ним.</li><li>Сделай один маленький шаг: запиши факты, озвучь границу или возьми паузу.</li><li>Проверь через 2–4 недели: изменились действия или только обещания?</li></ul></div>';
+h+='<button class="cp" onclick="cope()">🧭 ЧТО ДЕЛАТЬ С ЭТИМ ДАЛЬШЕ</button>';
+h+='<button class="arc" onclick="cardView(window.cur)">🗂 СОХРАНИТЬ В МОЙ АРХИВ</button>';
+h+='<button class="pub" onclick="shareForm(window.cur)">📤 ОТПРАВИТЬ В ПУБЛИЧНЫЙ АРХИВ</button>';
+h+='<button class="sos" onclick="helpForm(window.cur)">🆘 ЗАПРОСИТЬ ПОМОЩЬ АДМИНИСТРАТОРА</button>';
+h+='<button class="exp" onclick="exportCard(window.cur)">🖼 СКАЧАТЬ КАРТИНКОЙ</button>';
+h+='<button class="bigact" onclick="menu()">☰ В ГЛАВНОЕ МЕНЮ</button>';
+h+='<button class="sh" onclick="share()">☾ ПОДЕЛИТЬСЯ ВЕРДИКТОМ ☾</button>';
+h+='<button class="ag" onclick="startTest()">☠ НОВЫЙ АНАЛИЗ ☠</button>';
+document.getElementById("app").innerHTML=h;
+window.res="Мой результат: "+r.n+" — "+r.d[1]+". "+r.q;window.ty=best;window.cur=e;}
+function finish(){beep(220,.25,"sawtooth");var c=calc();
+var e=normCard({id:Date.now()+"-"+Math.random().toString(36).slice(2),t:c.best,d:new Date().toLocaleDateString("ru-RU"),n:"",s:JSON.parse(JSON.stringify(S)),dbId:null,dbStatus:null});
+var arr=load();arr.push(e);save(arr);bump("gms_cards");window.cur=e;showResult(e);}
+function cope(){beep(700,.1);var r=R[window.ty||"norm"]||R.norm,h='<div class="k">'+r.i+" "+r.n+" "+r.i+'</div><div class="bl yel"><b>ГЛАВНОЕ:</b><br>Ты не обязана сразу обрывать общение, чтобы начать заботиться о себе. Но ты имеешь право замечать, как тебе после общения, и менять дистанцию.</div><div class="bl"><b>ЧТО МОЖНО ДЕЛАТЬ:</b><ul><li>Записывай: что обещано, что сделано, как ты себя чувствовала после.</li><li>Оценивай повторяющиеся действия, а не отдельные хорошие моменты.</li><li>Формулируй границы коротко: «Мне не подходит такое общение».</li><li>Не принимай решения в момент вины, страха или сильной надежды.</li><li>Обсуди ситуацию с подругой, близким человеком или психологом.</li><li>Если есть страх, угрозы, контроль или насилие — безопасность важнее объяснений.</li></ul></div><div class="bl"><b>ДЛЯ ТИПА «'+r.n+'»:</b><br>'+r.co+'</div><div class="bl yel"><b>НАПОМИНАНИЕ:</b><br>Ты не обязана спасать взрослого человека или терпеть боль ради его потенциала.</div><button class="bk" onclick="showResult(window.cur)">← НАЗАД К КАРТОЧКЕ</button><button class="bigact" onclick="menu()">☰ В ГЛАВНОЕ МЕНЮ</button>';document.getElementById("app").innerHTML=h;}
+function findIdx(e){var arr=load();for(var i=0;i<arr.length;i++){if(arr[i].id===e.id)return i;}return -1;}
+function updateE(e){var arr=load(),i=findIdx(e);if(i>=0){arr[i]=e;save(arr);return true;}return false;}
+function deleteE(e){if(!confirm("Удалить эту карточку из твоего архива? Действие нельзя отменить."))return;var arr=load(),i=findIdx(e);if(i>=0){arr.splice(i,1);save(arr);beep(180,.2,"sawtooth");collection();}}
+function cardView(e){try{beep(700,.1);window.cur=e;e=normCard(e);if(!e)throw new Error("Карточка не найдена");
+var r=R[e.t]||R.norm,a=document.getElementById("app");
+a.innerHTML='<div class="t">КАРТОЧКА СУЩЕСТВА</div><div class="k">'+r.i+" "+r.n+" "+r.i+'</div><div class="d '+r.d[0]+'">'+r.d[1]+' · '+e.d+'</div>';
+if(e.danger)a.innerHTML+='<div class="warn">⚠️ ОСОБО ОПАСЕН</div>';
+a.innerHTML+='<div class="sec yel"><h3>✏ ИМЯ / ПОМЕТКА</h3><div class="big">'+(e.n||"Без пометки")+'</div>'+(e.n?"":'<div class="note">Например: «Коллега», «Бывший», «Мужчина из приложения».</div>')+'</div>';
+a.innerHTML+='<div class="sec red"><h3>🔴 КРАСНЫЕ ФЛАГИ</h3>'+(e.reds.length?"":"<div class='note'>Пока не добавлено.</div>");
+for(var i=0;i<e.reds.length;i++)a.innerHTML+='<div class="tag">🔴 '+e.reds[i]+'</div>';
+a.innerHTML+='</div>';
+a.innerHTML+='<div class="sec grn"><h3>🟢 ВИДИМЫЕ ПЛЮСЫ</h3>'+(e.pos.length?"":"<div class='note'>Пока не добавлено.</div>");
+for(var j=0;j<e.pos.length;j++)a.innerHTML+='<div class="ptag">🟢 '+e.pos[j]+'</div>';
+a.innerHTML+='</div>';
+a.innerHTML+='<div class="sec yel"><h3>📝 ЗАМЕТКИ</h3>'+(e.notes.length?"":"<div class='note'>Пока нет заметок.</div>");
+for(var m=0;m<e.notes.length;m++)a.innerHTML+='<div class="note">• '+e.notes[m]+'</div>';
+a.innerHTML+='</div>';
+a.innerHTML+='<div class="sec yel"><h3>📔 ДНЕВНИК ОТНОШЕНИЙ</h3>'+(e.diary.length?"":"<div class='note'>Пока нет записей.</div>");
+for(var q=0;q<e.diary.length;q++)a.innerHTML+='<div class="dentry"><b>'+e.diary[q].date+'</b><br>'+e.diary[q].text.replace(/</g,"&lt;")+'</div>';
+a.innerHTML+='</div>';
+if(e.dangerNote)a.innerHTML+='<div class="bl red"><b>⚠️ ОПАСНЫЕ СИГНАЛЫ:</b><br>'+e.dangerNote.replace(/</g,"&lt;")+'</div>';
+var b0=document.createElement("button");b0.className="opt";b0.textContent="✏ ИЗМЕНИТЬ ИМЯ / ПОМЕТКУ";b0.onclick=function(){var n=prompt("Кто это?",e.n||"");if(n!==null){e.n=n;updateE(e);cardView(e);}};a.appendChild(b0);
+var b1=document.createElement("button");b1.className="opt";b1.textContent="🔴 ДОБАВИТЬ КРАСНЫЙ ФЛАГ";b1.onclick=function(){var v=prompt("Какой красный флаг ты заметила?");if(v){e.reds.push(v);updateE(e);cardView(e);}};a.appendChild(b1);
+var b2=document.createElement("button");b2.className="opt";b2.textContent="🟢 ДОБАВИТЬ ВИДИМЫЙ ПЛЮС";b2.onclick=function(){var v=prompt("Какой видимый плюс ты заметила?");if(v){e.pos.push(v);updateE(e);cardView(e);}};a.appendChild(b2);
+var b3=document.createElement("button");b3.className="opt";b3.textContent="📝 ДОБАВИТЬ ЗАМЕТКУ";b3.onclick=function(){var v=prompt("Твоя заметка:");if(v){e.notes.push(v);updateE(e);cardView(e);}};a.appendChild(b3);
+var b4=document.createElement("button");b4.className="opt";b4.textContent="📔 ДОБАВИТЬ ЗАПИСЬ В ДНЕВНИК";b4.onclick=function(){var v=prompt("Что произошло? Что обещал, что сделал, что ты почувствовала?");if(v){e.diary.push({date:new Date().toLocaleDateString("ru-RU"),text:v});updateE(e);cardView(e);}};a.appendChild(b4);
+var bd=document.createElement("button");bd.className="opt";bd.textContent=e.danger?"⚠️ СНЯТЬ ПОМЕТКУ «ОСОБО ОПАСЕН»":"⚠️ ОТМЕТИТЬ КАК ОСОБО ОПАСНОГО";bd.onclick=function(){if(!e.danger){e.danger=true;var v=prompt("Опиши опасные сигналы без ссылок и личных данных:");if(v!==null)e.dangerNote=v;}else{e.danger=false;e.dangerNote="";}updateE(e);cardView(e);};a.appendChild(bd);
+var b7=document.createElement("button");b7.className="pub";b7.textContent="💾 СОХРАНИТЬ КАРТОЧКУ";b7.onclick=function(){if(updateE(e)){beep(900,.12);alert("Карточка сохранена в твоём архиве.");}else{alert("Не удалось сохранить карточку.");}};a.appendChild(b7);
+var b9=document.createElement("button");b9.className="exp";b9.textContent="🖼 СКАЧАТЬ КАРТИНКОЙ";b9.onclick=function(){exportCard(e);};a.appendChild(b9);
+var b6=document.createElement("button");b6.className="pub";b6.textContent="📤 ОТПРАВИТЬ В ПУБЛИЧНЫЙ АРХИВ";b6.onclick=function(){shareForm(e);};a.appendChild(b6);
+var bh=document.createElement("button");bh.className="sos";bh.textContent="🆘 ЗАПРОСИТЬ ПОМОЩЬ АДМИНИСТРАТОРА";bh.onclick=function(){helpForm(e);};a.appendChild(bh);
+var b5=document.createElement("button");b5.className="bk";b5.textContent="← МОЙ АРХИВ";b5.onclick=collection;a.appendChild(b5);
+var b10=document.createElement("button");b10.className="bk";b10.textContent="📖 К КАРТОЧКЕ МУЖИКА";b10.onclick=function(){showResult(e);};a.appendChild(b10);
+var b8=document.createElement("button");b8.className="bigact";b8.textContent="☰ В ГЛАВНОЕ МЕНЮ";b8.onclick=menu;a.appendChild(b8);
+var bx=document.createElement("button");bx.className="del";bx.textContent="🗑 УДАЛИТЬ КАРТОЧКУ";bx.onclick=function(){deleteE(e);};a.appendChild(bx);
+}catch(err){document.getElementById("app").innerHTML='<div class="bl red">Ошибка в редакторе карточки: '+err.message+'</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';}}
+function collection(){try{beep(700,.1);var arr=load(),a=document.getElementById("app");
+a.innerHTML='<div class="t">АРХИВ СУЩЕСТВ</div><div class="k">🗂 МОЯ КОЛЛЕКЦИЯ</div><div class="bl yel">Нажми на существо, чтобы открыть карточку. Внутри можно редактировать, скачать, опубликовать или удалить.</div>';
+if(!arr.length){a.innerHTML+='<div class="bl">Архив пока пуст. Пройди анализ, чтобы поймать первое существо.</div>';}
+else{for(var i=0;i<arr.length;i++){(function(idx){var e=arr[idx];if(!e)return;var r=R[e.t]||R.norm;
+var box=document.createElement("div");box.className="card";
+var st=e.dbStatus==="pending"?" · ⏳ на проверке":e.dbStatus==="approved"?" · 🌐 в публичном архиве":e.dbStatus==="rejected"?" · ❌ отклонено":"";
+box.innerHTML='<b>'+r.i+" "+r.n+"</b><br>"+e.d+st+(e.danger?'<div class="warn">⚠️ ОСОБО ОПАСЕН</div>':'');
+var b1=document.createElement("button");b1.className="opt";b1.textContent="📖 ОТКРЫТЬ КАРТОЧКУ";b1.onclick=function(){beep(700,.1);cardView(e);};
+box.appendChild(b1);a.appendChild(box);})(i);}}
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☠ НОВЫЙ АНАЛИЗ";bk.onclick=startTest;a.appendChild(bk);
+var b2=document.createElement("button");b2.className="bigact";b2.textContent="☰ В ГЛАВНОЕ МЕНЮ";b2.onclick=menu;a.appendChild(b2);
+}catch(err){document.getElementById("app").innerHTML='<div class="bl red">Ошибка в архиве: '+err.message+'</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';}}
+function shareForm(e){beep(700,.1);window.cur=e;e=normCard(e);if(!R[e.t])e.t="norm";var a=document.getElementById("app");
+a.innerHTML='<div class="t">ПУБЛИЧНЫЙ АРХИВ</div><div class="k">📤 АНОНИМНАЯ ИСТОРИЯ</div><div class="bl yel"><b>ПРАВИЛА:</b><br>В истории для посетителей не указывай ФИО, адреса, телефоны и данные, по которым можно узнать человека. Ссылку или доказательства можно оставить администратору: после проверки администратор сам решит, публиковать ли их.</div><div class="bl"><b>КАСТА:</b> '+(R[e.t]||R.norm).n+'</div>';
+var box=document.createElement("div");box.className="bl";box.innerHTML="<b>ЧТО БЫЛО В ОБЩЕНИИ?</b>";
+for(var i=0;i<FLAGS.length;i++){(function(fl){var l=document.createElement("label");l.className="chk";var cb=document.createElement("input");cb.type="checkbox";cb.value=fl;if(e.flags.indexOf(fl)>=0)cb.checked=true;cb.onchange=function(){if(cb.checked){if(e.flags.indexOf(fl)<0)e.flags.push(fl);}else{e.flags=e.flags.filter(function(x){return x!==fl;});}};l.appendChild(cb);l.appendChild(document.createTextNode(fl));box.appendChild(l);})(FLAGS[i]);}
+a.appendChild(box);
+var ta=document.createElement("textarea");ta.rows=6;ta.placeholder="Расскажи свою историю без имён и узнаваемых деталей.";ta.value=e.story||"";ta.oninput=function(){e.story=ta.value;};a.appendChild(ta);
+var dng=document.createElement("label");dng.className="chk";var dc=document.createElement("input");dc.type="checkbox";dc.checked=!!e.danger;dc.onchange=function(){e.danger=dc.checked;if(!dc.checked)e.dangerNote="";};dng.appendChild(dc);dng.appendChild(document.createTextNode("⚠️ Отметить как ОСОБО ОПАСНОГО"));a.appendChild(dng);
+var dn=document.createElement("textarea");dn.rows=3;dn.placeholder="Опиши опасные сигналы для публичного архива.";dn.value=e.dangerNote||"";dn.oninput=function(){e.dangerNote=dn.value;};a.appendChild(dn);
+var lk=document.createElement("input");lk.placeholder="Ссылка / доказательства для администратора";lk.value=e.modLink||"";lk.oninput=function(){e.modLink=lk.value;};a.appendChild(lk);
+var b1=document.createElement("button");b1.className="pub";b1.textContent="📤 ОТПРАВИТЬ НА ПРОВЕРКУ";b1.onclick=async function(){if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}var bad=autoFilter(ta.value);if(bad){alert(bad);return;}if(!e.story||e.story.trim().length<20){alert("Добавь историю минимум из 20 символов.");return;}
+b1.textContent="⏳ ОТПРАВЛЯЮ…";b1.disabled=true;
+var res=await sb.from("stories").insert({archetype:e.t,card_data:{n:e.n,s:e.s,reds:e.reds,pos:e.pos,notes:e.notes,diary:e.diary,danger:e.danger,dangerNote:e.dangerNote,modLink:e.modLink},story:e.story,flags:e.flags,status:"pending"});
+if(res.error){alert("Ошибка отправки: "+res.error.message+"\n\nПроверь, что в Supabase выполнен SQL для политики public_insert_stories.");b1.textContent="📤 ОТПРАВИТЬ НА ПРОВЕРКУ";b1.disabled=false;return;}
+e.dbStatus="pending";updateE(e);bump("gms_published");beep(900,.15);
+document.getElementById("app").innerHTML='<div class="k">⏳ ОТПРАВЛЕНО</div><div class="bl">История отправлена на проверку. Она появится в публичном архиве после одобрения.</div><button class="bk" onclick="showResult(window.cur)">← НАЗАД К КАРТОЧКЕ</button><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';};a.appendChild(b1);
+var b2=document.createElement("button");b2.className="bk";b2.textContent="← НАЗАД К КАРТОЧКЕ";b2.onclick=function(){showResult(e);};a.appendChild(b2);
+var b3=document.createElement("button");b3.className="bigact";b3.textContent="☰ В ГЛАВНОЕ МЕНЮ";b3.onclick=menu;a.appendChild(b3);}
+function helpForm(e){beep(700,.1);window.cur=e;var a=document.getElementById("app");
+a.innerHTML='<div class="t">ПОМОЩЬ АДМИНИСТРАТОРА</div><div class="k">🆘 МНЕ СТРАШНО</div><div class="bl yel">Опиши, что происходит. Администратор получит твоё сообщение, сможет ответить в разделе «Проверить ответ администратора» или связаться по указанному контакту. Если есть непосредственная угроза — сначала обращайся в экстренные службы.</div>'+(e?'<div class="bl"><b>КАРТОЧКА:</b> '+(R[e.t]||R.norm).n+' · '+(e.n||"без пометки")+'</div>':'');
+var n1=document.createElement("input");n1.placeholder="Твой никнейм";n1.value=NICK||"";a.appendChild(n1);
+var n2=document.createElement("input");n2.placeholder="Придумай контакт для ответа: например, кодовое слово или Telegram";a.appendChild(n2);
+var ta=document.createElement("textarea");ta.rows=5;ta.placeholder="Что происходит? Что тебя пугает или тревожит?";a.appendChild(ta);
+var b=document.createElement("button");b.className="sos";b.textContent="✉ ОТПРАВИТЬ АДМИНИСТРАТОРУ";b.onclick=async function(){if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}var v=ta.value.trim();if(v.length<10){alert("Опиши ситуацию подробнее.");return;}
+b.textContent="⏳ ОТПРАВЛЯЮ…";b.disabled=true;
+var ins=await sb.from("help_requests").insert({nickname:n1.value.trim()||"Аноним",contact:n2.value.trim(),message:v,card_id:e?e.id:null,card_type:e?e.t:null});
+if(ins.error){alert("Ошибка: "+ins.error.message);b.textContent="✉ ОТПРАВИТЬ АДМИНИСТРАТОРУ";b.disabled=false;return;}
+beep(900,.15);document.getElementById("app").innerHTML='<div class="k">✉ ОТПРАВЛЕНО</div><div class="bl">Сохрани свой контакт: <b>'+(n2.value.trim()||"не указан")+'</b>. По нему ты сможешь проверить ответ администратора.</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';};a.appendChild(b);
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+function replyCheck(){beep(700,.1);var a=document.getElementById("app");
+a.innerHTML='<div class="t">ОТВЕТ АДМИНИСТРАТОРА</div><div class="k">✉ ПРОВЕРКА ОТВЕТА</div><div class="bl yel">Введи тот же контакт, который ты указала при отправке запроса.</div>';
+var inp=document.createElement("input");inp.placeholder="Твой контакт / кодовое слово";a.appendChild(inp);
+var b=document.createElement("button");b.className="pub";b.textContent="🔍 ПРОВЕРИТЬ ОТВЕТ";b.onclick=async function(){if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}var c=inp.value.trim();if(!c){alert("Введи контакт.");return;}
+b.textContent="⏳ ИЩУ…";b.disabled=true;
+var res=await sb.rpc("get_help_reply",{p_contact:c});
+b.textContent="🔍 ПРОВЕРИТЬ ОТВЕТ";b.disabled=false;
+if(res.error){alert("Ошибка: "+res.error.message);return;}
+var rows=res.data||[];
+if(!rows.length){document.getElementById("app").innerHTML='<div class="k">ПОКА НЕТ ОТВЕТА</div><div class="bl">По этому контакту ответ администратора пока не найден.</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';return;}
+var h='<div class="k">✉ ОТВЕТЫ</div>';
+for(var i=0;i<rows.length;i++){h+='<div class="bl"><b>ТВОЁ СООБЩЕНИЕ:</b><br>'+rows[i].message.replace(/</g,"&lt;")+'</div><div class="bl grn"><b>ОТВЕТ АДМИНИСТРАТОРА:</b><br>'+rows[i].reply.replace(/</g,"&lt;")+'</div>';}
+h+='<button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';
+document.getElementById("app").innerHTML=h;};a.appendChild(b);
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+async function publicArchive(){beep(700,.1);var a=document.getElementById("app");if(!sb){a.innerHTML='<div class="k">НЕТ СВЯЗИ С АРХИВОМ</div><div class="bl red">'+(SB_ERR||"Supabase не подключён.")+'</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';return;}
+a.innerHTML='<div class="t">ПУБЛИЧНЫЙ АРХИВ</div><div class="k">🌐 ЗАГРУЗКА…</div>';
+var res=await sb.from("stories").select("id,archetype,card_data,story,flags,published_at").eq("status","approved").order("published_at",{ascending:false});
+if(res.error){a.innerHTML='<div class="k">ОШИБКА</div><div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';return;}
+var arr=res.data||[];window.allStories=arr;window.pubFilter="";
+a.innerHTML='<div class="t">ПУБЛИЧНЫЙ АРХИВ</div><div class="k">🌐 КОЛЛЕКЦИЯ ИСТОРИЙ</div><div class="bl yel">Это анонимные личные истории, а не юридические факты или диагнозы.</div><div class="t">ФИЛЬТР ПО ПАТТЕРНАМ</div>';
+var chips=document.createElement("div");chips.className="chips";chips.id="chips";a.appendChild(chips);
+var all=document.createElement("button");all.className="chip on";all.textContent="ВСЕ";all.onclick=function(){window.pubFilter="";renderChips();renderPublicList();};chips.appendChild(all);
+var seen={};
+for(var z=0;z<arr.length;z++){var fl=arr[z].flags||[];for(var q=0;q<fl.length;q++){if(!seen[fl[q]]){seen[fl[q]]=1;(function(f){var c=document.createElement("button");c.className="chip";c.textContent="🔴 "+f;c.onclick=function(){window.pubFilter=(window.pubFilter===f?"":f);renderChips();renderPublicList();};c.dataset.flag=f;chips.appendChild(c);})(fl[q]);}}}
+var lst=document.createElement("div");lst.id="plist";a.appendChild(lst);
+renderPublicList();
+var b2=document.createElement("button");b2.className="arc";b2.textContent="🗂 МОЙ АРХИВ";b2.onclick=collection;a.appendChild(b2);
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+function renderChips(){var chips=document.getElementById("chips");if(!chips)return;var bs=chips.querySelectorAll(".chip");
+for(var i=0;i<bs.length;i++){var f=bs[i].dataset.flag||"";bs[i].className="chip"+((window.pubFilter||"")===f?" on":"");}}
+function renderPublicList(){var arr=window.allStories||[],filter=window.pubFilter||"",lst=document.getElementById("plist");if(!lst)return;lst.innerHTML="";
+var shown=0;
+for(var i=0;i<arr.length;i++){(function(idx){var e=arr[idx];if(filter&&(!(e.flags||[]).length||e.flags.indexOf(filter)<0))return;shown++;
+var r=R[e.archetype]||R.norm,cd=e.card_data||{};
+var box=document.createElement("div");box.className="card";
+box.innerHTML='<b>'+r.i+" "+r.n+"</b> · "+(e.published_at?new Date(e.published_at).toLocaleDateString("ru-RU"):"")+(cd.danger?'<div class="warn">⚠️ ОСОБО ОПАСЕН</div>':'')+'<br><div class="note">'+(e.flags&&e.flags.length?e.flags.map(function(f){return "🔴 "+f;}).join(" · "):"Паттерны не выбраны")+'</div>'+(cd.danger&&cd.dangerNote?'<div class="bl red"><b>⚠️ ОПАСНЫЕ СИГНАЛЫ:</b><br>'+cd.dangerNote.replace(/</g,"&lt;")+'</div>':'')+(cd.publicLink?'<div class="bl yel"><b>🔗 Ссылка / доказательства от администратора:</b><br>'+cd.publicLink.replace(/</g,"&lt;")+'</div>':'')+'<div style="margin-top:6px;line-height:1.5">'+e.story.replace(/</g,"&lt;")+'</div>';
+var b1=document.createElement("button");b1.className="opt";b1.textContent="💬 ОТКРЫТЬ ИСТОРИЮ";b1.onclick=function(){beep(700,.1);publicCard(e);};
+var b2=document.createElement("button");b2.className="opt";b2.textContent="🔗 ПОХОЖИЕ ИСТОРИИ";b2.onclick=function(){beep(700,.1);publicSimilar(e);};
+box.appendChild(b1);box.appendChild(b2);lst.appendChild(box);})(i);}
+if(!shown)lst.innerHTML='<div class="bl">По этому фильтру пока нет историй.</div>';}
+async function publicSimilar(e){beep(700,.1);var a=document.getElementById("app");if(!sb){a.innerHTML='<div class="k">НЕТ СВЯЗИ</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';return;}
+a.innerHTML='<div class="t">ПОХОЖИЕ ИСТОРИИ</div><div class="k">🔗 ЗАГРУЗКА…</div>';
+var res=await sb.from("stories").select("id,archetype,card_data,story,flags,published_at").eq("status","approved").order("published_at",{ascending:false});
+if(res.error){a.innerHTML='<div class="k">ОШИБКА</div><div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';return;}
+var arr=res.data||[],my=e.flags||[],found=[];
+for(var i=0;i<arr.length;i++){if(arr[i].id===e.id)continue;var fl=arr[i].flags||[],common=fl.filter(function(x){return my.indexOf(x)>=0;});if(common.length)found.push({s:arr[i],c:common});}
+found.sort(function(x,y){return y.c.length-x.c.length;});
+a.innerHTML='<div class="t">ПОХОЖИЕ ИСТОРИИ</div><div class="k">🔗 ПО ОБЩИМ ПАТТЕРНАМ</div>';
+if(!found.length){a.innerHTML+='<div class="bl">Пока нет похожих опубликованных историй.</div>';}
+else{for(var j=0;j<Math.min(found.length,10);j++){(function(idx){var it=found[idx],r=R[it.s.archetype]||R.norm;
+var box=document.createElement("div");box.className="card";
+box.innerHTML='<b>'+r.i+" "+r.n+"</b><br><div class='note'>Общие паттерны: "+it.c.map(function(f){return "🔴 "+f;}).join(" · ")+'</div><div style="margin-top:6px">'+it.s.story.replace(/</g,"&lt;")+'</div>';
+var b1=document.createElement("button");b1.className="opt";b1.textContent="💬 ОТКРЫТЬ ИСТОРИЮ";b1.onclick=function(){beep(700,.1);publicCard(it.s);};
+box.appendChild(b1);a.appendChild(box);})(j);}}
+var bk=document.createElement("button");bk.className="bk";bk.textContent="← НАЗАД К ИСТОРИИ";bk.onclick=function(){publicCard(e);};a.appendChild(bk);
+var b2=document.createElement("button");b2.className="bigact";b2.textContent="☰ ГЛАВНОЕ МЕНЮ";b2.onclick=menu;a.appendChild(b2);}
+async function publicCard(e){beep(700,.1);var a=document.getElementById("app");if(!sb){a.innerHTML='<div class="k">НЕТ СВЯЗИ С АРХИВОМ</div><div class="bl red">'+(SB_ERR||"Supabase не подключён.")+'</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';return;}
+a.innerHTML='<div class="t">ПУБЛИЧНЫЙ АРХИВ</div><div class="k">💬 ЗАГРУЗКА…</div>';
+var res=await sb.from("comments").select("id,nickname,text,created_at").eq("story_id",e.id).order("created_at",{ascending:true});
+var comments=res.data||[];window.curStory=e;
+var rxRes=await sb.from("comment_reactions").select("comment_id,reaction").eq("story_id",e.id);
+var rx={};
+if(!rxRes.error&&rxRes.data){for(var ri=0;ri<rxRes.data.length;ri++){var rr=rxRes.data[ri];if(!rx[rr.comment_id])rx[rr.comment_id]={};rx[rr.comment_id][rr.reaction]=(rx[rr.comment_id][rr.reaction]||0)+1;}}
+var sess=await sb.auth.getSession();
+var ADMIN_UID="ВСТАВЬ_СВОЙ_UID";
+var isAdmin=!!(sess.data&&sess.data.session&&sess.data.session.user&&sess.data.session.user.id===ADMIN_UID);
+
+var r=R[e.archetype]||R.norm,cd=e.card_data||{};
+a.innerHTML='<div class="t">ПУБЛИЧНЫЙ АРХИВ</div><div class="k">'+r.i+" "+r.n+" "+r.i+'</div>'+(cd.danger?'<div class="warn">⚠️ ОСОБО ОПАСЕН</div>':'')+'<div class="bl"><b>ИСТОРИЯ:</b><br>'+e.story.replace(/</g,"&lt;")+'</div>'+(cd.danger&&cd.dangerNote?'<div class="bl red"><b>⚠️ ОПАСНЫЕ СИГНАЛЫ:</b><br>'+cd.dangerNote.replace(/</g,"&lt;")+'</div>':'')+(cd.publicLink?'<div class="bl yel"><b>🔗 ССЫЛКА / ДОКАЗАТЕЛЬСТВА ОТ АДМИНИСТРАТОРА:</b><br>'+cd.publicLink.replace(/</g,"&lt;")+'</div>':'')+'<div class="bl red"><b>ПАТТЕРНЫ:</b><br>'+(e.flags&&e.flags.length?e.flags.map(function(f){return "🔴 "+f;}).join("<br>"):"Не выбраны")+'</div><div class="bl"><b>КОММЕНТАРИИ:</b>';
+if(comments.length){for(var j=0;j<comments.length;j++){var rid=comments[j].id,rc=rx[rid]||{};
+a.innerHTML+='<div class="cmt"><b>'+(comments[j].nickname||"Аноним")+'</b><br>'+comments[j].text.replace(/</g,"&lt;")+'<div class="note">'+new Date(comments[j].created_at).toLocaleDateString("ru-RU")+'</div>';
+a.innerHTML+='<div class="chips">';
+var rks=[["support","🤍","Я рядом"],["relate","🔥","Точно про меня"],["bound","🛡","Ты не виновата"]];
+for(var q2=0;q2<rks.length;q2++){(function(rr){var cnt=rc[rr[0]]||0;
+var rb=document.createElement("button");rb.className="chip";rb.textContent=rr[1]+" "+rr[2]+(cnt?" · "+cnt:"");
+rb.onclick=function(){react(rid,rr[0]);};a.appendChild(rb);})(rks[q2]);}
+a.innerHTML+='</div>'+(isAdmin?'<button class="del" onclick="deleteComment(\''+rid+'\')">🗑 УДАЛИТЬ КОММЕНТАРИЙ</button>':'')+'</div>';}}
+else a.innerHTML+='<div class="note">Пока нет комментариев.</div>';
+a.innerHTML+='</div>';
+var ta=document.createElement("textarea");ta.rows=3;ta.placeholder="Поддержи, задай вопрос или поделись похожим опытом.";a.appendChild(ta);
+var b=document.createElement("button");b.className="pub";b.textContent="💬 ОСТАВИТЬ КОММЕНТАРИЙ";b.onclick=async function(){var v=ta.value.trim();if(v.length<3){alert("Напиши комментарий.");return;}var bad=autoFilter(v);if(bad){alert(bad);return;}
+b.textContent="⏳ ОТПРАВЛЯЮ…";b.disabled=true;
+var ins=await sb.from("comments").insert({story_id:e.id,text:v,nickname:NICK||"Аноним"});
+if(ins.error){alert("Ошибка: "+ins.error.message);b.textContent="💬 ОСТАВИТЬ КОММЕНТАРИЙ";b.disabled=false;return;}
+bump("gms_comments");beep(900,.1);publicCard(e);};a.appendChild(b);
+var sm=document.createElement("button");sm.className="opt";sm.textContent="🔗 ПОХОЖИЕ ИСТОРИИ";sm.onclick=function(){beep(700,.1);publicSimilar(e);};a.appendChild(sm);
+if(isAdmin){
+var hideB=document.createElement("button");hideB.className="mod";hideB.textContent="🙈 СКРЫТЬ ИСТОРИЮ";
+hideB.onclick=async function(){if(!confirm("Скрыть историю из публичного архива?"))return;var up=await sb.from("stories").update({status:"hidden"}).eq("id",e.id);if(up.error){alert(up.error.message);return;}beep(500,.15);publicArchive();};
+a.appendChild(hideB);
+var archB=document.createElement("button");archB.className="arc";archB.textContent="🗄 АРХИВИРОВАТЬ";
+archB.onclick=async function(){if(!confirm("Архивировать историю?"))return;var up=await sb.from("stories").update({status:"archived"}).eq("id",e.id);if(up.error){alert(up.error.message);return;}beep(700,.1);publicArchive();};
+a.appendChild(archB);
+var delB=document.createElement("button");delB.className="del";delB.textContent="🗑 УДАЛИТЬ НАВСЕГДА";
+delB.onclick=async function(){if(!confirm("Удалить историю навсегда? Действие нельзя отменить."))return;var up=await sb.from("stories").delete().eq("id",e.id);if(up.error){alert(up.error.message);return;}beep(180,.2,"sawtooth");publicArchive();};
+a.appendChild(delB);}                             
+var rep=document.createElement("button");rep.className="rep";rep.textContent="⚠️ ПОЖАЛОВАТЬСЯ НА ИСТОРИЮ";rep.onclick=async function(){var reason=prompt("Что не так с этой историей?");if(reason===null)return;
+rep.textContent="⏳ ОТПРАВЛЯЮ…";rep.disabled=true;
+var ins=await sb.from("reports").insert({story_id:e.id,reason:reason});
+if(ins.error){alert("Ошибка: "+ins.error.message);rep.textContent="⚠️ ПОЖАЛОВАТЬСЯ НА ИСТОРИЮ";rep.disabled=false;return;}
+beep(500,.15);document.getElementById("app").innerHTML='<div class="k">⚠️ ЖАЛОБА ОТПРАВЛЕНА</div><div class="bl">Спасибо. Жалоба отправлена администратору.</div><button class="bk" onclick="publicArchive()">← НАЗАД В АРХИВ</button><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';};a.appendChild(rep);
+var bk=document.createElement("button");bk.className="bk";bk.textContent="← НАЗАД В АРХИВ";bk.onclick=publicArchive;a.appendChild(bk);
+var b2=document.createElement("button");b2.className="arc";b2.textContent="🗂 МОЙ АРХИВ";b2.onclick=collection;a.appendChild(b2);
+var b3=document.createElement("button");b3.className="bigact";b3.textContent="☰ ГЛАВНОЕ МЕНЮ";b3.onclick=menu;a.appendChild(b3);}
+async function modLogin(){
+if(!sb){alert(SB_ERR||"Supabase не подключён.");return false;}
+try{
+var sess=await sb.auth.getSession();
+if(!sess.error&&sess.data&&sess.data.session)return true;
+var em=prompt("Email администратора:");if(!em)return false;
+var pw=prompt("Пароль:");if(!pw)return false;
+var res=await sb.auth.signInWithPassword({email:em.trim(),password:pw});
+if(res.error){alert("Ошибка входа: "+res.error.message);return false;}
+return !!(res.data&&res.data.session);
+}catch(err){alert("Ошибка входа: "+err.message);return false;}
+}
+async function modLogout(){
+if(!confirm("Выйти из аккаунта администратора на этом сайте?"))return;
+try{
+var res=await sb.auth.signOut({scope:"local"});
+if(res.error){alert("Не удалось выйти: "+res.error.message);return;}
+beep(300,.15,"sawtooth");menu();
+}catch(err){alert("Не удалось выйти: "+err.message);}
+}
+async function moderation(){beep(700,.1);if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}var ok=await modLogin();if(!ok)return;
+var a=document.getElementById("app");a.innerHTML='<div class="t">ПАНЕЛЬ АДМИНИСТРАТОРА</div><div class="k">🛡 ЗАГРУЗКА…</div>';
+var st=await sb.from("stories").select("id,archetype,card_data,story,flags,status,created_at").in("status",["pending","reported"]).order("created_at",{ascending:false});
+var rp=await sb.from("reports").select("id,story_id,reason,created_at,status").eq("status","open").order("created_at",{ascending:false});
+var hp=await sb.from("help_requests").select("id,nickname,contact,message,card_id,card_type,status,created_at").eq("status","open").order("created_at",{ascending:false});
+if(st.error||rp.error||hp.error){a.innerHTML='<div class="k">ОШИБКА</div><div class="bl red">'+((st.error&&st.error.message)||(rp.error&&rp.error.message)||(hp.error&&hp.error.message))+'</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';return;}
+var pend=st.data||[],reports=rp.data||[],helps=hp.data||[];
+a.innerHTML='<div class="t">ПАНЕЛЬ АДМИНИСТРАТОРА</div><div class="k">🛡 ОЧЕРЕДЬ</div>';
+if(!pend.length&&!reports.length&&!helps.length){a.innerHTML+='<div class="bl">Новых заявок, жалоб и запросов помощи нет.</div>';}
+for(var h=0;h<helps.length;h++){(function(idx){var q=helps[idx];
+var box=document.createElement("div");box.className="card";
+box.innerHTML='<b>🆘 ЗАПРОС ПОМОЩИ</b> · '+new Date(q.created_at).toLocaleDateString("ru-RU")+'<br><div class="note">Ник: '+(q.nickname||"Аноним")+' · Контакт: '+(q.contact||"не указан")+'</div><div class="note">Карточка: '+(q.card_type?(R[q.card_type]||R.norm).n:"—")+'</div><div style="margin-top:6px">'+q.message.replace(/</g,"&lt;")+'</div>';
+var ta=document.createElement("textarea");ta.rows=3;ta.placeholder="Твой ответ автору запроса";box.appendChild(ta);
+var b1=document.createElement("button");b1.className="pub";b1.textContent="✉ СОХРАНИТЬ ОТВЕТ И ЗАКРЫТЬ";b1.onclick=async function(){var v=ta.value.trim();if(v.length<3){alert("Напиши ответ.");return;}
+await sb.from("help_requests").update({admin_reply:v,status:"closed"}).eq("id",q.id);beep(900,.1);moderation();};
+var b2=document.createElement("button");b2.className="bk";b2.textContent="ЗАКРЫТЬ БЕЗ ОТВЕТА";b2.onclick=async function(){await sb.from("help_requests").update({status:"closed"}).eq("id",q.id);beep(900,.1);moderation();};
+box.appendChild(b1);box.appendChild(b2);a.appendChild(box);})(h);}
+for(var i=0;i<pend.length;i++){(function(idx){var e=pend[idx],r=R[e.archetype]||R.norm,cd=e.card_data||{};
+var box=document.createElement("div");box.className="card";
+box.innerHTML='<b>'+r.i+" "+r.n+"</b> · "+new Date(e.created_at).toLocaleDateString("ru-RU")+(cd.danger?'<div class="warn">⚠️ ОСОБО ОПАСЕН</div>':'')+'<br><div class="note">⏳ НОВАЯ ЗАЯВКА</div><div class="note">'+(e.flags&&e.flags.length?e.flags.join(" · "):"Флаги не выбраны")+'</div>'+(cd.danger&&cd.dangerNote?'<div class="bl red"><b>ОПАСНЫЕ СИГНАЛЫ:</b><br>'+cd.dangerNote.replace(/</g,"&lt;")+'</div>':'')+(cd.modLink?'<div class="bl yel"><b>ДАННЫЕ ДЛЯ АДМИНИСТРАТОРА:</b><br>'+cd.modLink.replace(/</g,"&lt;")+'</div>':'')+'<div style="margin-top:6px">'+e.story.replace(/</g,"&lt;")+'</div>';
+var pl=document.createElement("input");pl.placeholder="Публичная ссылка / доказательства для публикации (по желанию)";box.appendChild(pl);
+var b1=document.createElement("button");b1.className="pub";b1.textContent="✅ ОДОБРИТЬ И ОПУБЛИКОВАТЬ";b1.onclick=async function(){var cd2=JSON.parse(JSON.stringify(cd||{}));cd2.publicLink=pl.value.trim();
+var up=await sb.from("stories").update({status:"approved",published_at:new Date().toISOString(),card_data:cd2}).eq("id",e.id);if(up.error){alert(up.error.message);return;}beep(900,.15);moderation();};
+var b2=document.createElement("button");b2.className="ag";b2.textContent="❌ ОТКЛОНИТЬ И СКРЫТЬ";b2.onclick=async function(){var up=await sb.from("stories").update({status:"rejected"}).eq("id",e.id);if(up.error){alert(up.error.message);return;}beep(180,.2,"sawtooth");moderation();};
+box.appendChild(b1);box.appendChild(b2);a.appendChild(box);})(i);}
+for(var q=0;q<reports.length;q++){(function(idx){var rep=reports[idx];
+var box=document.createElement("div");box.className="card";
+box.innerHTML='<b>⚠️ ЖАЛОБА</b> · '+new Date(rep.created_at).toLocaleDateString("ru-RU")+'<br><div class="note">Причина: '+rep.reason.replace(/</g,"&lt;")+'</div><div class="note">История ID: '+rep.story_id+'</div>';
+var b1=document.createElement("button");b1.className="ag";b1.textContent="❌ СКРЫТЬ ИСТОРИЮ ПО ЖАЛОБЕ";b1.onclick=async function(){var up=await sb.from("stories").update({status:"rejected"}).eq("id",rep.story_id);if(up.error){alert(up.error.message);return;}await sb.from("reports").update({status:"closed"}).eq("id",rep.id);beep(180,.2,"sawtooth");moderation();};
+var b2=document.createElement("button");b2.className="pub";b2.textContent="✅ ЖАЛОБА НЕ ОБОСНОВАНА · ЗАКРЫТЬ";b2.onclick=async function(){await sb.from("reports").update({status:"closed"}).eq("id",rep.id);beep(900,.1);moderation();};
+box.appendChild(b1);box.appendChild(b2);a.appendChild(box);})(q);}
+var th=document.createElement("button");th.className="pub";th.textContent="✉ ДИАЛОГИ С ПОСЕТИТЕЛЯМИ";th.onclick=adminThreads;a.appendChild(th);
+var ab=document.createElement("button");ab.className="arc";ab.textContent="📇 АДРЕСНАЯ КНИГА";ab.onclick=addrBook;a.appendChild(ab);
+var ha=document.createElement("button");ha.className="bk";ha.textContent="🗄 СКРЫТЫЕ И АРХИВНЫЕ";ha.onclick=hiddenArchive;a.appendChild(ha);
+var lo=document.createElement("button");lo.className="bk";lo.textContent="🚪 ВЫЙТИ ИЗ АККАУНТА АДМИНИСТРАТОРА";lo.onclick=modLogout;a.appendChild(lo);
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+
+function bump(k){try{localStorage.setItem(k,(parseInt(localStorage.getItem(k)||"0",10)+1)+"");}catch(e){}}
+function visitorId(){var v=localStorage.getItem("gms_vid");if(!v){v="v-"+Date.now()+"-"+Math.random().toString(36).slice(2);localStorage.setItem("gms_vid",v);}return v;}
+async function react(commentId,type){
+if(!sb)return;var bad=await sb.from("comment_reactions").insert({comment_id:commentId,story_id:window.curStory.id,reaction:type,visitor_id:visitorId()});
+if(bad.error){alert("Ошибка: "+bad.error.message);return;}
+beep(900,.08);if(window.curStory)publicCard(window.curStory);}
+async function deleteComment(id){
+if(!confirm("Удалить этот комментарий?"))return;
+var del=await sb.from("comments").delete().eq("id",id);
+if(del.error){alert("Ошибка: "+del.error.message);return;}
+beep(180,.2,"sawtooth");
+if(window.curStory)publicCard(window.curStory);}
+var DAILY=[
+{q:"Он сказал: «Ты слишком остро реагируешь» после того, как тебе было неприятно.",a:["Газлайт","Забота","Случайность"],c:0,e:"Обесценивание твоих чувств и перевод разговора с поступка на твою реакцию — частый признак газлайта."},
+{q:"Он исчез на неделю, а потом вернулся, будто ничего не произошло.",a:["Уважение","Хаос-паттерн","Забота"],c:1,e:"Возвращение без объяснений создаёт тревогу и непредсказуемость. Твоё право — спросить прямо или взять дистанцию."},
+{q:"Он требует удалить друга из контактов, потому что «ревнует».",a:["Граница","Контроль","Поддержка"],c:1,e:"Ревность не даёт права управлять твоими друзьями. Контроль часто начинается именно с таких требований."},
+{q:"Он говорит: «После всего, что я для тебя сделал».",a:["Игра на вине","Извинение","Уважение"],c:0,e:"Забота не становится долгом. Если за помощью требуют благодарность и подчинение — это манипуляция."},
+{q:"Он признаёт ошибку и меняет поведение без повторных упрёков.",a:["Манипуляция","Зелёный флаг","Газлайт"],c:1,e:"Важны не красивые слова, а устойчивые действия и уважение к твоим границам."},
+{q:"Он читает твою переписку «для твоей же безопасности».",a:["Доверие","Контроль","Забота"],c:1,e:"Чтение переписки без согласия — нарушение границ и признак контроля."},
+{q:"Он называет твоё «нет» обидой и давит: «Значит, я тебе не нужен».",a:["Уважение","Давление","Поддержка"],c:1,e:"«Нет» — полноценный ответ. Уважающий человек принимает его без наказания и манипуляций."},
+{q:"Он спокойно уточняет, что тебя задело, и учитывает это дальше.",a:["Зелёный флаг","Газлайт","Контроль"],c:0,e:"Способность услышать и изменить поведение — хороший знак."},
+{q:"Он сравнивает тебя с бывшими и говорит, что все «такие же».",a:["Поддержка","Обесценивание","Забота"],c:1,e:"Обобщения и сравнения унижают и уходят от конкретной проблемы."},
+{q:"Он обещает измениться, но спустя месяцы всё повторяется.",a:["Потенциал","Паттерн","Случайность"],c:1,e:"Смотри на повторяющиеся действия, а не на обещания. Паттерн важнее отдельных хороших эпизодов."}];
+function dayIndex(){var d=new Date();var start=new Date(d.getFullYear(),0,0);return Math.floor((d-start)/86400000);}
+function dailyFlag(){beep(700,.1);var d=DAILY[dayIndex()%DAILY.length],a=document.getElementById("app");
+a.innerHTML='<div class="t">ЕЖЕДНЕВНЫЙ ВЫЗОВ</div><div class="k">🚩 КРАСНЫЙ ФЛАГ ДНЯ</div><div class="qq">'+d.q+'</div>';
+for(var i=0;i<d.a.length;i++){(function(idx){var b=document.createElement("button");b.className="opt";b.textContent=d.a[idx];
+b.onclick=function(){var ok=idx===d.c;
+a.innerHTML='<div class="t">РАЗБОР</div><div class="k">'+(ok?"✅ ВЕРНО":"❌ НЕ СОВСЕМ")+'</div><div class="bl '+(ok?"grn":"red")+'"><b>ПРАВИЛЬНЫЙ ОТВЕТ:</b> '+d.a[d.c]+'</div><div class="bl yel"><b>ПОЧЕМУ:</b><br>'+d.e+'</div><button class="opt" onclick="dailyFlag()">↻ ЕЩЁ РАЗ</button><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';
+beep(ok?900:180,ok?.1:.2,ok?"square":"sawtooth");};a.appendChild(b);})(i);}
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+async function storyOfDay(){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
+a.innerHTML='<div class="t">ИСТОРИЯ ДНЯ</div><div class="k">📖 ЗАГРУЗКА…</div>';
+var res=await sb.from("stories").select("id,archetype,card_data,story,flags,published_at").eq("status","approved").order("published_at",{ascending:false});
+if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';return;}
+var arr=res.data||[];
+if(!arr.length){a.innerHTML='<div class="bl">Пока нет опубликованных историй.</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';return;}
+var e=arr[dayIndex()%arr.length],r=R[e.archetype]||R.norm;
+a.innerHTML='<div class="t">ИСТОРИЯ ДНЯ</div><div class="k">📖 '+r.i+" "+r.n+'</div><div class="bl yel">Сегодня в фокусе — одна история из публичного архива. Читай бережно: это чужой опыт, а не диагноз.</div><div class="bl">'+e.story.replace(/</g,"&lt;")+'</div>';
+var b=document.createElement("button");b.className="opt";b.textContent="💬 ОТКРЫТЬ ИСТОРИЮ И КОММЕНТАРИИ";b.onclick=function(){publicCard(e);};a.appendChild(b);
+var b2=document.createElement("button");b2.className="opt";b2.textContent="🔗 ПОХОЖИЕ ИСТОРИИ";b2.onclick=function(){publicSimilar(e);};a.appendChild(b2);
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+function badges(){beep(700,.1);var a=document.getElementById("app");
+var cards=parseInt(localStorage.getItem("gms_cards")||"0",10),pub=parseInt(localStorage.getItem("gms_published")||"0",10),com=parseInt(localStorage.getItem("gms_comments")||"0",10),thr=parseInt(localStorage.getItem("gms_threads")||"0",10);
+var list=[["🗂 Первое досье",cards>=1,"Сохрани первую карточку в архив"],["📚 Инквизитор архива",cards>=3,"Сохрани 3 карточки"],["📤 Первый выход в свет",pub>=1,"Отправь историю на проверку"],["💬 Голос поддержки",com>=1,"Оставь комментарий"],["✉ Открытый диалог",thr>=1,"Начни диалог с администратором"]];
+a.innerHTML='<div class="t">ТВОЙ ПРОГРЕСС</div><div class="k">🏅 ДОСТИЖЕНИЯ</div><div class="bl yel">Здесь нет гонки и наказаний. Только отметки твоего пути: ты замечаешь, записываешь и заботишься о себе.</div>';
+for(var i=0;i<list.length;i++){var b=list[i];
+a.innerHTML+='<div class="bl '+(b[1]?"grn":"")+'">'+(b[1]?"🏅":"🔒")+" <b>"+b[0]+'</b><br><span class="note">'+b[2]+'</span></div>';}
+a.innerHTML+='<div class="bl"><b>СТАТИСТИКА:</b><br>Карточек в архиве: '+cards+'<br>Историй отправлено: '+pub+'<br>Комментариев: '+com+'<br>Диалогов: '+thr+'</div>';
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+function toggleQuiet(){var q=localStorage.getItem("gms_quiet")==="1";localStorage.setItem("gms_quiet",q?"0":"1");applyQuiet();beep(q?900:400,.1);menu();}
+function applyQuiet(){document.body.classList.toggle("quiet",localStorage.getItem("gms_quiet")==="1");}
+async function hiddenArchive(){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
+a.innerHTML='<div class="t">АДМИН-ПАНЕЛЬ</div><div class="k">🗄 ЗАГРУЗКА…</div>';
+var res=await sb.from("stories").select("id,archetype,card_data,story,flags,status,created_at,published_at").in("status",["hidden","archived"]).order("created_at",{ascending:false});
+if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="moderation()">← НАЗАД</button>';return;}
+var rows=res.data||[];
+a.innerHTML='<div class="t">АДМИН-ПАНЕЛЬ</div><div class="k">🗄 СКРЫТЫЕ И АРХИВНЫЕ</div><div class="bl yel">Здесь истории, которые ты скрыла или заархивировала. Они не видны посетителям, но сохранены в базе.</div>';
+if(!rows.length)a.innerHTML+='<div class="bl">Пока нет скрытых или архивных историй.</div>';
+for(var i=0;i<rows.length;i++){(function(e){var r=R[e.archetype]||R.norm,box=document.createElement("div");box.className="card";
+box.innerHTML='<b>'+r.i+" "+r.n+'</b> · '+(e.status==="hidden"?"🙈 скрыта":"🗄 в архиве")+'<br><div class="note">'+new Date(e.created_at).toLocaleDateString("ru-RU")+'</div><div style="margin-top:6px">'+e.story.replace(/</g,"&lt;").slice(0,300)+'…</div>';
+var b1=document.createElement("button");b1.className="pub";b1.textContent="✅ ВЕРНУТЬ В ПУБЛИЧНЫЙ АРХИВ";
+b1.onclick=async function(){if(!confirm("Вернуть эту историю в публичный архив?"))return;
+var up=await sb.from("stories").update({status:"approved",published_at:new Date().toISOString()}).eq("id",e.id);
+if(up.error){alert(up.error.message);return;}beep(900,.15);hiddenArchive();};box.appendChild(b1);
+var b2=document.createElement("button");b2.className="del";b2.textContent="🗑 УДАЛИТЬ НАВСЕГДА";
+b2.onclick=async function(){if(!confirm("Удалить историю навсегда? Действие нельзя отменить."))return;
+var del=await sb.from("stories").delete().eq("id",e.id);
+if(del.error){alert(del.error.message);return;}beep(180,.2,"sawtooth");hiddenArchive();};box.appendChild(b2);
+a.appendChild(box);})(rows[i]);}
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="← В АДМИН-ПАНЕЛЬ";bk.onclick=moderation;a.appendChild(bk);}
+var GAME=[["«Ты слишком чувствительная»",["Газлайт","Забота","Комплимент"],0],["«Я был неправ, извини»",["Газлайт","Здоровая граница","Манипуляция"],1],["«После всего, что я для тебя сделал»",["Чувство вины","Поддержка","Уважение"],0],["«Мне не нравится, когда ты общаешься с ним»",["Контроль","Граница","Забота"],0],["«Ты не обязана решать прямо сейчас»",["Уважение","Давление","Обесценивание"],0],["«Я пошутил, ты что»",["Обесценивание","Извинение","Забота"],0],["«Давай обсудим спокойно»",["Уважение","Газлайт","Ревность"],0],["«Если любишь — удали его»",["Контроль","Граница","Поддержка"],0]];
+var gi=0,gs=0;
+function game(){beep(700,.1);gi=0;gs=0;gq();}
+function gq(){if(gi>=GAME.length){var rank=gs>=7?"ИНКВИЗИТОР ГРАНИЦ":gs>=5?"СТАЖЁР ИНКВИЗИЦИИ":"СТУДЕНТ ДЕМОНИЧЕСКОЙ МАТРИЦЫ";
+document.getElementById("app").innerHTML='<div class="k">🎮 РЕЗУЛЬТАТ ИГРЫ</div><div class="bl"><b>ВЕРНО:</b> '+gs+" из "+GAME.length+'</div><div class="bl yel"><b>ЗВАНИЕ:</b> '+rank+'</div><button class="bigact" onclick="menu()">☰ В ГЛАВНОЕ МЕНЮ</button><button class="opt" onclick="game()">↻ ЕЩЁ РАУНД</button><button class="opt" onclick="gen()">✍ ГЕНЕРАТОР ФРАЗ-ГРАНИЦ</button>';return;}
+var g=GAME[gi],h='<div class="t">ФРАЗЫ-ДЕТЕКТОРЫ · '+(gi+1)+"/"+GAME.length+'</div><div class="qq">Что это за фраза?</div><div class="bl red"><b>«'+g[0]+'»</b></div>';
+document.getElementById("app").innerHTML=h;
+for(var i=0;i<g[1].length;i++){(function(idx){var b=document.createElement("button");b.className="opt";b.textContent=g[1][idx];b.onclick=function(){if(idx===g[2]){gs++;beep(900,.1);}else{beep(180,.2,"sawtooth");}gi++;gq();};document.getElementById("app").appendChild(b);})(i);}
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ В ГЛАВНОЕ МЕНЮ";bk.onclick=menu;document.getElementById("app").appendChild(bk);}
+function gen(){beep(700,.1);var P={"Он давит и уговаривает":"Мне не подходит давление. Я готова обсудить это, когда разговор будет спокойным.","Он обесценивает мои чувства":"Мои чувства для меня важны. Я не буду продолжать разговор в формате обесценивания.","Он исчезает и возвращается без объяснений":"Мне важны понятные договорённости. Если общение прекращается без объяснений, я беру дистанцию.","Он контролирует моё общение":"Мои друзья и переписки — моя территория. Контроль для меня не равен заботе.","Он переводит спор на мои недостатки":"Я хочу обсудить конкретный поступок, а не получать оценку моей личности.","Он обещает, но не делает":"Я ориентируюсь на действия. Пока договорённости не выполняются, я не буду строить ожиданий.","Он наказывает молчанием":"Молчание как наказание мне не подходит. Я готова к диалогу, когда он будет возможен.","Он называет ревность заботой":"Забота не требует контроля. Мне подходит уважение и доверие."};
+var h='<div class="t">ГЕНЕРАТОР ФРАЗ-ГРАНИЦ</div><div class="k">✍ ВЫБЕРИ СИТУАЦИЮ</div>';
+document.getElementById("app").innerHTML=h;
+for(var k in P){(function(key){var b=document.createElement("button");b.className="opt";b.textContent=key;b.onclick=function(){beep(900,.1);document.getElementById("app").innerHTML='<div class="t">ГОТОВАЯ ФРАЗА-ГРАНИЦА</div><div class="bl yel"><b>МОЖНО СКАЗАТЬ ТАК:</b><br>'+P[key]+'</div><div class="sm">Граница — это не объявление войны.</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button><button class="opt" onclick="gen()">↻ ДРУГАЯ СИТУАЦИЯ</button><button class="opt" onclick="game()">🎮 ФРАЗЫ-ДЕТЕКТОРЫ</button>';};document.getElementById("app").appendChild(b);})(k);}
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;document.getElementById("app").appendChild(bk);}
+function share(){beep(900,.08);var t=window.res||"Сканер мужика",u=location.href.split("?")[0];if(navigator.share)navigator.share({title:"Сканер мужика",text:t,url:u});else if(navigator.clipboard){navigator.clipboard.writeText(t+" "+u);alert("Скопировано!");}else prompt("Скопируй:",t+" "+u);}
+function portal(){var p=document.getElementById("p");p.style.opacity=1;beep(140,.5,"sawtooth");setTimeout(function(){p.style.opacity=0;},600);}
+function no(){beep(180,.18,"sawtooth");document.getElementById("iq").innerHTML='<div class="bq">НЕТ.<br>НО МУЖИКИ ВСЁ РАВНО СУЩЕСТВУЮТ.<br>ДАВАЙ ПОПРОБУЕМ.</div><button class="y" onclick="startTest()">ДА, НАЧНЁМ</button><button class="bigact" onclick="menu()">☰ В ГЛАВНОЕ МЕНЮ</button>';}
+function intro(){var L=["> ИНИЦИАЛИЗАЦИЯ СКАНЕРА МУЖИКА…","> ПОДКЛЮЧЕНИЕ К МАТРИЦЕ…","> ЗАГРУЗКА ПРОТОКОЛА «ЦИФРОВАЯ ИНКВИЗИЦИЯ»…","> КАЛИБРОВКА АРХЕТИПОВ…","> ОБНАРУЖЕНЫ ПИКМИ-ВАМПИРЫ, ГАЗЛАЙТ-ГОБЛИНЫ И ХАОС-АГЕНТЫ…","> СКАНЕР ГОТОВ."],h='<div class="bt">';
+for(var i=0;i<L.length;i++)h+='<div class="ln'+(i===4?" red":"")+'" style="animation-delay:'+(i*.5)+'s">'+L[i]+'</div>';
+h+='<div class="b"><div class="f" id="bf" style="width:0"></div></div><div id="iq"></div></div>';
+document.getElementById("app").innerHTML=h;var w=0,t=setInterval(function(){w+=4;beep(500+w*3,.03);document.getElementById("bf").style.width=w+"%";if(w>=100){clearInterval(t);beep(980,.15);document.getElementById("iq").innerHTML='<div class="bq">ВЫ ГОТОВЫ НАЧАТЬ АНАЛИЗ?</div><button class="y" onclick="startTest()">ДА, НАЧНЁМ</button><button class="n" onclick="no()">НЕТ</button><button class="bigact" onclick="menu()">☰ В ГЛАВНОЕ МЕНЮ</button>';}},110);}
+applyQuiet();intro();
+var c=document.getElementById("m"),x=c.getContext("2d"),cols,dr;
+function rs(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/16);dr=[];for(var i=0;i<cols;i++)dr.push(Math.random()*50);}
+rs();addEventListener("resize",rs);
+var ch="01АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ☠✝⚔";
+setInterval(function(){x.fillStyle="rgba(4,5,6,.09)";x.fillRect(0,0,c.width,c.height);x.font="15px monospace";for(var i=0;i<cols;i++){var y=dr[i]*16;x.fillStyle=Math.random()>.97?"#ff3b5c":"#39ff88";x.fillText(ch[Math.floor(Math.random()*ch.length)],i*16,y);if(y>c.height&&Math.random()>.975)dr[i]=0;dr[i]++;}},45);
+</script></body></html>
