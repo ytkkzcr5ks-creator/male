@@ -184,6 +184,7 @@ var b4=document.createElement("button");b4.className="ctr";b4.textContent="✍ �
 var b8=document.createElement("button");b8.className="ctr";b8.textContent="✏ МОЙ НИКНЕЙМ";b8.onclick=setNick;a.appendChild(b8);
 var b9=document.createElement("button");b9.className="ctr";b9.textContent="✉ ПРОВЕРИТЬ ОТВЕТ АДМИНИСТРАТОРА";b9.onclick=replyCheck;a.appendChild(b9);
 var b7=document.createElement("button");b7.className="sos";b7.textContent="🆘 МНЕ СТРАШНО — ПОМОЩЬ АДМИНИСТРАТОРА";b7.onclick=function(){helpForm(null);};a.appendChild(b7);
+var bm=document.createElement("button");bm.className="pub";bm.textContent="✉ МОИ СООБЩЕНИЯ";bm.onclick=messagesHome;a.appendChild(bm);
 var b6=document.createElement("button");b6.className="mod";b6.textContent="🛡 ПАНЕЛЬ АДМИНИСТРАТОРА";b6.onclick=moderation;a.appendChild(b6);
 var b0=document.createElement("button");b0.className="bigact";b0.textContent="☰ В ГЛАВНОЕ МЕНЮ";b0.onclick=menu;a.appendChild(b0);}
 function startTest(){portal();setTimeout(function(){qi=0;replaces=2;for(var k in S)S[k]=0;renderQ(0);},500);}
@@ -379,10 +380,14 @@ var b2=document.createElement("button");b2.className="bigact";b2.textContent="�
 async function publicCard(e){beep(700,.1);var a=document.getElementById("app");if(!sb){a.innerHTML='<div class="k">НЕТ СВЯЗИ С АРХИВОМ</div><div class="bl red">'+(SB_ERR||"Supabase не подключён.")+'</div><button class="bigact" onclick="menu()">☰ ГЛАВНОЕ МЕНЮ</button>';return;}
 a.innerHTML='<div class="t">ПУБЛИЧНЫЙ АРХИВ</div><div class="k">💬 ЗАГРУЗКА…</div>';
 var res=await sb.from("comments").select("id,nickname,text,created_at").eq("story_id",e.id).order("created_at",{ascending:true});
-var comments=res.data||[];
+var comments=res.data||[];window.curStory=e;
+var sess=await sb.auth.getSession();
+var ADMIN_UID="ВСТАВЬ_СВОЙ_UID";
+var isAdmin=!!(sess.data&&sess.data.session&&sess.data.session.user&&sess.data.session.user.id===ADMIN_UID);
+
 var r=R[e.archetype]||R.norm,cd=e.card_data||{};
 a.innerHTML='<div class="t">ПУБЛИЧНЫЙ АРХИВ</div><div class="k">'+r.i+" "+r.n+" "+r.i+'</div>'+(cd.danger?'<div class="warn">⚠️ ОСОБО ОПАСЕН</div>':'')+'<div class="bl"><b>ИСТОРИЯ:</b><br>'+e.story.replace(/</g,"&lt;")+'</div>'+(cd.danger&&cd.dangerNote?'<div class="bl red"><b>⚠️ ОПАСНЫЕ СИГНАЛЫ:</b><br>'+cd.dangerNote.replace(/</g,"&lt;")+'</div>':'')+(cd.publicLink?'<div class="bl yel"><b>🔗 ССЫЛКА / ДОКАЗАТЕЛЬСТВА ОТ АДМИНИСТРАТОРА:</b><br>'+cd.publicLink.replace(/</g,"&lt;")+'</div>':'')+'<div class="bl red"><b>ПАТТЕРНЫ:</b><br>'+(e.flags&&e.flags.length?e.flags.map(function(f){return "🔴 "+f;}).join("<br>"):"Не выбраны")+'</div><div class="bl"><b>КОММЕНТАРИИ:</b>';
-if(comments.length){for(var j=0;j<comments.length;j++)a.innerHTML+='<div class="cmt"><b>'+(comments[j].nickname||"Аноним")+'</b><br>'+comments[j].text.replace(/</g,"&lt;")+'<div class="note">'+new Date(comments[j].created_at).toLocaleDateString("ru-RU")+'</div></div>';}
+if(comments.length){for(var j=0;j<comments.length;j++){a.innerHTML+='<div class="cmt"><b>'+(comments[j].nickname||"Аноним")+'</b><br>'+comments[j].text.replace(/</g,"&lt;")+'<div class="note">'+new Date(comments[j].created_at).toLocaleDateString("ru-RU")+'</div>'+(isAdmin?'<button class="del" onclick="deleteComment(\''+comments[j].id+'\')">🗑 УДАЛИТЬ КОММЕНТАРИЙ</button>':'')+'</div>';}}
 else a.innerHTML+='<div class="note">Пока нет комментариев.</div>';
 a.innerHTML+='</div>';
 var ta=document.createElement("textarea");ta.rows=3;ta.placeholder="Поддержи, задай вопрос или поделись похожим опытом.";a.appendChild(ta);
@@ -392,9 +397,6 @@ var ins=await sb.from("comments").insert({story_id:e.id,text:v,nickname:NICK||"�
 if(ins.error){alert("Ошибка: "+ins.error.message);b.textContent="💬 ОСТАВИТЬ КОММЕНТАРИЙ";b.disabled=false;return;}
 beep(900,.1);publicCard(e);};a.appendChild(b);
 var sm=document.createElement("button");sm.className="opt";sm.textContent="🔗 ПОХОЖИЕ ИСТОРИИ";sm.onclick=function(){beep(700,.1);publicSimilar(e);};a.appendChild(sm);
-var sess=await sb.auth.getSession();
-var ADMIN_UID="ВСТАВЬ_СВОЙ_UID";
-var isAdmin=!!(sess.data&&sess.data.session&&sess.data.session.user&&sess.data.session.user.id===ADMIN_UID);
 if(isAdmin){
 var hideB=document.createElement("button");hideB.className="mod";hideB.textContent="🙈 СКРЫТЬ ИСТОРИЮ";
 hideB.onclick=async function(){if(!confirm("Скрыть историю из публичного архива?"))return;var up=await sb.from("stories").update({status:"hidden"}).eq("id",e.id);if(up.error){alert(up.error.message);return;}beep(500,.15);publicArchive();};
@@ -464,8 +466,88 @@ box.innerHTML='<b>⚠️ ЖАЛОБА</b> · '+new Date(rep.created_at).toLocale
 var b1=document.createElement("button");b1.className="ag";b1.textContent="❌ СКРЫТЬ ИСТОРИЮ ПО ЖАЛОБЕ";b1.onclick=async function(){var up=await sb.from("stories").update({status:"rejected"}).eq("id",rep.story_id);if(up.error){alert(up.error.message);return;}await sb.from("reports").update({status:"closed"}).eq("id",rep.id);beep(180,.2,"sawtooth");moderation();};
 var b2=document.createElement("button");b2.className="pub";b2.textContent="✅ ЖАЛОБА НЕ ОБОСНОВАНА · ЗАКРЫТЬ";b2.onclick=async function(){await sb.from("reports").update({status:"closed"}).eq("id",rep.id);beep(900,.1);moderation();};
 box.appendChild(b1);box.appendChild(b2);a.appendChild(box);})(q);}
+var th=document.createElement("button");th.className="pub";th.textContent="✉ ДИАЛОГИ С ПОСЕТИТЕЛЯМИ";th.onclick=adminThreads;a.appendChild(th);
+var ab=document.createElement("button");ab.className="arc";ab.textContent="📇 АДРЕСНАЯ КНИГА";ab.onclick=addrBook;a.appendChild(ab);
 var lo=document.createElement("button");lo.className="bk";lo.textContent="🚪 ВЫЙТИ ИЗ АККАУНТА АДМИНИСТРАТОРА";lo.onclick=modLogout;a.appendChild(lo);
 var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+
+async function deleteComment(id){
+if(!confirm("Удалить этот комментарий?"))return;
+var del=await sb.from("comments").delete().eq("id",id);
+if(del.error){alert("Ошибка: "+del.error.message);return;}
+beep(180,.2,"sawtooth");
+if(window.curStory)publicCard(window.curStory);
+}
+async function messagesHome(){beep(700,.1);var a=document.getElementById("app");
+a.innerHTML='<div class="t">ЛИЧНЫЕ СООБЩЕНИЯ</div><div class="k">✉ ДИАЛОГ С АДМИНИСТРАТОРОМ</div><div class="bl yel">Придумай секретный код — например, несколько случайных слов. По нему ты будешь открывать свою переписку. Никому его не передавай.</div>';
+var inp=document.createElement("input");inp.placeholder="Твой секретный код";inp.value=localStorage.getItem("gms_thread")||"";a.appendChild(inp);
+var b=document.createElement("button");b.className="pub";b.textContent="🔍 ОТКРЫТЬ / СОЗДАТЬ ДИАЛОГ";b.onclick=function(){var c=inp.value.trim();if(c.length<4){alert("Код должен быть минимум из 4 символов.");return;}localStorage.setItem("gms_thread",c);openThread(c);};a.appendChild(b);
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="☰ ГЛАВНОЕ МЕНЮ";bk.onclick=menu;a.appendChild(bk);}
+async function openThread(code){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
+a.innerHTML='<div class="t">ЛИЧНЫЕ СООБЩЕНИЯ</div><div class="k">✉ ЗАГРУЗКА…</div>';
+var res=await sb.from("messages").select("id,sender,text,created_at").eq("thread_code",code).order("created_at",{ascending:true});
+if(res.error){a.innerHTML='<div class="k">ОШИБКА</div><div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="messagesHome()">← НАЗАД</button>';return;}
+var msgs=res.data||[];
+a.innerHTML='<div class="t">ЛИЧНЫЕ СООБЩЕНИЯ</div><div class="k">✉ ТВОЙ ДИАЛОГ</div><div class="bl">Код диалога: <b>'+code.replace(/</g,"&lt;")+'</b>. Сохрани его: без него переписку не открыть.</div>';
+if(!msgs.length)a.innerHTML+='<div class="bl">Напиши администратору, что происходит. Ответ появится здесь.</div>';
+for(var i=0;i<msgs.length;i++){var m=msgs[i];
+a.innerHTML+='<div class="'+(m.sender==="admin"?"cmt":"bl")+'"><b>'+(m.sender==="admin"?"✉ АДМИНИСТРАТОР":"ТЫ")+'</b><br>'+m.text.replace(/</g,"&lt;")+'<div class="note">'+new Date(m.created_at).toLocaleString("ru-RU")+'</div></div>';}
+var ta=document.createElement("textarea");ta.rows=3;ta.placeholder="Написать администратору…";a.appendChild(ta);
+var b=document.createElement("button");b.className="pub";b.textContent="✉ ОТПРАВИТЬ";b.onclick=async function(){var v=ta.value.trim();if(v.length<2){alert("Напиши сообщение.");return;}var bad=autoFilter(v);if(bad){alert(bad);return;}
+b.textContent="⏳ ОТПРАВЛЯЮ…";b.disabled=true;
+var ins=await sb.from("messages").insert({thread_code:code,sender:"user",text:v});
+if(ins.error){alert("Ошибка: "+ins.error.message);b.textContent="✉ ОТПРАВИТЬ";b.disabled=false;return;}
+beep(900,.1);openThread(code);};a.appendChild(b);
+var bk=document.createElement("button");bk.className="bk";bk.textContent="← ДРУГОЙ КОД";bk.onclick=messagesHome;a.appendChild(bk);
+var b2=document.createElement("button");b2.className="bigact";b2.textContent="☰ ГЛАВНОЕ МЕНЮ";b2.onclick=menu;a.appendChild(b2);}
+async function adminThreads(){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
+a.innerHTML='<div class="t">АДМИН-ПАНЕЛЬ</div><div class="k">✉ ДИАЛОГИ</div>';
+var res=await sb.from("messages").select("*").order("created_at",{ascending:false});
+if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="moderation()">← НАЗАД</button>';return;}
+var rows=res.data||[],seen={},list=[];
+for(var i=0;i<rows.length;i++){var c=rows[i].thread_code;if(!seen[c]){seen[c]=1;list.push({code:c,last:rows[i]});}}
+if(!list.length)a.innerHTML+='<div class="bl">Пока нет личных диалогов.</div>';
+for(var j=0;j<list.length;j++){(function(it){var box=document.createElement("div");box.className="card";
+box.innerHTML='<b>✉ '+it.code.replace(/</g,"&lt;")+'</b><br><div class="note">Последнее: '+(it.last.sender==="admin"?"администратор":"посетитель")+' · '+new Date(it.last.created_at).toLocaleString("ru-RU")+'</div><div style="margin-top:6px">'+it.last.text.replace(/</g,"&lt;")+'</div>';
+var b=document.createElement("button");b.className="opt";b.textContent="💬 ОТКРЫТЬ ДИАЛОГ";b.onclick=function(){adminThread(it.code);};box.appendChild(b);a.appendChild(box);})(list[j]);}
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="← В АДМИН-ПАНЕЛЬ";bk.onclick=moderation;a.appendChild(bk);}
+async function adminThread(code){beep(700,.1);var a=document.getElementById("app");
+a.innerHTML='<div class="t">ДИАЛОГ</div><div class="k">✉ ЗАГРУЗКА…</div>';
+var res=await sb.from("messages").select("*").eq("thread_code",code).order("created_at",{ascending:true});
+if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="adminThreads()">← НАЗАД</button>';return;}
+var msgs=res.data||[];
+a.innerHTML='<div class="t">ДИАЛОГ С ПОСЕТИТЕЛЕМ</div><div class="k">✉ '+code.replace(/</g,"&lt;")+'</div>';
+for(var i=0;i<msgs.length;i++){var m=msgs[i];
+a.innerHTML+='<div class="'+(m.sender==="admin"?"bl grn":"cmt")+'"><b>'+(m.sender==="admin"?"ТЫ (АДМИН)":"ПОСЕТИТЕЛЬ")+'</b><br>'+m.text.replace(/</g,"&lt;")+'<div class="note">'+new Date(m.created_at).toLocaleString("ru-RU")+'</div></div>';}
+var ta=document.createElement("textarea");ta.rows=3;ta.placeholder="Твой ответ посетителю…";a.appendChild(ta);
+var b=document.createElement("button");b.className="pub";b.textContent="✉ ОТВЕТИТЬ";b.onclick=async function(){var v=ta.value.trim();if(v.length<2){alert("Напиши ответ.");return;}
+b.textContent="⏳ ОТПРАВЛЯЮ…";b.disabled=true;
+var ins=await sb.from("messages").insert({thread_code:code,sender:"admin",text:v});
+if(ins.error){alert("Ошибка: "+ins.error.message);b.textContent="✉ ОТВЕТИТЬ";b.disabled=false;return;}
+beep(900,.1);adminThread(code);};a.appendChild(b);
+var bk=document.createElement("button");bk.className="bk";bk.textContent="← ВСЕ ДИАЛОГИ";bk.onclick=adminThreads;a.appendChild(bk);
+var b2=document.createElement("button");b2.className="bigact";b2.textContent="← В АДМИН-ПАНЕЛЬ";b2.onclick=moderation;a.appendChild(b2);}
+async function addrBook(){beep(700,.1);var a=document.getElementById("app");if(!sb){alert(SB_ERR||"Supabase не подключён.");return;}
+a.innerHTML='<div class="t">АДРЕСНАЯ КНИГА</div><div class="k">📇 ЗАГРУЗКА…</div>';
+var res=await sb.from("contacts").select("*").order("created_at",{ascending:false});
+if(res.error){a.innerHTML='<div class="bl red">'+res.error.message+'</div><button class="bigact" onclick="moderation()">← НАЗАД</button>';return;}
+var rows=res.data||[];
+a.innerHTML='<div class="t">АДРЕСНАЯ КНИГА</div><div class="k">📇 МОИ КОНТАКТЫ</div><div class="bl yel">Видна только тебе в админ-панели. Не сохраняй здесь лишние личные данные.</div>';
+var n1=document.createElement("input");n1.placeholder="Кодовое имя / никнейм";a.appendChild(n1);
+var n2=document.createElement("input");n2.placeholder="Контакт для связи";a.appendChild(n2);
+var n3=document.createElement("textarea");n3.rows=2;n3.placeholder="Заметка: ситуация, статус, что важно помнить";a.appendChild(n3);
+var add=document.createElement("button");add.className="pub";add.textContent="➕ ДОБАВИТЬ КОНТАКТ";add.onclick=async function(){if(!n1.value.trim()){alert("Введи кодовое имя.");return;}
+var ins=await sb.from("contacts").insert({nickname:n1.value.trim(),contact:n2.value.trim(),notes:n3.value.trim(),status:"в работе"});
+if(ins.error){alert("Ошибка: "+ins.error.message);return;}beep(900,.1);addrBook();};a.appendChild(add);
+if(!rows.length)a.innerHTML+='<div class="bl">Пока нет сохранённых контактов.</div>';
+for(var i=0;i<rows.length;i++){(function(c){var box=document.createElement("div");box.className="card";
+box.innerHTML='<b>👤 '+c.nickname.replace(/</g,"&lt;")+'</b> · '+(c.status||"в работе")+'<br><div class="note">Контакт: '+(c.contact||"—").replace(/</g,"&lt;")+'</div><div class="note">'+(c.notes||"").replace(/</g,"&lt;")+'</div>';
+var st=document.createElement("input");st.value=c.status||"в работе";st.placeholder="Статус";box.appendChild(st);
+var nt=document.createElement("textarea");nt.rows=2;nt.value=c.notes||"";nt.placeholder="Заметка";box.appendChild(nt);
+var b1=document.createElement("button");b1.className="pub";b1.textContent="💾 СОХРАНИТЬ";b1.onclick=async function(){var up=await sb.from("contacts").update({status:st.value,notes:nt.value}).eq("id",c.id);if(up.error){alert(up.error.message);return;}beep(900,.1);addrBook();};box.appendChild(b1);
+var b2=document.createElement("button");b2.className="del";b2.textContent="🗑 УДАЛИТЬ";b2.onclick=async function(){if(!confirm("Удалить контакт из адресной книги?"))return;var del=await sb.from("contacts").delete().eq("id",c.id);if(del.error){alert(del.error.message);return;}beep(180,.2,"sawtooth");addrBook();};box.appendChild(b2);
+a.appendChild(box);})(rows[i]);}
+var bk=document.createElement("button");bk.className="bigact";bk.textContent="← В АДМИН-ПАНЕЛЬ";bk.onclick=moderation;a.appendChild(bk);}
 var GAME=[["«Ты слишком чувствительная»",["Газлайт","Забота","Комплимент"],0],["«Я был неправ, извини»",["Газлайт","Здоровая граница","Манипуляция"],1],["«После всего, что я для тебя сделал»",["Чувство вины","Поддержка","Уважение"],0],["«Мне не нравится, когда ты общаешься с ним»",["Контроль","Граница","Забота"],0],["«Ты не обязана решать прямо сейчас»",["Уважение","Давление","Обесценивание"],0],["«Я пошутил, ты что»",["Обесценивание","Извинение","Забота"],0],["«Давай обсудим спокойно»",["Уважение","Газлайт","Ревность"],0],["«Если любишь — удали его»",["Контроль","Граница","Поддержка"],0]];
 var gi=0,gs=0;
 function game(){beep(700,.1);gi=0;gs=0;gq();}
