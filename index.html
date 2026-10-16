@@ -393,7 +393,8 @@ if(ins.error){alert("Ошибка: "+ins.error.message);b.textContent="💬 ОС
 beep(900,.1);publicCard(e);};a.appendChild(b);
 var sm=document.createElement("button");sm.className="opt";sm.textContent="🔗 ПОХОЖИЕ ИСТОРИИ";sm.onclick=function(){beep(700,.1);publicSimilar(e);};a.appendChild(sm);
 var sess=await sb.auth.getSession();
-var isAdmin=!!(sess.data&&sess.data.session&&sess.data.session.user);
+var ADMIN_UID="ВСТАВЬ_СВОЙ_UID";
+var isAdmin=!!(sess.data&&sess.data.session&&sess.data.session.user&&sess.data.session.user.id===ADMIN_UID);
 if(isAdmin){
 var hideB=document.createElement("button");hideB.className="mod";hideB.textContent="🙈 СКРЫТЬ ИСТОРИЮ";
 hideB.onclick=async function(){if(!confirm("Скрыть историю из публичного архива?"))return;var up=await sb.from("stories").update({status:"hidden"}).eq("id",e.id);if(up.error){alert(up.error.message);return;}beep(500,.15);publicArchive();};
